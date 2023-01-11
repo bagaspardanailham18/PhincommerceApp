@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">MyEcommerceApp</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="email_string">Email</string>
+    <string name="password_string">Password</string>
+    <string name="confirm_password_string">Confirm Password</string>
+    <string name="male_string">Male</string>
+    <string name="female_string">Female</string>
+    <string name="gender_string">Gender</string>
+    <string name="signup_string">Sign Up</string>
+    <string name="login_string">Login</string>
+    <string name="title_favorite">Favorite</string>
+    <string name="title_profile">Profile</string>
+    <string name="name_string">Name</string>
+    <string name="email_phone">Phone</string>
+    <string name="menu_logout">Logout</string>
+</resources>
