@@ -8,8 +8,10 @@ import javax.inject.Singleton
 import com.bagaspardanailham.myecommerceapp.data.local.PreferenceDataStore
 import com.bagaspardanailham.myecommerceapp.data.remote.response.LoginResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.RegisterResponse
+import kotlinx.coroutines.Dispatchers
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
 
 @Singleton
@@ -19,7 +21,7 @@ class EcommerceRepository @Inject constructor(private val apiService: ApiService
         const val API_KEY = "TuIBt77u7tZHi8n7WqUC"
     }
 
-    suspend fun registerUser(name: String, email: String, password: String, phone: String, image: String, gender: Int): LiveData<Result<RegisterResponse>> = liveData {
+    suspend fun registerUser(name: String, email: String, password: String, phone: String, image: String, gender: Int): LiveData<Result<RegisterResponse>> = liveData(Dispatchers.IO) {
         emit(Result.Loading)
         try {
             val response = apiService.registerUser(API_KEY, name, email, password, phone, gender, image)
@@ -30,7 +32,7 @@ class EcommerceRepository @Inject constructor(private val apiService: ApiService
         }
     }
 
-    suspend fun loginUser(email: String, password: String): LiveData<Result<LoginResponse>> = liveData {
+    suspend fun loginUser(email: String, password: String): LiveData<Result<LoginResponse>> = liveData(Dispatchers.IO) {
         emit(Result.Loading)
         try {
             val response = apiService.loginUser(API_KEY, email, password)

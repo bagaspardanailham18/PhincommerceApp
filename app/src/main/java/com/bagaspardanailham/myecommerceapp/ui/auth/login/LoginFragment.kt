@@ -76,23 +76,19 @@ class LoginFragment : Fragment() {
                                     binding?.progressBar?.visibility = View.VISIBLE
                                 }
                                 is Result.Success -> {
-                                    if (result.data.success?.status == 200) {
-                                        binding?.progressBar?.visibility = View.GONE
-                                        val authToken = result.data.success.accessToken.toString()
-                                        val refreshToken = result.data.success.refreshToken.toString()
-                                        lifecycleScope.launch {
-                                            viewModel.saveToken(authToken, refreshToken)
-                                        }
-
-                                        Log.d("AuthToken", "Auth Token : $authToken")
-                                        Toast.makeText(requireActivity(), result.data.success.message, Toast.LENGTH_SHORT).show()
-
-                                        val intent = Intent(requireActivity(), MainActivity::class.java)
-                                        startActivity(intent)
-                                        requireActivity().finish()
-                                    } else if (result.data.success?.status == 400) {
-                                        Toast.makeText(requireActivity(), result.data.success.message, Toast.LENGTH_SHORT).show()
+                                    binding?.progressBar?.visibility = View.GONE
+                                    val authToken = result.data.success?.accessToken.toString()
+                                    val refreshToken = result.data.success?.refreshToken.toString()
+                                    lifecycleScope.launch {
+                                        viewModel.saveToken(authToken, refreshToken)
                                     }
+
+                                    Log.d("AuthToken", "Auth Token : $authToken")
+                                    Toast.makeText(requireActivity(), result.data.success?.message, Toast.LENGTH_SHORT).show()
+
+                                    val intent = Intent(requireActivity(), MainActivity::class.java)
+                                    startActivity(intent)
+                                    requireActivity().finish()
                                 }
                                 is Result.Error -> {
                                     binding?.progressBar?.visibility = View.GONE

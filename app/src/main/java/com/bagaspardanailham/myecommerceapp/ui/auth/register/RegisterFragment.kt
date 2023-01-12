@@ -1,5 +1,7 @@
 package com.bagaspardanailham.myecommerceapp.ui.auth.register
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
@@ -8,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,6 +21,7 @@ import com.bagaspardanailham.myecommerceapp.databinding.FragmentRegisterBinding
 import kotlinx.coroutines.launch
 import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 @AndroidEntryPoint
 class RegisterFragment : Fragment() {
@@ -38,6 +43,10 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding?.imgPickerBtn?.setOnClickListener {
+            showImgPickerDialog()
+        }
+
         binding?.btnToLogin?.setOnClickListener {
             findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
         }
@@ -45,6 +54,54 @@ class RegisterFragment : Fragment() {
         binding?.btnSignup?.setOnClickListener {
             handleRegister()
         }
+
+    }
+
+    private fun showImgPickerDialog() {
+        val items = arrayOf("Camera", "Gallery")
+        MaterialAlertDialogBuilder(requireActivity())
+            .setTitle("Select Image")
+            .setItems(items) { dialog, which ->
+                when {
+                    items[which] == "Camera" -> {
+                        getImgFromCamera()
+                    }
+                    items[which] == "Gallery" -> {
+                        getImgFromGallery()
+                    }
+                }
+            }
+            .show()
+
+    }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permission ->
+            when {
+                permission[Manifest.permission.CAMERA] ?: false -> {
+                    getImgFromCamera()
+                }
+            }
+        }
+
+    private fun checkSelfPermission(permission: String): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireActivity(),
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun getImgFromCamera() {
+        if (checkSelfPermission(CAMARA_PERMISSION)) {
+
+        } else {
+
+        }
+    }
+
+    private fun getImgFromGallery() {
 
     }
 
@@ -99,7 +156,7 @@ class RegisterFragment : Fragment() {
                             when(result) {
                                 is Result.Success -> {
                                     binding?.progressBar?.visibility = View.GONE
-                                    Toast.makeText(requireActivity(), "User successfully registered", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(requireActivity(), result.data.success?.message, Toast.LENGTH_SHORT).show()
                                     findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
                                 }
                                 is Result.Error -> {
@@ -115,5 +172,9 @@ class RegisterFragment : Fragment() {
                 }
             }
         }
+    }
+
+    companion object {
+        const val CAMARA_PERMISSION = Manifest.permission.CAMERA
     }
 }
