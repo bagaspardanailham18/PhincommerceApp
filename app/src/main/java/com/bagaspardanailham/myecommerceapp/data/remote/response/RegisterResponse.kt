@@ -7,8 +7,6 @@ data class RegisterResponse(
 	@field:SerializedName("success")
 	val success: RegisterSuccess? = null,
 
-	@field:SerializedName("error")
-	val error: RegisterError? = null
 )
 
 data class RegisterSuccess(
@@ -18,6 +16,11 @@ data class RegisterSuccess(
 
 	@field:SerializedName("status")
 	val status: Int? = null
+)
+
+data class ErrorResponse(
+	@field:SerializedName("error")
+	val error: RegisterError? = null
 )
 
 data class RegisterError(

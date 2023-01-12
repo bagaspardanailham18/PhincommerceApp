@@ -16,9 +16,13 @@ import com.bagaspardanailham.myecommerceapp.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import com.bagaspardanailham.myecommerceapp.data.Result
+import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentLoginBinding
 import com.bagaspardanailham.myecommerceapp.ui.MainActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import org.json.JSONObject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -92,7 +96,11 @@ class LoginFragment : Fragment() {
                                 }
                                 is Result.Error -> {
                                     binding?.progressBar?.visibility = View.GONE
-                                    Toast.makeText(requireActivity(), result.error, Toast.LENGTH_SHORT).show()
+                                    val errorres = JSONObject(result.errorBody?.string()).toString()
+                                    val gson = Gson()
+                                    val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
+                                    val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
+                                    Toast.makeText(requireActivity(), errorResponse.error?.message, Toast.LENGTH_SHORT).show()
                                 }
                             }
                         }

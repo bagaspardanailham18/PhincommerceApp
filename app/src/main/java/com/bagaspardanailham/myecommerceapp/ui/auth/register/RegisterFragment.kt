@@ -20,8 +20,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentRegisterBinding
 import kotlinx.coroutines.launch
 import com.bagaspardanailham.myecommerceapp.data.Result
+import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import org.json.JSONObject
 
 @AndroidEntryPoint
 class RegisterFragment : Fragment() {
@@ -161,7 +165,11 @@ class RegisterFragment : Fragment() {
                                 }
                                 is Result.Error -> {
                                     binding?.progressBar?.visibility = View.GONE
-                                    Toast.makeText(requireActivity(), result.error, Toast.LENGTH_SHORT).show()
+                                    val errorres = JSONObject(result.errorBody?.string()).toString()
+                                    val gson = Gson()
+                                    val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
+                                    val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
+                                    Toast.makeText(requireActivity(), errorResponse.error?.message, Toast.LENGTH_SHORT).show()
                                 }
                                 is Result.Loading -> {
                                     binding?.progressBar?.visibility = View.VISIBLE

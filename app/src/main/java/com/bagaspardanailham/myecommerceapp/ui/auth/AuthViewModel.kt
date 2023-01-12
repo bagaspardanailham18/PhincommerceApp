@@ -1,14 +1,23 @@
 package com.bagaspardanailham.myecommerceapp.ui.auth
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.content.Intent
+import android.util.Log
+import android.view.View
+import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
+import androidx.lifecycle.*
 import com.bagaspardanailham.myecommerceapp.data.EcommerceRepository
+import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.local.PreferenceDataStore
 import com.bagaspardanailham.myecommerceapp.data.remote.ApiService
-import com.bagaspardanailham.myecommerceapp.data.remote.response.LoginResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.*
+import com.bagaspardanailham.myecommerceapp.ui.MainActivity
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,6 +45,5 @@ class AuthViewModel @Inject constructor(private val repository: EcommerceReposit
     suspend fun registerUser(
         email: String, password: String, name: String, gender: Int, phone: String, image: String?
     ) = repository.registerUser(name, email, password, phone, image.toString(), gender)
-
 
 }

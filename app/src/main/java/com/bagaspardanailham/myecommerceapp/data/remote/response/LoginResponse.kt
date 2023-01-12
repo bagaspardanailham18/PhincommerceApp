@@ -7,8 +7,6 @@ data class LoginResponse(
 	@field:SerializedName("success")
 	val success: LoginSuccess? = null,
 
-	@field:SerializedName("error")
-	val error: LoginError? = null
 )
 
 data class LoginSuccess(
@@ -51,13 +49,4 @@ data class DataUser(
 
 	@field:SerializedName("email")
 	val email: String? = null
-)
-
-data class LoginError(
-
-	@field:SerializedName("message")
-	val message: String? = null,
-
-	@field:SerializedName("status")
-	val status: Int? = null
 )
