@@ -69,7 +69,7 @@ class LoginFragment : Fragment() {
             }
             else -> {
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    Toast.makeText(requireActivity(), "Email is not valid", Toast.LENGTH_SHORT).show()
+                    binding?.layoutEdtEmail?.error = "Wrong email format"
                     return
                 } else {
                     lifecycleScope.launch {
