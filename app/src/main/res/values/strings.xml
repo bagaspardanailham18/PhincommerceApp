@@ -18,4 +18,6 @@
     <string name="name_string">Name</string>
     <string name="email_phone">Phone</string>
     <string name="menu_logout">Logout</string>
+    <string name="string_change_language">Change Language</string>
+    <string name="string_change_password">Change Password</string>
 </resources>

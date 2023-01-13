@@ -9,5 +9,6 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="light_red">#EB848E</color>
+    <color name="light_grey">#A4A4A4</color>
     <color name="background">#FFC7CD</color>
 </resources>
