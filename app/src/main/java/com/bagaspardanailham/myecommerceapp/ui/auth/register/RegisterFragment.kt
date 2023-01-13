@@ -139,10 +139,11 @@ class RegisterFragment : Fragment() {
             }
             else -> {
                 if (password != confirmPassword) {
-                    binding?.layoutEdtEmail?.error = "Password doesn't match!"
+                    binding?.layoutEdtEmail?.error = "Password must be same"
+                    binding?.layoutEdtConfirmPassword?.error = "Password must be same"
                     return
                 } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    Toast.makeText(requireActivity(), "Email is not valid", Toast.LENGTH_SHORT).show()
+                    binding?.layoutEdtEmail?.error = "Wrong email format"
                     return
                 }
                 else if (!binding?.rgMale!!.isChecked && !binding?.rgFemale!!.isChecked) {
