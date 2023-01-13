@@ -24,11 +24,11 @@ import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(private val repository: EcommerceRepository, private val pref: PreferenceDataStore, private val apiService: ApiService): ViewModel() {
+class AuthViewModel @Inject constructor(private val repository: EcommerceRepository, private val pref: PreferenceDataStore): ViewModel() {
 
-    fun saveToken(authToken: String, refreshToken: String) {
+    fun saveToken(authToken: String, refreshToken: String, id: Int?, name: String, email: String, phone: String, gender: String, imgPath: String) {
         viewModelScope.launch {
-            pref.saveAuthToken(authToken, refreshToken)
+            pref.saveAuthToken(authToken, refreshToken, id, name, email, phone, gender, imgPath)
         }
     }
 

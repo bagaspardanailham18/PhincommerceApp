@@ -81,14 +81,33 @@ class LoginFragment : Fragment() {
                                 }
                                 is Result.Success -> {
                                     binding?.progressBar?.visibility = View.GONE
-                                    val authToken = result.data.success?.accessToken.toString()
-                                    val refreshToken = result.data.success?.refreshToken.toString()
-                                    lifecycleScope.launch {
-                                        viewModel.saveToken(authToken, refreshToken)
-                                    }
+                                    result.data.success?.apply {
+                                        val authToken = accessToken.toString()
+                                        val refreshToken = refreshToken.toString()
+                                        val id = dataUser?.id
+                                        val name = dataUser?.name.toString()
+                                        val email = dataUser?.email.toString()
+                                        val phone = dataUser?.phone.toString()
+                                        val gender = dataUser?.gender.toString()
+                                        val imgPath = dataUser?.path.toString()
 
-                                    Log.d("AuthToken", "Auth Token : $authToken")
-                                    Toast.makeText(requireActivity(), result.data.success?.message, Toast.LENGTH_SHORT).show()
+                                        lifecycleScope.launch {
+                                            viewModel.saveToken(authToken, refreshToken, id, name, email, phone, gender, imgPath)
+                                        }
+
+                                        Log.d("AuthToken", "Auth Token : $authToken")
+                                        Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show()
+                                        Log.d("pref", """
+                                            authToken : $authToken,
+                                            refreshToken : $refreshToken,
+                                            id : $id,
+                                            name : $name,
+                                            email : $email,
+                                            phone : $phone,
+                                            gender : $gender,
+                                            imgPath : $imgPath
+                                        """.trimIndent())
+                                    }
 
                                     val intent = Intent(requireActivity(), MainActivity::class.java)
                                     startActivity(intent)
