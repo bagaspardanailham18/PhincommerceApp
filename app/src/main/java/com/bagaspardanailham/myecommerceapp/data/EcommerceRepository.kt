@@ -7,6 +7,7 @@ import com.bagaspardanailham.myecommerceapp.data.remote.ApiService
 import javax.inject.Inject
 import javax.inject.Singleton
 import com.bagaspardanailham.myecommerceapp.data.local.PreferenceDataStore
+import com.bagaspardanailham.myecommerceapp.data.remote.response.ChangePasswordResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.LoginResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.RegisterResponse
 import com.google.gson.Gson
@@ -22,7 +23,7 @@ import retrofit2.HttpException
 import retrofit2.Response
 
 @Singleton
-class EcommerceRepository @Inject constructor(private val apiService: ApiService, private val dataStore: PreferenceDataStore) {
+class EcommerceRepository @Inject constructor(private val apiService: ApiService) {
 
     companion object {
         const val API_KEY = "TuIBt77u7tZHi8n7WqUC"
@@ -60,6 +61,32 @@ class EcommerceRepository @Inject constructor(private val apiService: ApiService
         try {
             val response = apiService.loginUser(API_KEY, email, password)
             Log.d("result", response.success?.message.toString())
+            emit(Result.Success(response))
+        } catch (throwable: Throwable) {
+            if (throwable is HttpException) {
+                when (throwable.code()) {
+                    404 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    500 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    else -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                }
+            } else {
+                emit(
+                    Result.Error(false, null, null)
+                )
+            }
+        }
+    }
+
+    suspend fun changePassword(auth: String, id: Int, pass: String, newPass: String, confirmNewPass: String): LiveData<Result<ChangePasswordResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.changePassword(API_KEY, auth, id, pass, newPass, confirmNewPass)
             emit(Result.Success(response))
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {

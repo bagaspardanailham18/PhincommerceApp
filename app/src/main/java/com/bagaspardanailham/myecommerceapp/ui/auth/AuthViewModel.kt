@@ -48,4 +48,8 @@ class AuthViewModel @Inject constructor(private val repository: EcommerceReposit
         email: String, password: String, name: String, gender: Int, phone: String, image: String?
     ) = repository.registerUser(name, email, password, phone, image.toString(), gender)
 
+    suspend fun changePassword(
+        auth: String, id: Int, pass: String, newPass: String, confirmNewPass: String
+    ) = repository.changePassword(auth, id, pass, newPass, confirmNewPass)
+
 }
