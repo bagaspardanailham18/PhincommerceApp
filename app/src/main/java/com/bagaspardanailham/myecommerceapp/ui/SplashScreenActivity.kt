@@ -15,6 +15,7 @@ import com.bagaspardanailham.myecommerceapp.ui.auth.AuthActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlin.text.Typography.dagger
 
@@ -44,8 +45,8 @@ class SplashScreenActivity : AppCompatActivity() {
     private fun determiningDirection() {
         lifecycleScope.launchWhenCreated {
             delay(3000)
-            viewModel.getAccessToken().observe(this@SplashScreenActivity) { data ->
-                if (data.isNullOrEmpty() || data == "") {
+            viewModel.getAccessToken().collect { data ->
+                if (data?.authTokenKey.equals("") || data?.authTokenKey.isNullOrEmpty()) {
                     Log.d("token", "Token : $data")
                     startActivity(Intent(this@SplashScreenActivity, AuthActivity::class.java))
                     finish()

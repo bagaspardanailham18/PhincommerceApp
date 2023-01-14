@@ -87,6 +87,7 @@
                     android:fontFamily="@font/poppinsregular"
                     android:padding="15dp"
                     android:text="@string/login_string"
+                    android:textAllCaps="false"
                     app:cornerRadius="7dp" />
 
                 <LinearLayout

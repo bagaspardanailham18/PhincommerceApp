@@ -167,6 +167,7 @@ class RegisterFragment : Fragment() {
                                 is Result.Error -> {
                                     binding?.progressBar?.visibility = View.GONE
                                     val errorres = JSONObject(result.errorBody?.string()).toString()
+                                    Log.d("error", result.toString())
                                     val gson = Gson()
                                     val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
                                     val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)

@@ -200,6 +200,7 @@
                     android:layout_marginHorizontal="38dp"
                     android:padding="15dp"
                     android:text="@string/signup_string"
+                    android:textAllCaps="false"
                     android:fontFamily="@font/poppinsregular"
                     app:cornerRadius="7dp" />
 

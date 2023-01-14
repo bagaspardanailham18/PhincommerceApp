@@ -1,5 +1,6 @@
 package com.bagaspardanailham.myecommerceapp.data.remote
 
+import com.bagaspardanailham.myecommerceapp.data.remote.response.ChangePasswordResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.LoginResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.RegisterResponse
 import retrofit2.Call
@@ -8,6 +9,8 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 
 interface ApiService {
 
@@ -31,4 +34,13 @@ interface ApiService {
         @Field("image") image: String,
     ) : RegisterResponse
 
+    @PUT("api/ecommerce/change-password/{id}")
+    suspend fun changePassword(
+        @Header("apikey") apikey: String,
+        @Header("Authorization") authorization: String,
+        @Path("id") id: Int,
+        @Field("password") password: String,
+        @Field("new_password") newPassword: String,
+        @Field("confirm_password") confirmPassword: String
+    ) : ChangePasswordResponse
 }

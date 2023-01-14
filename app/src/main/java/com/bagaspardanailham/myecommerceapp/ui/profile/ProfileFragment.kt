@@ -1,5 +1,6 @@
 package com.bagaspardanailham.myecommerceapp.ui.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,10 +8,17 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.view.accessibility.AccessibilityEventCompat.setAction
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentProfileBinding
+import com.bagaspardanailham.myecommerceapp.ui.auth.AuthActivity
+import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -20,6 +28,8 @@ class ProfileFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    private val viewModel by viewModels<AuthViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,6 +48,22 @@ class ProfileFragment : Fragment() {
         val items = listOf("English", "Indonesia")
         val adapter = ArrayAdapter(requireContext(), R.layout.item_row_language, items)
         (binding.edtLang as? AutoCompleteTextView)?.setAdapter(adapter)
+
+        setAction()
+    }
+
+    private fun setAction() {
+        binding.btnToChangePassword.setOnClickListener {
+            requireActivity().startActivity(Intent(requireActivity(), ChangePasswordActivity::class.java))
+        }
+        binding.btnLogout.setOnClickListener {
+            lifecycleScope.launch {
+                viewModel.deleteToken()
+                startActivity(Intent(requireActivity(), AuthActivity::class.java))
+                Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
+                requireActivity().finish()
+            }
+        }
     }
 
     override fun onDestroyView() {

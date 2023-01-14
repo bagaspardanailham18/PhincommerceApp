@@ -50,24 +50,24 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_logout -> {
-                lifecycleScope.launch {
-                    viewModel.deleteToken()
-                    startActivity(Intent(this@MainActivity, AuthActivity::class.java))
-                    Toast.makeText(this@MainActivity, "Logged out", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.main_menu, menu)
+//        return true
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        when (item.itemId) {
+//            R.id.menu_logout -> {
+//                lifecycleScope.launch {
+//                    viewModel.deleteToken()
+//                    startActivity(Intent(this@MainActivity, AuthActivity::class.java))
+//                    Toast.makeText(this@MainActivity, "Logged out", Toast.LENGTH_SHORT).show()
+//                    finish()
+//                }
+//            }
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 
     private fun setupWindow() {
         setSupportActionBar(binding.customToolbar)

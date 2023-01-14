@@ -20,4 +20,8 @@
     <string name="menu_logout">Logout</string>
     <string name="string_change_language">Change Language</string>
     <string name="string_change_password">Change Password</string>
+    <string name="old_password_string">Old Password</string>
+    <string name="new_password_string">New Password</string>
+    <string name="confirm_new_password_string">Confirm New Password</string>
+    <string name="save_string">Save</string>
 </resources>

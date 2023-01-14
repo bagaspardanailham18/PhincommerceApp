@@ -9,12 +9,14 @@ import androidx.lifecycle.*
 import com.bagaspardanailham.myecommerceapp.data.EcommerceRepository
 import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.local.PreferenceDataStore
+import com.bagaspardanailham.myecommerceapp.data.local.PreferencesModel
 import com.bagaspardanailham.myecommerceapp.data.remote.ApiService
 import com.bagaspardanailham.myecommerceapp.data.remote.response.*
 import com.bagaspardanailham.myecommerceapp.ui.MainActivity
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -32,7 +34,7 @@ class AuthViewModel @Inject constructor(private val repository: EcommerceReposit
         }
     }
 
-    fun getAccessToken(): LiveData<String?> = pref.getAuthToken()
+    fun getAccessToken(): Flow<PreferencesModel?> = pref.userPreferencesFlow
 
     fun deleteToken() {
         viewModelScope.launch {
