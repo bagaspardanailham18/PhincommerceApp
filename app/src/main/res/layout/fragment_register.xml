@@ -35,12 +35,13 @@
                 android:layout_gravity="center">
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/shapeableImageView"
+                    android:id="@+id/tv_user_img_prev"
                     android:layout_width="171dp"
                     android:layout_height="171dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="15dp"
                     app:shapeAppearance="@style/circleImageView"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/user" />
 
                 <androidx.appcompat.widget.AppCompatImageView
