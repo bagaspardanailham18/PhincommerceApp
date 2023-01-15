@@ -16,6 +16,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,7 +31,7 @@ class EcommerceRepository @Inject constructor(private val apiService: ApiService
         const val API_KEY = "TuIBt77u7tZHi8n7WqUC"
     }
 
-    suspend fun registerUser(name: String, email: String, password: String, phone: String, image: String, gender: Int): LiveData<Result<RegisterResponse>> = liveData {
+    suspend fun registerUser(name: String, email: String, password: String, phone: String, image: MultipartBody.Part, gender: Int): LiveData<Result<RegisterResponse>> = liveData {
         emit(Result.Loading)
         try {
             val response = apiService.registerUser(API_KEY, name, email, password, phone, gender, image)

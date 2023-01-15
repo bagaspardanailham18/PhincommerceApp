@@ -34,10 +34,14 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.ui.CameraActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.utils.createCustomTempFile
+import com.bagaspardanailham.myecommerceapp.utils.reduceFileImage
 import com.bagaspardanailham.myecommerceapp.utils.rotateBitmap
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
@@ -49,6 +53,8 @@ class RegisterFragment : Fragment() {
 
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding
+
+    private var getFile: File? = null
 
     private val registerViewModel by viewModels<AuthViewModel>()
 
@@ -162,6 +168,7 @@ class RegisterFragment : Fragment() {
         if (it.resultCode == CAMERA_X_RESULT) {
             val myFile = it.data?.getSerializableExtra("picture") as File
             val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
+            getFile = myFile
             val result = rotateBitmap(
                 BitmapFactory.decodeFile(myFile.path),
                 isBackCamera
@@ -201,6 +208,7 @@ class RegisterFragment : Fragment() {
         if (result.resultCode == RESULT_OK) {
             val selectedImg: Uri = result.data?.data as Uri
             val myFile = uriToFile(selectedImg, requireContext())
+            getFile = myFile
             binding?.tvUserImgPrev?.setImageURI(selectedImg)
         }
 
@@ -249,11 +257,19 @@ class RegisterFragment : Fragment() {
                 }
                 else {
                     val genderId = if (binding?.rgMale!!.isChecked) "0" else "1"
+
+                    val file = reduceFileImage(getFile as File)
+                    val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                    val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
+                        "photo",
+                        getFile?.name.toString(),
+                        requestImageFile
+                    )
                     Log.d("data", "Name : $name, email: $email, gender: $genderId")
                     lifecycleScope.launch {
                         binding?.progressBar?.visibility = View.VISIBLE
                         registerViewModel.registerUser(
-                            email, password, name, genderId.toInt(), phone, ""
+                            email, password, name, genderId.toInt(), phone, imageMultipart
                         ).observe(viewLifecycleOwner) { result ->
                             when(result) {
                                 is Result.Success -> {

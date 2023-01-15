@@ -19,6 +19,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -45,8 +46,8 @@ class AuthViewModel @Inject constructor(private val repository: EcommerceReposit
     suspend fun loginUser(email: String, password: String) = repository.loginUser(email, password)
 
     suspend fun registerUser(
-        email: String, password: String, name: String, gender: Int, phone: String, image: String?
-    ) = repository.registerUser(name, email, password, phone, image.toString(), gender)
+        email: String, password: String, name: String, gender: Int, phone: String, image: MultipartBody.Part
+    ) = repository.registerUser(name, email, password, phone, image, gender)
 
     suspend fun changePassword(
         auth: String, id: Int, pass: String, newPass: String, confirmNewPass: String
