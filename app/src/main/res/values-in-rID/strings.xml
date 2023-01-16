@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyEcommerceApp</string>
+    <string name="title_home">Beranda</string>
+    <string name="email_string">Email</string>
+    <string name="password_string">Kata Sandi</string>
+    <string name="confirm_password_string">Konfirmasi Kata Sandi Baru</string>
+    <string name="male_string">Pria</string>
+    <string name="female_string">Wanita</string>
+    <string name="gender_string">Jenis Kelamin</string>
+    <string name="signup_string">Daftar</string>
+    <string name="login_string">Masuk</string>
+    <string name="title_favorite">Favorit</string>
+    <string name="title_profile">Profil</string>
+    <string name="name_string">Nama</string>
+    <string name="email_phone">Phone</string>
+    <string name="menu_logout">Keluar</string>
+    <string name="string_change_language">Ubah Bahasa</string>
+    <string name="string_change_password">Ubah Kata Sandi</string>
+    <string name="old_password_string">Kata Sandi Lama</string>
+    <string name="new_password_string">Kata Sandi Baru</string>
+    <string name="confirm_new_password_string">Konfirmasi Kata Sandi Baru</string>
+    <string name="save_string">Simpan</string>
+</resources>

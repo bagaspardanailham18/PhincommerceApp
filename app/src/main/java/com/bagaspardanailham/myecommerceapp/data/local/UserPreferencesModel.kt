@@ -1,6 +1,6 @@
 package com.bagaspardanailham.myecommerceapp.data.local
 
-data class PreferencesModel(
+data class UserPreferencesModel(
     val authTokenKey: String,
     val refreshTokenKey: String,
     val id: String,

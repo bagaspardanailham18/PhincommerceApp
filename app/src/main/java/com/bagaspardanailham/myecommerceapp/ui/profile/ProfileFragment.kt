@@ -6,12 +6,14 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.TextView
@@ -34,11 +36,13 @@ import com.bagaspardanailham.myecommerceapp.utils.rotateBitmap
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
+import java.util.Locale
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -50,6 +54,7 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel by viewModels<AuthViewModel>()
+    private val profileViewModel by viewModels<ProfileViewModel>()
 
     private var getFile: File? = null
 
@@ -97,13 +102,8 @@ class ProfileFragment : Fragment() {
             )
         }
 
-        val langNames = arrayOf("EN", "IDN")
-        val langImgs = intArrayOf(R.drawable.us_flag, R.drawable.idn_flag)
-        val adapter = ChangeLangAdapter(requireContext(), langNames, langImgs)
-
-        binding.langSpinner.adapter = adapter
-
         setProfile()
+        setLocale()
         setAction()
     }
 
@@ -121,7 +121,25 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    private fun setLocale() {
+        lifecycleScope.launch {
+            profileViewModel.getSettingPref().collect { locale ->
+                if (locale?.langName == "EN") {
+                    binding.langSpinner.setSelection(0)
+                } else if (locale?.langName == "IDN") {
+                    binding.langSpinner.setSelection(1)
+                }
+            }
+        }
+    }
+
     private fun setAction() {
+        val langNames = arrayOf("EN", "IDN")
+        val langImgs = intArrayOf(R.drawable.us_flag, R.drawable.idn_flag)
+        val adapter = ChangeLangAdapter(requireContext(), langNames, langImgs)
+
+        binding.langSpinner.adapter = adapter
+
         binding.imgPickerBtn.setOnClickListener {
             val items = arrayOf("Camera", "Gallery")
             MaterialAlertDialogBuilder(requireActivity())
@@ -138,6 +156,23 @@ class ProfileFragment : Fragment() {
                 }
                 .show()
         }
+
+        binding.langSpinner.post(kotlinx.coroutines.Runnable {
+            binding.langSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    val selectedView = langNames[position]
+                    lifecycleScope.launch {
+                        profileViewModel.saveSettingPref(selectedView)
+                    }
+                    setLanguage(selectedView)
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+                    TODO("Not yet implemented")
+                }
+
+            }
+        })
         binding.btnToChangePassword.setOnClickListener {
             requireActivity().startActivity(Intent(requireActivity(), ChangePasswordActivity::class.java))
         }
@@ -206,6 +241,22 @@ class ProfileFragment : Fragment() {
             binding.tvUserImg.setImageURI(selectedImg)
         }
 
+    }
+
+    private fun setLanguage(id: String) {
+        if (id == "EN") {
+            val locale = Locale("en")
+            Locale.setDefault(locale)
+            val config = Configuration()
+            config.locale = locale
+            requireActivity().resources.updateConfiguration(config, requireActivity().resources.displayMetrics)
+        } else if (id == "IDN") {
+            val locale = Locale("in")
+            Locale.setDefault(locale)
+            val config = Configuration()
+            config.locale = locale
+            requireActivity().resources.updateConfiguration(config, requireActivity().resources.displayMetrics)
+        }
     }
 
     override fun onDestroyView() {

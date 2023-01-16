@@ -66,12 +66,16 @@ class ChangePasswordActivity : AppCompatActivity() {
                                             finish()
                                         }
                                         is Result.Error -> {
-                                            binding.progressBar?.visibility = View.GONE
-                                            val errorres = JSONObject(respone.errorBody?.string()).toString()
-                                            val gson = Gson()
-                                            val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
-                                            val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
-                                            Toast.makeText(this@ChangePasswordActivity, errorResponse.error?.message, Toast.LENGTH_SHORT).show()
+                                            try {
+                                                binding.progressBar.visibility = View.GONE
+                                                val errorres = JSONObject(respone.errorBody?.string()).toString()
+                                                val gson = Gson()
+                                                val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
+                                                val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
+                                                Toast.makeText(this@ChangePasswordActivity, errorResponse.error?.message, Toast.LENGTH_SHORT).show()
+                                            } catch (e: Exception) {
+                                                Toast.makeText(this@ChangePasswordActivity, e.message, Toast.LENGTH_SHORT).show()
+                                            }
                                         }
                                     }
                                 }

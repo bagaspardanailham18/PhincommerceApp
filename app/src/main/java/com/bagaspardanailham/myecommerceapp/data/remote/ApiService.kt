@@ -4,6 +4,7 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.ChangePasswordR
 import com.bagaspardanailham.myecommerceapp.data.remote.response.LoginResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.RegisterResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -26,25 +27,25 @@ interface ApiService {
     ) : LoginResponse
 
     @Multipart
-    @FormUrlEncoded
     @POST("api/ecommerce/registration")
     suspend fun registerUser(
         @Header("apikey") apikey: String,
-        @Field("name") name: String,
-        @Field("email") email: String,
-        @Field("password") password: String,
-        @Field("phone") phone: String,
-        @Field("gender") gender: Int,
+        @Part("name") name: RequestBody,
+        @Part("email") email: RequestBody,
+        @Part("password") password: RequestBody,
+        @Part("phone") phone: RequestBody,
+        @Part("gender") gender: RequestBody,
         @Part image: MultipartBody.Part,
     ) : RegisterResponse
 
+    @FormUrlEncoded
     @PUT("api/ecommerce/change-password/{id}")
     suspend fun changePassword(
         @Header("apikey") apikey: String,
-        @Header("Authorization") authorization: String,
+        @Header("Authorization") token: String,
         @Path("id") id: Int,
         @Field("password") password: String,
-        @Field("new_password") newPassword: String,
-        @Field("confirm_password") confirmPassword: String
+        @Field("new_password") new_password: String,
+        @Field("confirm_password") confirm_password: String
     ) : ChangePasswordResponse
 }

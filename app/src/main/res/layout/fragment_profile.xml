@@ -31,6 +31,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="15dp"
                 android:src="@drawable/user"
+                android:scaleType="centerCrop"
                 app:shapeAppearance="@style/circleImageView" />
 
             <androidx.appcompat.widget.AppCompatImageView

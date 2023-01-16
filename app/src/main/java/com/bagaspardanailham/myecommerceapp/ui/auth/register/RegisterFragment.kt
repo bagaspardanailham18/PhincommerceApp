@@ -39,9 +39,11 @@ import com.bagaspardanailham.myecommerceapp.utils.rotateBitmap
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
@@ -168,12 +170,13 @@ class RegisterFragment : Fragment() {
         if (it.resultCode == CAMERA_X_RESULT) {
             val myFile = it.data?.getSerializableExtra("picture") as File
             val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
-            getFile = myFile
+
             val result = rotateBitmap(
                 BitmapFactory.decodeFile(myFile.path),
                 isBackCamera
             )
 
+            getFile = myFile
             binding?.tvUserImgPrev?.setImageBitmap(result)
         }
     }
@@ -207,7 +210,7 @@ class RegisterFragment : Fragment() {
 
         if (result.resultCode == RESULT_OK) {
             val selectedImg: Uri = result.data?.data as Uri
-            val myFile = uriToFile(selectedImg, requireContext())
+            val myFile = uriToFile(selectedImg, requireActivity())
             getFile = myFile
             binding?.tvUserImgPrev?.setImageURI(selectedImg)
         }
@@ -244,10 +247,10 @@ class RegisterFragment : Fragment() {
             }
             else -> {
                 if (password != confirmPassword) {
-                    binding?.layoutEdtEmail?.error = "Password must be same"
+                    binding?.layoutEdtPassword?.error = "Password must be same"
                     binding?.layoutEdtConfirmPassword?.error = "Password must be same"
                     return
-                } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                } else if (!Patterns.EMAIL_ADDRESS.matcher(email.toString()).matches()) {
                     binding?.layoutEdtEmail?.error = "Wrong email format"
                     return
                 }
@@ -258,36 +261,48 @@ class RegisterFragment : Fragment() {
                 else {
                     val genderId = if (binding?.rgMale!!.isChecked) "0" else "1"
 
-                    val file = reduceFileImage(getFile as File)
-                    val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
-                    val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
-                        "photo",
-                        getFile?.name.toString(),
-                        requestImageFile
-                    )
-                    Log.d("data", "Name : $name, email: $email, gender: $genderId")
-                    lifecycleScope.launch {
-                        binding?.progressBar?.visibility = View.VISIBLE
-                        registerViewModel.registerUser(
-                            email, password, name, genderId.toInt(), phone, imageMultipart
-                        ).observe(viewLifecycleOwner) { result ->
-                            when(result) {
-                                is Result.Success -> {
-                                    binding?.progressBar?.visibility = View.GONE
-                                    Toast.makeText(requireActivity(), result.data.success?.message, Toast.LENGTH_SHORT).show()
-                                    findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
-                                }
-                                is Result.Error -> {
-                                    binding?.progressBar?.visibility = View.GONE
-                                    val errorres = JSONObject(result.errorBody?.string()).toString()
-                                    Log.d("error", result.toString())
-                                    val gson = Gson()
-                                    val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
-                                    val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
-                                    Toast.makeText(requireActivity(), errorResponse.error?.message, Toast.LENGTH_SHORT).show()
-                                }
-                                is Result.Loading -> {
-                                    binding?.progressBar?.visibility = View.VISIBLE
+                    if (getFile != null) {
+                        val file = reduceFileImage(getFile as File)
+                        val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                        val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
+                            "image",
+                            file.name,
+                            requestImageFile
+                        )
+
+                        Log.d("register", """
+                        MyFile: ${getFile}
+                    """.trimIndent())
+
+                        lifecycleScope.launch {
+                            binding?.progressBar?.visibility = View.VISIBLE
+                            registerViewModel.registerUser(
+                                email.toRequestBody("text/plain".toMediaType()),
+                                password.toRequestBody("text/plain".toMediaType()),
+                                name.toRequestBody("text/plain".toMediaType()),
+                                genderId.toRequestBody("text/plain".toMediaType()),
+                                phone.toRequestBody("text/plain".toMediaType()),
+                                imageMultipart
+                            ).observe(viewLifecycleOwner) { result ->
+                                when(result) {
+                                    is Result.Success -> {
+                                        binding?.progressBar?.visibility = View.GONE
+                                        Toast.makeText(requireActivity(), result.data.success?.message, Toast.LENGTH_SHORT).show()
+                                        findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+                                    }
+                                    is Result.Error -> {
+                                        binding?.progressBar?.visibility = View.GONE
+                                        Log.e("error", result.errorBody.toString())
+                                        val errorres = JSONObject(result.errorBody?.string()).toString()
+                                        Log.d("errorres", errorres.toString())
+                                        val gson = Gson()
+                                        val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
+                                        val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
+                                        Toast.makeText(requireActivity(), errorResponse.error?.message, Toast.LENGTH_SHORT).show()
+                                    }
+                                    is Result.Loading -> {
+                                        binding?.progressBar?.visibility = View.VISIBLE
+                                    }
                                 }
                             }
                         }

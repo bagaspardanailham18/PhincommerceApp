@@ -42,7 +42,7 @@ class SplashScreenActivity : AppCompatActivity() {
         lifecycleScope.launchWhenCreated {
             delay(3000)
             viewModel.getUserPref().collect { data ->
-                if (data?.authTokenKey.equals("") || data?.authTokenKey.isNullOrEmpty()) {
+                if (data?.authTokenKey.equals("") || data?.authTokenKey.isNullOrEmpty() || data?.authTokenKey.toString() == "null") {
                     Log.d("token", "Token : $data")
                     startActivity(Intent(this@SplashScreenActivity, AuthActivity::class.java))
                     finish()

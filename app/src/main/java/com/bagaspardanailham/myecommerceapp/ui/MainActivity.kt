@@ -1,6 +1,8 @@
 package com.bagaspardanailham.myecommerceapp.ui
 
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.view.*
@@ -18,8 +20,11 @@ import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityMainBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
+import com.bagaspardanailham.myecommerceapp.ui.profile.ProfileViewModel
+import com.bagaspardanailham.myecommerceapp.utils.LocalizationUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.util.*
 import kotlin.text.Typography.dagger
 
 
@@ -28,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val viewModel by viewModels<AuthViewModel>()
+//    private val viewModel by viewModels<ProfileViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +53,13 @@ class MainActivity : AppCompatActivity() {
             )
         )
         navView.setupWithNavController(navController)
+
+//        lifecycleScope.launch {
+//            viewModel.getSettingPref().collect { pref ->
+//                val lang = pref?.langName.toString()
+//                setLanguage(lang)
+//            }
+//        }
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
