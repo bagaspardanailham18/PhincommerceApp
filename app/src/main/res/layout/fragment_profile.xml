@@ -89,8 +89,9 @@
                 android:layout_height="wrap_content"
                 android:background="@color/background"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="16dp">
+                android:paddingStart="12dp"
+                android:paddingVertical="16dp"
+                tools:ignore="RtlSymmetry">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/appCompatImageView3"
@@ -114,25 +115,13 @@
                     app:layout_constraintStart_toEndOf="@+id/appCompatImageView3"
                     app:layout_constraintTop_toTopOf="@+id/appCompatImageView3" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/lang_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:backgroundTint="@android:color/transparent"
                     app:layout_constraintBottom_toBottomOf="@+id/textView"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/textView">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/edt_lang"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:background="@android:color/transparent"
-                        android:inputType="none" />
-
-                </com.google.android.material.textfield.TextInputLayout>
+                    app:layout_constraintTop_toTopOf="@+id/textView"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
