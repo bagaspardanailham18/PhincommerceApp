@@ -46,7 +46,7 @@ class ChangePasswordActivity : AppCompatActivity() {
 
                 if (isAllChecked) {
                     lifecycleScope.launch {
-                        viewModel.getAccessToken().collect { data ->
+                        viewModel.getUserPref().collect { data ->
                             data.apply {
                                 viewModel.changePassword(
                                     data!!.authTokenKey,

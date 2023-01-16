@@ -9,15 +9,11 @@ import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.databinding.ActivitySplashScreenBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import kotlin.text.Typography.dagger
 
 @AndroidEntryPoint
 @SuppressLint("CustomSplashScreen")
@@ -37,7 +33,7 @@ class SplashScreenActivity : AppCompatActivity() {
     }
 
     private fun startAnimation() {
-        ObjectAnimator.ofFloat(binding.imgSplash, View.TRANSLATION_Y, 0f, -500f).apply {
+        ObjectAnimator.ofFloat(binding.imgSplash, View.TRANSLATION_Y, 0f, -700f).apply {
             duration = 1000
         }.start()
     }
@@ -45,7 +41,7 @@ class SplashScreenActivity : AppCompatActivity() {
     private fun determiningDirection() {
         lifecycleScope.launchWhenCreated {
             delay(3000)
-            viewModel.getAccessToken().collect { data ->
+            viewModel.getUserPref().collect { data ->
                 if (data?.authTokenKey.equals("") || data?.authTokenKey.isNullOrEmpty()) {
                     Log.d("token", "Token : $data")
                     startActivity(Intent(this@SplashScreenActivity, AuthActivity::class.java))

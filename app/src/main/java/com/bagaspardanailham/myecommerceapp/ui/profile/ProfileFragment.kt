@@ -17,6 +17,7 @@ import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentProfileBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
+import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -45,11 +46,26 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val items = listOf("English", "Indonesia")
+        val items = listOf("EN", "IDN")
         val adapter = ArrayAdapter(requireContext(), R.layout.item_row_language, items)
         (binding.edtLang as? AutoCompleteTextView)?.setAdapter(adapter)
 
+        setProfile()
         setAction()
+    }
+
+    private fun setProfile() {
+        lifecycleScope.launch {
+            viewModel.getUserPref().collect { pref ->
+                binding.apply {
+                    tvUserName.text = pref?.name.toString()
+                    tvUserEmail.text = pref?.email.toString()
+                    Glide.with(requireActivity())
+                        .load(pref?.imgPath.toString())
+                        .into(tvUserImg)
+                }
+            }
+        }
     }
 
     private fun setAction() {
