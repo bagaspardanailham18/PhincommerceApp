@@ -12,6 +12,7 @@ import com.bagaspardanailham.myecommerceapp.databinding.ActivityChangePasswordBi
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
+import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog
 import com.bagaspardanailham.myecommerceapp.ui.MainActivity
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -25,10 +26,14 @@ class ChangePasswordActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<AuthViewModel>()
 
+    private lateinit var loading: LoadingDialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChangePasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        loading = LoadingDialog(this)
 
         setCustomToolbar()
         setAction()
@@ -57,17 +62,17 @@ class ChangePasswordActivity : AppCompatActivity() {
                                 ).observe(this@ChangePasswordActivity) { respone ->
                                     when (respone) {
                                         is Result.Loading -> {
-                                            binding.progressBar.visibility = View.VISIBLE
+                                            loading.startLoading()
                                         }
                                         is Result.Success -> {
-                                            binding.progressBar.visibility = View.GONE
+                                            loading.isDismiss()
                                             Toast.makeText(this@ChangePasswordActivity, respone.data.success?.message, Toast.LENGTH_SHORT).show()
                                             startActivity(Intent(this@ChangePasswordActivity, MainActivity::class.java))
                                             finish()
                                         }
                                         is Result.Error -> {
                                             try {
-                                                binding.progressBar.visibility = View.GONE
+                                                loading.isDismiss()
                                                 val errorres = JSONObject(respone.errorBody?.string()).toString()
                                                 val gson = Gson()
                                                 val jsonObject = gson.fromJson(errorres, JsonObject::class.java)

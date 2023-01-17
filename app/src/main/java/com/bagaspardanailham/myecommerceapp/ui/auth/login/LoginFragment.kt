@@ -18,10 +18,12 @@ import kotlinx.coroutines.launch
 import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentLoginBinding
+import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog
 import com.bagaspardanailham.myecommerceapp.ui.MainActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import kotlinx.coroutines.delay
 import org.json.JSONObject
 
 @AndroidEntryPoint
@@ -31,6 +33,8 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding
 
     private val viewModel by viewModels<AuthViewModel>()
+
+    private lateinit var loading: LoadingDialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +47,8 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        loading = LoadingDialog(requireActivity())
 
         binding?.btnToSignup?.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
@@ -73,14 +79,13 @@ class LoginFragment : Fragment() {
                     return
                 } else {
                     lifecycleScope.launch {
-                        binding?.progressBar?.visibility = View.VISIBLE
                         viewModel.loginUser(email, password).observe(viewLifecycleOwner) { result ->
                             when (result) {
                                 is Result.Loading -> {
-                                    binding?.progressBar?.visibility = View.VISIBLE
+                                    loading.startLoading()
                                 }
                                 is Result.Success -> {
-                                    binding?.progressBar?.visibility = View.GONE
+                                    loading.isDismiss()
                                     result.data.success?.apply {
                                         val authToken = accessToken.toString()
                                         val refreshToken = refreshToken.toString()
@@ -114,7 +119,7 @@ class LoginFragment : Fragment() {
                                     requireActivity().finish()
                                 }
                                 is Result.Error -> {
-                                    binding?.progressBar?.visibility = View.GONE
+                                    loading.isDismiss()
                                     val errorres = JSONObject(result.errorBody?.string()).toString()
                                     val gson = Gson()
                                     val jsonObject = gson.fromJson(errorres, JsonObject::class.java)

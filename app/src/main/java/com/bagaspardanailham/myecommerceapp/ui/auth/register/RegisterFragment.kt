@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.ui.CameraActivity
+import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.utils.createCustomTempFile
 import com.bagaspardanailham.myecommerceapp.utils.reduceFileImage
@@ -59,6 +60,8 @@ class RegisterFragment : Fragment() {
     private var getFile: File? = null
 
     private val registerViewModel by viewModels<AuthViewModel>()
+
+    private lateinit var loading: LoadingDialog
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -93,6 +96,8 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        loading = LoadingDialog(requireActivity())
 
         if (!allPermissionGranted()) {
             ActivityCompat.requestPermissions(
@@ -275,7 +280,6 @@ class RegisterFragment : Fragment() {
                     """.trimIndent())
 
                         lifecycleScope.launch {
-                            binding?.progressBar?.visibility = View.VISIBLE
                             registerViewModel.registerUser(
                                 email.toRequestBody("text/plain".toMediaType()),
                                 password.toRequestBody("text/plain".toMediaType()),
@@ -286,22 +290,20 @@ class RegisterFragment : Fragment() {
                             ).observe(viewLifecycleOwner) { result ->
                                 when(result) {
                                     is Result.Success -> {
-                                        binding?.progressBar?.visibility = View.GONE
+                                        loading.isDismiss()
                                         Toast.makeText(requireActivity(), result.data.success?.message, Toast.LENGTH_SHORT).show()
                                         findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
                                     }
                                     is Result.Error -> {
-                                        binding?.progressBar?.visibility = View.GONE
-                                        Log.e("error", result.errorBody.toString())
+                                        loading.isDismiss()
                                         val errorres = JSONObject(result.errorBody?.string()).toString()
-                                        Log.d("errorres", errorres.toString())
                                         val gson = Gson()
                                         val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
                                         val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
                                         Toast.makeText(requireActivity(), errorResponse.error?.message, Toast.LENGTH_SHORT).show()
                                     }
                                     is Result.Loading -> {
-                                        binding?.progressBar?.visibility = View.VISIBLE
+                                        loading.startLoading()
                                     }
                                 }
                             }

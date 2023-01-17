@@ -56,8 +56,6 @@ class ProfileFragment : Fragment() {
     private val viewModel by viewModels<AuthViewModel>()
     private val profileViewModel by viewModels<ProfileViewModel>()
 
-    private var getFile: File? = null
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -93,14 +91,6 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        if (!allPermissionGranted()) {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                REQUIRED_PERMISSIONS,
-                REQUEST_CODE_PERMISSIONS
-            )
-        }
 
         setProfile()
         setLocale()
@@ -147,7 +137,15 @@ class ProfileFragment : Fragment() {
                 .setItems(items) { dialog, which ->
                     when {
                         items[which] == "Camera" -> {
-                            getImgFromCamera()
+                            if (!allPermissionGranted()) {
+                                ActivityCompat.requestPermissions(
+                                    requireActivity(),
+                                    REQUIRED_PERMISSIONS,
+                                    REQUEST_CODE_PERMISSIONS
+                                )
+                            } else {
+                                getImgFromCamera()
+                            }
                         }
                         items[which] == "Gallery" -> {
                             getImgFromGallery()
@@ -197,13 +195,14 @@ class ProfileFragment : Fragment() {
         if (it.resultCode == CAMERA_X_RESULT) {
             val myFile = it.data?.getSerializableExtra("picture") as File
             val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
-            getFile = myFile
+
             val result = rotateBitmap(
                 BitmapFactory.decodeFile(myFile.path),
                 isBackCamera
             )
 
             binding.tvUserImg.setImageBitmap(result)
+
         }
     }
 
@@ -237,7 +236,6 @@ class ProfileFragment : Fragment() {
         if (result.resultCode == Activity.RESULT_OK) {
             val selectedImg: Uri = result.data?.data as Uri
             val myFile = uriToFile(selectedImg, requireContext())
-            getFile = myFile
             binding.tvUserImg.setImageURI(selectedImg)
         }
 

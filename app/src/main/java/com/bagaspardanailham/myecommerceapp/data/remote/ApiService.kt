@@ -48,4 +48,13 @@ interface ApiService {
         @Field("new_password") new_password: String,
         @Field("confirm_password") confirm_password: String
     ) : ChangePasswordResponse
+
+    @Multipart
+    @POST("api/ecommerce/change-image")
+    suspend fun changeImage(
+        @Header("apikey") apikey: String,
+        @Header("Authorization") token: String,
+        @Field("id") id: Int,
+        @Part image: MultipartBody.Part
+    )
 }

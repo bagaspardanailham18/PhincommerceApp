@@ -20,4 +20,5 @@
     <string name="new_password_string">New Password</string>
     <string name="confirm_new_password_string">Confirm New Password</string>
     <string name="save_string">Save</string>
+    <string name="waiting_string">Waiting..</string>
 </resources>
