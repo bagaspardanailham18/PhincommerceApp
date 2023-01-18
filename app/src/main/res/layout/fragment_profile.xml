@@ -25,7 +25,7 @@
             android:padding="26dp">
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/tv_user_img"
+                android:id="@+id/tv_user_img_prev"
                 android:layout_width="171dp"
                 android:layout_height="171dp"
                 android:layout_gravity="center_horizontal"

@@ -50,6 +50,12 @@ class PreferenceDataStore constructor(private val datastore: DataStore<Preferenc
         }
     }
 
+    suspend fun updateImagePath(path: String) {
+        datastore.edit { pref ->
+            pref[USER_IMG_PATH] = path
+        }
+    }
+
     suspend fun clearAuthToken() {
         datastore.edit {
 //            for removing spesific item

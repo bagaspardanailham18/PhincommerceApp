@@ -21,4 +21,5 @@
     <string name="new_password_string">Kata Sandi Baru</string>
     <string name="confirm_new_password_string">Konfirmasi Kata Sandi Baru</string>
     <string name="save_string">Simpan</string>
+    <string name="waiting_string">Menunggu..</string>
 </resources>

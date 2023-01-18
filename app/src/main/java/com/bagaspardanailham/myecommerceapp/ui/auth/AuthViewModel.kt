@@ -28,6 +28,12 @@ class AuthViewModel @Inject constructor(private val repository: EcommerceReposit
         }
     }
 
+    fun updateImgPath(path: String) {
+        viewModelScope.launch {
+            pref.updateImagePath(path)
+        }
+    }
+
     suspend fun loginUser(email: String, password: String) = repository.loginUser(email, password)
 
     suspend fun registerUser(

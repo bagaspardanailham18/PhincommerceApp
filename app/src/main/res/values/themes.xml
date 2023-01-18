@@ -3,7 +3,7 @@
     <style name="Theme.MyEcommerceApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/light_red</item>
-        <item name="colorPrimaryVariant">@color/light_red</item>
+        <item name="colorPrimaryVariant">@color/background</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>

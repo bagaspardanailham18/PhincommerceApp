@@ -7,6 +7,7 @@ import com.bagaspardanailham.myecommerceapp.data.remote.ApiService
 import javax.inject.Inject
 import javax.inject.Singleton
 import com.bagaspardanailham.myecommerceapp.data.local.PreferenceDataStore
+import com.bagaspardanailham.myecommerceapp.data.remote.response.ChangeImageResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ChangePasswordResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.LoginResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.RegisterResponse
@@ -25,7 +26,7 @@ import retrofit2.HttpException
 import retrofit2.Response
 
 @Singleton
-class EcommerceRepository @Inject constructor(private val apiService: ApiService) {
+open class EcommerceRepository @Inject constructor(private val apiService: ApiService) {
 
     companion object {
         const val API_KEY = "TuIBt77u7tZHi8n7WqUC"
@@ -89,6 +90,40 @@ class EcommerceRepository @Inject constructor(private val apiService: ApiService
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {
                 when (throwable.code()) {
+                    401 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    404 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    500 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    else -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                }
+            } else {
+                emit(
+                    Result.Error(false, null, null)
+                )
+            }
+        }
+    }
+
+
+
+    suspend fun changeImage(token: String, id: RequestBody, image: MultipartBody.Part): LiveData<Result<ChangeImageResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.changeImage(API_KEY, token, id, image)
+            emit(Result.Success(response))
+        } catch (throwable: Throwable) {
+            if (throwable is HttpException) {
+                when (throwable.code()) {
+                    401 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
                     404 -> emit(
                         Result.Error(true, throwable.code(), throwable.response()?.errorBody())
                     )

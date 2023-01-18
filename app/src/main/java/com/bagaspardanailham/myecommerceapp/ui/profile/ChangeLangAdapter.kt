@@ -10,7 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bagaspardanailham.myecommerceapp.R
 
-class ChangeLangAdapter(val context: Context, val names: Array<String>, val imgs: IntArray): BaseAdapter() {
+class ChangeLangAdapter(val context: Context, val names: List<String>, val imgs: List<Int>): BaseAdapter() {
     private var inflater = LayoutInflater.from(context)
     override fun getCount(): Int = imgs.size
 

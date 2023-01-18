@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-//    private val viewModel by viewModels<ProfileViewModel>()
+    private val viewModel by viewModels<ProfileViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +60,36 @@ class MainActivity : AppCompatActivity() {
 //                setLanguage(lang)
 //            }
 //        }
+
+        setLocale()
+    }
+
+    private fun setLocale() {
+        lifecycleScope.launch {
+            viewModel.getSettingPref().collect { data ->
+                if (data?.langName != null) {
+                    if (data.langName == "en") {
+                        val locale = Locale("en")
+                        Locale.setDefault(locale)
+                        val config = Configuration()
+                        config.locale = locale
+                        this@MainActivity.resources.updateConfiguration(config, this@MainActivity.resources.displayMetrics)
+                    } else {
+                        val locale = Locale("in")
+                        Locale.setDefault(locale)
+                        val config = Configuration()
+                        config.locale = locale
+                        this@MainActivity.resources.updateConfiguration(config, this@MainActivity.resources.displayMetrics)
+                    }
+                } else {
+                    val locale = Locale("en")
+                    Locale.setDefault(locale)
+                    val config = Configuration()
+                    config.locale = locale
+                    this@MainActivity.resources.updateConfiguration(config, this@MainActivity.resources.displayMetrics)
+                }
+            }
+        }
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -52,35 +52,38 @@ class ChangePasswordActivity : AppCompatActivity() {
                 if (isAllChecked) {
                     lifecycleScope.launch {
                         viewModel.getUserPref().collect { data ->
-                            data.apply {
-                                viewModel.changePassword(
-                                    data!!.authTokenKey,
-                                    data.id.toInt(),
-                                    oldPass,
-                                    newPass,
-                                    newPassConfirm
-                                ).observe(this@ChangePasswordActivity) { respone ->
-                                    when (respone) {
-                                        is Result.Loading -> {
-                                            loading.startLoading()
-                                        }
-                                        is Result.Success -> {
+                            viewModel.changePassword(
+                                data!!.authTokenKey,
+                                data.id.toInt(),
+                                oldPass,
+                                newPass,
+                                newPassConfirm
+                            ).observe(this@ChangePasswordActivity) { response ->
+                                when (response) {
+                                    is Result.Loading -> {
+                                        loading.startLoading()
+                                    }
+                                    is Result.Success -> {
+                                        loading.isDismiss()
+                                        Toast.makeText(this@ChangePasswordActivity, response.data.success?.message, Toast.LENGTH_SHORT).show()
+                                        startActivity(Intent(this@ChangePasswordActivity, MainActivity::class.java))
+                                        finish()
+                                    }
+                                    is Result.Error -> {
+                                        try {
                                             loading.isDismiss()
-                                            Toast.makeText(this@ChangePasswordActivity, respone.data.success?.message, Toast.LENGTH_SHORT).show()
-                                            startActivity(Intent(this@ChangePasswordActivity, MainActivity::class.java))
-                                            finish()
-                                        }
-                                        is Result.Error -> {
-                                            try {
-                                                loading.isDismiss()
-                                                val errorres = JSONObject(respone.errorBody?.string()).toString()
-                                                val gson = Gson()
-                                                val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
-                                                val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
+                                            val errorres = JSONObject(response.errorBody?.string()).toString()
+                                            val gson = Gson()
+                                            val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
+                                            val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
+                                            if (response.errorCode == 401) {
+                                                Toast.makeText(this@ChangePasswordActivity, "Token is expired", Toast.LENGTH_SHORT).show()
+                                            } else {
                                                 Toast.makeText(this@ChangePasswordActivity, errorResponse.error?.message, Toast.LENGTH_SHORT).show()
-                                            } catch (e: Exception) {
-                                                Toast.makeText(this@ChangePasswordActivity, e.message, Toast.LENGTH_SHORT).show()
                                             }
+                                        } catch (e: Exception) {
+                                            loading.isDismiss()
+                                            Toast.makeText(this@ChangePasswordActivity, e.message, Toast.LENGTH_SHORT).show()
                                         }
                                     }
                                 }

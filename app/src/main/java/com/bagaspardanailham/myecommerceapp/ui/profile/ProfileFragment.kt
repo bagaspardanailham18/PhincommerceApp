@@ -1,6 +1,7 @@
 package com.bagaspardanailham.myecommerceapp.ui.profile
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
@@ -9,52 +10,79 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build.ID
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.TextView
+import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.accessibility.AccessibilityEventCompat.setAction
+import com.bagaspardanailham.myecommerceapp.data.Result
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bagaspardanailham.myecommerceapp.R
+import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorChangeImageResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentProfileBinding
 import com.bagaspardanailham.myecommerceapp.ui.CameraActivity
+import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog
+import com.bagaspardanailham.myecommerceapp.ui.MainActivity
+import com.bagaspardanailham.myecommerceapp.ui.SplashScreenActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.ui.auth.register.RegisterFragment
+import com.bagaspardanailham.myecommerceapp.ui.auth.register.RegisterFragment.Companion.CAMERA_X_RESULT
 import com.bagaspardanailham.myecommerceapp.utils.createCustomTempFile
+import com.bagaspardanailham.myecommerceapp.utils.reduceFileImage
 import com.bagaspardanailham.myecommerceapp.utils.rotateBitmap
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.Locale
 
+@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     private val viewModel by viewModels<AuthViewModel>()
     private val profileViewModel by viewModels<ProfileViewModel>()
+    private lateinit var loading: LoadingDialog
+
+    private var getFile: File? = null
+
+    private lateinit var langNames: List<String>
+    private lateinit var langImgs: List<Int>
+
+    private var isUserAction = false
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -75,7 +103,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun allPermissionGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
+        ContextCompat.checkSelfPermission(requireActivity(), it) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun onCreateView(
@@ -92,8 +120,12 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        loading = LoadingDialog(requireActivity())
+
+        langNames = listOf("Default", "EN", "IDN")
+        langImgs = listOf(0, R.drawable.us_flag, R.drawable.idn_flag)
+
         setProfile()
-        setLocale()
         setAction()
     }
 
@@ -101,11 +133,17 @@ class ProfileFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.getUserPref().collect { pref ->
                 binding.apply {
+                    println("lyfecycle preference")
                     tvUserName.text = pref?.name.toString()
                     tvUserEmail.text = pref?.email.toString()
-                    Glide.with(requireActivity())
-                        .load(pref?.imgPath.toString())
-                        .into(tvUserImg)
+                    Log.d("imgpref", "My Image : ${pref?.imgPath}")
+                    if (pref?.imgPath.toString().isEmpty()) {
+                        tvUserImgPrev.setImageResource(R.drawable.user)
+                    } else {
+                        Glide.with(requireActivity())
+                            .load(pref?.imgPath.toString())
+                            .into(tvUserImgPrev)
+                    }
                 }
             }
         }
@@ -113,23 +151,33 @@ class ProfileFragment : Fragment() {
 
     private fun setLocale() {
         lifecycleScope.launch {
-            profileViewModel.getSettingPref().collect { locale ->
-                if (locale?.langName == "EN") {
+            profileViewModel.getSettingPref().collect { data ->
+                Toast.makeText(requireActivity(), data?.langName.toString(), Toast.LENGTH_SHORT).show()
+                if (data?.langName != null) {
+                    if (data.langName == "en") {
+                        binding.langSpinner.setSelection(langNames.indexOf("en"))
+                        val locale = Locale("en")
+                        Locale.setDefault(locale)
+                        val config = Configuration()
+                        config.locale = locale
+                        requireActivity().resources.updateConfiguration(config, requireActivity().resources.displayMetrics)
+                    } else {
+                        binding.langSpinner.setSelection(langNames.indexOf("in"))
+                        val locale = Locale("in")
+                        Locale.setDefault(locale)
+                        val config = Configuration()
+                        config.locale = locale
+                        requireActivity().resources.updateConfiguration(config, requireActivity().resources.displayMetrics)
+                    }
+                } else {
                     binding.langSpinner.setSelection(0)
-                } else if (locale?.langName == "IDN") {
-                    binding.langSpinner.setSelection(1)
                 }
             }
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setAction() {
-        val langNames = arrayOf("EN", "IDN")
-        val langImgs = intArrayOf(R.drawable.us_flag, R.drawable.idn_flag)
-        val adapter = ChangeLangAdapter(requireContext(), langNames, langImgs)
-
-        binding.langSpinner.adapter = adapter
-
         binding.imgPickerBtn.setOnClickListener {
             val items = arrayOf("Camera", "Gallery")
             MaterialAlertDialogBuilder(requireActivity())
@@ -155,14 +203,48 @@ class ProfileFragment : Fragment() {
                 .show()
         }
 
-        binding.langSpinner.post(kotlinx.coroutines.Runnable {
-            binding.langSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    val selectedView = langNames[position]
-                    lifecycleScope.launch {
-                        profileViewModel.saveSettingPref(selectedView)
+        binding.apply {
+            val adapter = ChangeLangAdapter(requireContext(), langNames, langImgs)
+            binding.langSpinner.adapter = adapter
+
+            lifecycleScope.launch {
+                profileViewModel.getSettingPref().collect { pref ->
+                    if (pref?.langName != null) {
+                        if (pref.langName == "en") {
+                            binding.langSpinner.setSelection(1)
+                        } else if (pref.langName == "in") {
+                            binding.langSpinner.setSelection(2)
+                        } else {
+                            binding.langSpinner.setSelection(0)
+                        }
                     }
-                    setLanguage(selectedView)
+                }
+            }
+
+            langSpinner.setOnTouchListener { view, motionEvent ->
+                isUserAction = true
+                false
+            }
+            langSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    if (isUserAction) {
+                        when (position) {
+                            1 -> {
+                                setLanguage("en")
+                                startActivity(Intent(requireActivity(), SplashScreenActivity::class.java))
+                            }
+                            2 -> {
+                                setLanguage("in")
+                                startActivity(Intent(requireActivity(), SplashScreenActivity::class.java))
+                            }
+                            else -> {
+                                setLanguage("en")
+                                startActivity(Intent(requireActivity(), SplashScreenActivity::class.java))
+                            }
+                        }
+                    } else {
+                        isUserAction = false
+                    }
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -170,7 +252,8 @@ class ProfileFragment : Fragment() {
                 }
 
             }
-        })
+        }
+
         binding.btnToChangePassword.setOnClickListener {
             requireActivity().startActivity(Intent(requireActivity(), ChangePasswordActivity::class.java))
         }
@@ -194,6 +277,7 @@ class ProfileFragment : Fragment() {
     ) {
         if (it.resultCode == CAMERA_X_RESULT) {
             val myFile = it.data?.getSerializableExtra("picture") as File
+
             val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
 
             val result = rotateBitmap(
@@ -201,8 +285,67 @@ class ProfileFragment : Fragment() {
                 isBackCamera
             )
 
-            binding.tvUserImg.setImageBitmap(result)
+            getFile = myFile
+            binding.tvUserImgPrev.setImageBitmap(result)
 
+            uploadImg()
+        }
+    }
+
+    private fun uploadImg() {
+        if (getFile != null) {
+            val file = reduceFileImage(getFile as File)
+            val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+            val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
+                "image",
+                file.name,
+                requestImageFile
+            )
+            lifecycleScope.launch {
+                val id = viewModel.getUserPref().first()?.id
+                val authToken = viewModel.getUserPref().first()?.authTokenKey.toString()
+                profileViewModel.changeImage(
+                    authToken,
+                    id?.toRequestBody("text/plain".toMediaType())!!,
+                    imageMultipart
+                ).observe(viewLifecycleOwner) { response ->
+                    Log.d("repeat", "repeat")
+                    when (response) {
+                        is Result.Loading -> {
+                            loading.startLoading()
+                        }
+                        is Result.Success -> {
+                            loading.isDismiss()
+                            response.data.success.apply {
+                                println("result success")
+                                lifecycleScope.launch {
+                                    viewModel.updateImgPath(response.data.success.path)
+                                }
+                                Toast.makeText(requireActivity(), response.data.success.message, Toast.LENGTH_SHORT).show()
+                            }
+
+                        }
+                        is Result.Error -> {
+                            try {
+                                loading.isDismiss()
+                                val errorres = JSONObject(response.errorBody?.string()).toString()
+                                val gson = Gson()
+                                val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
+                                val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
+                                if (response.errorCode == 401) {
+                                    Toast.makeText(requireActivity(), "Token is expired", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(requireActivity(), errorResponse.error?.message, Toast.LENGTH_SHORT).show()
+                                }
+
+                            } catch (e: Exception) {
+                                loading.isDismiss()
+                                Toast.makeText(requireActivity(), e.message, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -235,25 +378,26 @@ class ProfileFragment : Fragment() {
 
         if (result.resultCode == Activity.RESULT_OK) {
             val selectedImg: Uri = result.data?.data as Uri
-            val myFile = uriToFile(selectedImg, requireContext())
-            binding.tvUserImg.setImageURI(selectedImg)
+            val myFile = uriToFile(selectedImg, requireActivity())
+            getFile = myFile
+            binding.tvUserImgPrev.setImageURI(selectedImg)
+
+            uploadImg()
         }
 
     }
 
-    private fun setLanguage(id: String) {
-        if (id == "EN") {
-            val locale = Locale("en")
-            Locale.setDefault(locale)
-            val config = Configuration()
-            config.locale = locale
-            requireActivity().resources.updateConfiguration(config, requireActivity().resources.displayMetrics)
-        } else if (id == "IDN") {
-            val locale = Locale("in")
-            Locale.setDefault(locale)
-            val config = Configuration()
-            config.locale = locale
-            requireActivity().resources.updateConfiguration(config, requireActivity().resources.displayMetrics)
+    private fun setLanguage(localeName: String) {
+        val locale = Locale(localeName)
+        Locale.setDefault(locale)
+        val res = resources
+        val dm = res.displayMetrics
+        val conf = res.configuration
+        conf.locale = locale
+        res.updateConfiguration(conf, dm)
+
+        lifecycleScope.launch {
+            profileViewModel.saveSettingPref(localeName)
         }
     }
 

@@ -1,10 +1,9 @@
 package com.bagaspardanailham.myecommerceapp.data.remote
 
-import com.bagaspardanailham.myecommerceapp.data.remote.response.ChangePasswordResponse
-import com.bagaspardanailham.myecommerceapp.data.remote.response.LoginResponse
-import com.bagaspardanailham.myecommerceapp.data.remote.response.RegisterResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.Response
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -54,7 +53,16 @@ interface ApiService {
     suspend fun changeImage(
         @Header("apikey") apikey: String,
         @Header("Authorization") token: String,
-        @Field("id") id: Int,
+        @Part("id") id: RequestBody,
         @Part image: MultipartBody.Part
-    )
+    ) : ChangeImageResponse
+
+    @FormUrlEncoded
+    @POST("api/ecommerce/refresh-token")
+    suspend fun refreshToken(
+        @Header("apikey") apikey: String,
+        @Field("id_user") idUser: Int,
+        @Field("access_token") accessToken: String,
+        @Field("refresh_token") refreshToken: String
+    ) : retrofit2.Response<RefreshTokenResponse>
 }
