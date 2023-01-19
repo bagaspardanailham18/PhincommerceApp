@@ -9,6 +9,7 @@
     <string name="female_string">Female</string>
     <string name="gender_string">Gender</string>
     <string name="signup_string">Sign Up</string>
+    <string name="register_string">Register</string>
     <string name="login_string">Login</string>
     <string name="title_favorite">Favorite</string>
     <string name="title_profile">Profile</string>
@@ -22,4 +23,9 @@
     <string name="confirm_new_password_string">Confirm New Password</string>
     <string name="save_string">Save</string>
     <string name="waiting_string">Waiting..</string>
+    <string name="ok">OK</string>
+    <string name="success">%1$s Success</string>
+    <string name="successfully">%1s is successfully</string>
+    <string name="validation">Are you sure you want to %1s?</string>
+    <string name="cancel">Cancel</string>
 </resources>

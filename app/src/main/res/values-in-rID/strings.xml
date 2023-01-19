@@ -9,6 +9,7 @@
     <string name="female_string">Wanita</string>
     <string name="gender_string">Jenis Kelamin</string>
     <string name="signup_string">Daftar</string>
+    <string name="register_string">Daftar</string>
     <string name="login_string">Masuk</string>
     <string name="title_favorite">Favorit</string>
     <string name="title_profile">Profil</string>
@@ -22,4 +23,9 @@
     <string name="confirm_new_password_string">Konfirmasi Kata Sandi Baru</string>
     <string name="save_string">Simpan</string>
     <string name="waiting_string">Menunggu..</string>
+    <string name="ok">OK</string>
+    <string name="success">%1$s Berhasil</string>
+    <string name="successfully">%1s Berhasil</string>
+    <string name="validation">Apakah kamu yakin ingin %1s?</string>
+    <string name="cancel">Batal</string>
 </resources>

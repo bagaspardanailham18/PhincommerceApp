@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.system.Os.accept
 import android.util.Log
 import android.util.Patterns
 import androidx.fragment.app.Fragment
@@ -40,6 +41,7 @@ import com.bagaspardanailham.myecommerceapp.utils.rotateBitmap
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import kotlinx.coroutines.NonCancellable.cancel
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -291,8 +293,8 @@ class RegisterFragment : Fragment() {
                                 when(result) {
                                     is Result.Success -> {
                                         loading.isDismiss()
+                                        showSuccessDialog()
                                         Toast.makeText(requireActivity(), result.data.success?.message, Toast.LENGTH_SHORT).show()
-                                        findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
                                     }
                                     is Result.Error -> {
                                         loading.isDismiss()
@@ -312,6 +314,16 @@ class RegisterFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun showSuccessDialog() {
+        MaterialAlertDialogBuilder(requireActivity())
+            .setTitle(String.format(resources.getString(R.string.success), resources.getString(R.string.register_string)))
+            .setMessage(String.format(resources.getString(R.string.successfully), resources.getString(R.string.register_string)))
+            .setPositiveButton(resources.getString(R.string.ok)) { dialog, which ->
+                findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+            }
+            .show()
     }
 
     companion object {

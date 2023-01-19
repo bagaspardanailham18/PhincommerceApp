@@ -7,6 +7,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityChangePasswordBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
@@ -14,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog
 import com.bagaspardanailham.myecommerceapp.ui.MainActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.launch
@@ -65,9 +69,8 @@ class ChangePasswordActivity : AppCompatActivity() {
                                     }
                                     is Result.Success -> {
                                         loading.isDismiss()
+                                        showSuccessDialog()
                                         Toast.makeText(this@ChangePasswordActivity, response.data.success?.message, Toast.LENGTH_SHORT).show()
-                                        startActivity(Intent(this@ChangePasswordActivity, MainActivity::class.java))
-                                        finish()
                                     }
                                     is Result.Error -> {
                                         try {
@@ -119,6 +122,18 @@ class ChangePasswordActivity : AppCompatActivity() {
             }
             return true
         }
+    }
+
+    private fun showSuccessDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(String.format(resources.getString(R.string.success), resources.getString(R.string.string_change_password)))
+            .setMessage(String.format(resources.getString(R.string.successfully), resources.getString(
+                R.string.string_change_password)))
+            .setPositiveButton(resources.getString(R.string.ok)) { dialog, which ->
+                startActivity(Intent(this@ChangePasswordActivity, MainActivity::class.java))
+                finish()
+            }
+            .show()
     }
 
     private fun setCustomToolbar() {

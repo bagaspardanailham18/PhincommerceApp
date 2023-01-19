@@ -205,17 +205,17 @@ class ProfileFragment : Fragment() {
 
         binding.apply {
             val adapter = ChangeLangAdapter(requireContext(), langNames, langImgs)
-            binding.langSpinner.adapter = adapter
+            langSpinner.adapter = adapter
 
             lifecycleScope.launch {
                 profileViewModel.getSettingPref().collect { pref ->
                     if (pref?.langName != null) {
                         if (pref.langName == "en") {
-                            binding.langSpinner.setSelection(1)
+                            langSpinner.setSelection(1)
                         } else if (pref.langName == "in") {
-                            binding.langSpinner.setSelection(2)
+                            langSpinner.setSelection(2)
                         } else {
-                            binding.langSpinner.setSelection(0)
+                            langSpinner.setSelection(0)
                         }
                     }
                 }
@@ -257,13 +257,9 @@ class ProfileFragment : Fragment() {
         binding.btnToChangePassword.setOnClickListener {
             requireActivity().startActivity(Intent(requireActivity(), ChangePasswordActivity::class.java))
         }
+
         binding.btnLogout.setOnClickListener {
-            lifecycleScope.launch {
-                viewModel.deleteToken()
-                startActivity(Intent(requireActivity(), AuthActivity::class.java))
-                Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
-                requireActivity().finish()
-            }
+            showLogoutValidationDialog()
         }
     }
 
@@ -399,6 +395,24 @@ class ProfileFragment : Fragment() {
         lifecycleScope.launch {
             profileViewModel.saveSettingPref(localeName)
         }
+    }
+
+    private fun showLogoutValidationDialog() {
+        MaterialAlertDialogBuilder(requireActivity())
+            .setMessage(String.format(resources.getString(R.string.validation), resources.getString(
+                R.string.menu_logout)))
+            .setPositiveButton(resources.getString(R.string.ok)) { dialog, which ->
+                lifecycleScope.launch {
+                    viewModel.deleteToken()
+                    startActivity(Intent(requireActivity(), AuthActivity::class.java))
+                    Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
+                }
+                requireActivity().finish()
+            }
+            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     override fun onDestroyView() {
