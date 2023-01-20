@@ -7,10 +7,7 @@ import com.bagaspardanailham.myecommerceapp.data.remote.ApiService
 import javax.inject.Inject
 import javax.inject.Singleton
 import com.bagaspardanailham.myecommerceapp.data.local.PreferenceDataStore
-import com.bagaspardanailham.myecommerceapp.data.remote.response.ChangeImageResponse
-import com.bagaspardanailham.myecommerceapp.data.remote.response.ChangePasswordResponse
-import com.bagaspardanailham.myecommerceapp.data.remote.response.LoginResponse
-import com.bagaspardanailham.myecommerceapp.data.remote.response.RegisterResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.*
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -117,6 +114,66 @@ open class EcommerceRepository @Inject constructor(private val apiService: ApiSe
         emit(Result.Loading)
         try {
             val response = apiService.changeImage(API_KEY, token, id, image)
+            emit(Result.Success(response))
+        } catch (throwable: Throwable) {
+            if (throwable is HttpException) {
+                when (throwable.code()) {
+                    401 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    404 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    500 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    else -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                }
+            } else {
+                emit(
+                    Result.Error(false, null, null)
+                )
+            }
+        }
+    }
+
+    // Product
+
+    suspend fun getProductList(accessToken: String, query: String?): LiveData<Result<GetProductListResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.getProductList(API_KEY, accessToken, query)
+            emit(Result.Success(response))
+        } catch (throwable: Throwable) {
+            if (throwable is HttpException) {
+                when (throwable.code()) {
+                    401 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    404 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    500 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    else -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                }
+            } else {
+                emit(
+                    Result.Error(false, null, null)
+                )
+            }
+        }
+    }
+
+    suspend fun getFavoriteProductList(accessToken: String, query: String?, id: Int): LiveData<Result<GetFavoriteProductListResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.getFavoriteProductList(API_KEY, accessToken, query, id)
             emit(Result.Success(response))
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {

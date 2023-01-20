@@ -28,4 +28,6 @@
     <string name="successfully">%1s Berhasil</string>
     <string name="validation">Apakah kamu yakin ingin %1s?</string>
     <string name="cancel">Batal</string>
+    <string name="sort_by">Sort By</string>
+    <string name="currency_code">Rp %1$s</string>
 </resources>

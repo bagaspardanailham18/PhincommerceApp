@@ -28,4 +28,6 @@
     <string name="validation">Are you sure you want to %1s?</string>
     <string name="cancel">Cancel</string>
     <string name="sort_by">Sort By</string>
+    <string name="currency_code">Rp %1$s</string>
+    <string name="menu_cart">Shopping Cart</string>
 </resources>

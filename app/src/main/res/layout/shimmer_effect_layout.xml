@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="105dp"
     app:cardElevation="10dp"
     android:layout_marginBottom="22dp"
     android:layout_marginHorizontal="16dp"
@@ -15,77 +15,54 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/tv_item_product_img"
             android:layout_width="105dp"
-            android:layout_height="105dp"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/backgrounds/scenic" />
+            android:background="#dddddd" />
 
         <TextView
             android:id="@+id/tv_item_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="12dp"
-            android:ellipsize="end"
-            android:fontFamily="@font/poppinsregular"
-            android:maxLines="2"
-            android:textColor="@color/black"
-            android:textSize="11sp"
+            android:background="#dddddd"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tv_item_product_img"
-            app:layout_constraintTop_toBottomOf="@+id/tv_item_date"
-            tools:text="Product Name" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_item_date" />
 
         <TextView
             android:id="@+id/tv_item_price"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:fontFamily="@font/poppinsbold"
-            android:textColor="@color/black"
-            android:textSize="12sp"
+            android:layout_marginTop="10dp"
+            android:background="#dddddd"
             app:layout_constraintStart_toStartOf="@+id/tv_item_name"
-            app:layout_constraintTop_toBottomOf="@+id/tv_item_name"
-            tools:text="Jam Tangan" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_item_name" />
 
         <androidx.appcompat.widget.AppCompatRatingBar
             android:id="@+id/tv_item_rating"
             style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="9dp"
             android:layout_marginBottom="8dp"
-            android:theme="@style/RatingBar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tv_item_price"
             app:layout_constraintTop_toBottomOf="@+id/tv_item_price" />
 
         <TextView
             android:id="@+id/tv_item_date"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:layout_marginEnd="12dp"
-            android:fontFamily="@font/poppinsregular"
-            android:textColor="#80000000"
-            android:textSize="10sp"
+            android:background="#dddddd"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="12 Juni 2023" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/icon_favorite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:visibility="gone"
-            android:src="@drawable/ic_baseline_favorite_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

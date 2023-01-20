@@ -45,21 +45,7 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_favorite, R.id.navigation_profile
-            )
-        )
         navView.setupWithNavController(navController)
-
-//        lifecycleScope.launch {
-//            viewModel.getSettingPref().collect { pref ->
-//                val lang = pref?.langName.toString()
-//                setLanguage(lang)
-//            }
-//        }
 
         setLocale()
     }
@@ -92,24 +78,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.main_menu, menu)
-//        return true
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            R.id.menu_logout -> {
-//                lifecycleScope.launch {
-//                    viewModel.deleteToken()
-//                    startActivity(Intent(this@MainActivity, AuthActivity::class.java))
-//                    Toast.makeText(this@MainActivity, "Logged out", Toast.LENGTH_SHORT).show()
-//                    finish()
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_chart -> {
+                val badge = binding.navView.getOrCreateBadge(R.id.menu_chart)
+                badge.isVisible = true
+                badge.number = 99
+
+//                val badgeDrawable = binding.navView.getBadge(R.id.menu_chart)
+//                if (badgeDrawable != null) {
+//                    badgeDrawable.isVisible = false
+//                    badgeDrawable.clearNumber()
 //                }
-//            }
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
+
+                //binding.navView.removeBadge(R.id.menu_chart)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     private fun setupWindow() {
         setSupportActionBar(binding.customToolbar)

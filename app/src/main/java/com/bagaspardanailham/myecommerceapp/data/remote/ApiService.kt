@@ -5,15 +5,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.Response
 import retrofit2.Call
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.Header
-import retrofit2.http.Headers
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Part
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface ApiService {
 
@@ -65,4 +57,19 @@ interface ApiService {
         @Field("access_token") accessToken: String,
         @Field("refresh_token") refreshToken: String
     ) : retrofit2.Response<RefreshTokenResponse>
+
+    @GET("api/ecommerce/get_list_product")
+    suspend fun getProductList(
+        @Header("apikey") apikey: String,
+        @Header("Authorization") token: String,
+        @Query("search") search: String?
+    ) : GetProductListResponse
+
+    @GET("api/ecommerce/get_list_product_favorite")
+    suspend fun getFavoriteProductList(
+        @Header("apikey") apikey: String,
+        @Header("Authorization") token: String,
+        @Query("search") search: String?,
+        @Query("id_user") iduser: Int
+    ) : GetFavoriteProductListResponse
 }
