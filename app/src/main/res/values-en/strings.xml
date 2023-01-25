@@ -30,4 +30,17 @@
     <string name="cancel">Cancel</string>
     <string name="sort_by">Sort By</string>
     <string name="currency_code">Rp %1$s</string>
+    <string name="menu_cart">Shopping Cart</string>
+    <string name="data_not_found">Data Not Found</string>
+    <string name="stock_string">Stock</string>
+    <string name="stock_with_value_string">Stock : %1$s</string>
+    <string name="size_string">Size</string>
+    <string name="type_string">Type</string>
+    <string name="weight_string">Weight</string>
+    <string name="double_dot">:</string>
+    <string name="description_string">Description</string>
+    <string name="lorem_string">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et integer turpis fermentum pulvinar adipiscing accumsan, dignissim viverra. Quisque hendrerit ac ipsum, malesuada odio netus. Eu, mauris ullamcorper neque ullamcorper arcu. Amet, condimentum adipiscing enim eu feugiat feugiat pharetra, tristique. Interdum ipsum amet, a nec. Fermentum in viverra suscipit at at sit. Metus condimentum augue erat.</string>
+    <string name="buy_string">Buy</string>
+    <string name="trolly_string">Trolley</string>
+    <string name="total">Total</string>
 </resources>

@@ -51,7 +51,7 @@ class ApiModule {
     fun providesRetrofitBuilder(): Retrofit.Builder {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("http://172.17.20.201/training_android/public/")
+            .baseUrl("https://portlan.id/training_android/public/")
     }
 
     @Provides

@@ -2,16 +2,16 @@ package com.bagaspardanailham.myecommerceapp.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 
-data class GetFavoriteProductListResponse(
+data class GetProductDetailResponse(
 
 	@field:SerializedName("success")
-	val success: GetFavoriteProductListSuccess? = null
+	val success: GetProductDetailSuccess? = null
 )
 
-data class GetFavoriteProductListSuccess(
+data class GetProductDetailSuccess(
 
 	@field:SerializedName("data")
-	val data: List<FavoriteProductItem?>? = null,
+	val data: ProductDetailItem? = null,
 
 	@field:SerializedName("message")
 	val message: String? = null,
@@ -20,10 +20,16 @@ data class GetFavoriteProductListSuccess(
 	val status: Int? = null
 )
 
-data class FavoriteProductItem(
+data class ImageProductItem(
 
-	@field:SerializedName("id")
-	val id: Int? = null,
+	@field:SerializedName("image_product")
+	val imageProduct: String? = null,
+
+	@field:SerializedName("title_product")
+	val titleProduct: String? = null
+)
+
+data class ProductDetailItem(
 
 	@field:SerializedName("date")
 	val date: String? = null,
@@ -45,6 +51,12 @@ data class FavoriteProductItem(
 
 	@field:SerializedName("weight")
 	val weight: String? = null,
+
+	@field:SerializedName("image_product")
+	val imageProduct: List<ImageProductItem?>? = null,
+
+	@field:SerializedName("id")
+	val id: Int? = null,
 
 	@field:SerializedName("stock")
 	val stock: Int? = null,

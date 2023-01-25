@@ -51,7 +51,7 @@ class AuthAuthenticator @Inject constructor(
         val okHttpClient = OkHttpClient.Builder().addInterceptor(loggingInterceptor).build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://172.17.20.201/training_android/public/")
+            .baseUrl("https://portlan.id/training_android/public/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()

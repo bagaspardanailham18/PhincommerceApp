@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="?actionBarSize">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView"
+        android:layout_width="0dp"
+        android:layout_height="194dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="37dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/lighter_grey"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView2"
+        android:layout_width="71dp"
+        android:layout_height="13dp"
+        android:layout_marginTop="9dp"
+        android:backgroundTint="@color/lighter_grey"
+        app:layout_constraintEnd_toEndOf="@+id/materialCardView"
+        app:layout_constraintStart_toStartOf="@+id/materialCardView"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView3"
+        android:layout_width="102dp"
+        android:layout_height="17dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/lighter_grey"
+        app:cardCornerRadius="30dp"
+        app:layout_constraintStart_toStartOf="@+id/materialCardView"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView2" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="109dp"
+        android:layout_height="29dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@color/lighter_grey"
+        app:cardCornerRadius="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/materialCardView3"
+        app:layout_constraintEnd_toEndOf="@+id/materialCardView"
+        app:layout_constraintTop_toTopOf="@+id/materialCardView3" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView4"
+        android:layout_width="82dp"
+        android:layout_height="17dp"
+        android:layout_marginTop="13dp"
+        android:backgroundTint="@color/lighter_grey"
+        app:cardCornerRadius="30dp"
+        app:layout_constraintStart_toStartOf="@+id/materialCardView3"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView3" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView5"
+        android:layout_width="82dp"
+        android:layout_height="17dp"
+        android:layout_marginTop="13dp"
+        android:backgroundTint="@color/lighter_grey"
+        app:cardCornerRadius="30dp"
+        app:layout_constraintStart_toStartOf="@+id/materialCardView4"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView4" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="11dp"
+        android:background="@color/lighter_grey"
+        android:backgroundTint="@color/lighter_grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView5" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView6"
+        android:layout_width="59dp"
+        android:layout_height="11dp"
+        android:layout_marginTop="13dp"
+        android:backgroundTint="@color/lighter_grey"
+        app:cardCornerRadius="30dp"
+        app:layout_constraintStart_toStartOf="@+id/materialCardView5"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView7"
+        android:layout_width="59dp"
+        android:layout_height="11dp"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="13dp"
+        android:backgroundTint="@color/lighter_grey"
+        app:cardCornerRadius="30dp"
+        app:layout_constraintStart_toEndOf="@+id/materialCardView6"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView8"
+        android:layout_width="59dp"
+        android:layout_height="11dp"
+        android:layout_marginTop="25dp"
+        android:backgroundTint="@color/lighter_grey"
+        app:cardCornerRadius="30dp"
+        app:layout_constraintStart_toStartOf="@+id/materialCardView5"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView6" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView9"
+        android:layout_width="59dp"
+        android:layout_height="11dp"
+        android:backgroundTint="@color/lighter_grey"
+        app:cardCornerRadius="30dp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintStart_toStartOf="@+id/materialCardView7"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView7" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView10"
+        android:layout_width="59dp"
+        android:layout_height="11dp"
+        android:backgroundTint="@color/lighter_grey"
+        app:cardCornerRadius="30dp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintStart_toStartOf="@+id/materialCardView5"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView8" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView11"
+        android:layout_width="59dp"
+        android:layout_height="11dp"
+        android:layout_marginTop="25dp"
+        android:backgroundTint="@color/lighter_grey"
+        app:cardCornerRadius="30dp"
+        app:layout_constraintStart_toStartOf="@+id/materialCardView9"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView8" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView12"
+        android:layout_width="59dp"
+        android:layout_height="11dp"
+        android:backgroundTint="@color/lighter_grey"
+        app:cardCornerRadius="30dp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintStart_toStartOf="@+id/materialCardView5"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView10" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView13"
+        android:layout_width="59dp"
+        android:layout_height="11dp"
+        android:layout_marginTop="25dp"
+        android:backgroundTint="@color/lighter_grey"
+        app:cardCornerRadius="30dp"
+        app:layout_constraintStart_toStartOf="@+id/materialCardView11"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView10" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView14"
+        android:layout_width="59dp"
+        android:layout_height="11dp"
+        android:backgroundTint="@color/lighter_grey"
+        app:cardCornerRadius="30dp"
+        android:layout_marginTop="34dp"
+        app:layout_constraintStart_toStartOf="@+id/materialCardView5"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView12" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView15"
+        android:layout_width="0dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="28dp"
+        android:backgroundTint="@color/lighter_grey"
+        app:cardCornerRadius="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView14" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

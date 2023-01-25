@@ -10,6 +10,9 @@ data class GetProductListResponse(
 
 data class ProductListItem(
 
+	@field:SerializedName("id")
+	val id: Int? = null,
+
 	@field:SerializedName("date")
 	val date: String? = null,
 

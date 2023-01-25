@@ -1,6 +1,7 @@
 package com.bagaspardanailham.myecommerceapp.ui.home
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.ColorFilter
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
 import com.bagaspardanailham.myecommerceapp.databinding.ItemRowProductBinding
+import com.bagaspardanailham.myecommerceapp.ui.detail.ProductDetailActivity
 import com.bumptech.glide.Glide
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -19,6 +21,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class ProductListAdapter: ListAdapter<ProductListItem, ProductListAdapter.ProductListVH>(DIFF_CALLBACK) {
+
+    private lateinit var onItemClickCallback: OnItemClickCallback
+
+    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductListVH {
         val binding = ItemRowProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -46,6 +54,10 @@ class ProductListAdapter: ListAdapter<ProductListItem, ProductListAdapter.Produc
                 tvItemPrice.text = String.format(itemView.resources.getString(R.string.currency_code), dec.format(data.harga?.toInt()).toString())
                 tvItemRating.rating = data.rate?.toFloat()!!
                 tvItemDate.text = formattingDate(data.date)
+
+                itemView.setOnClickListener {
+                    onItemClickCallback.onItemClicked(data)
+                }
             }
         }
     }
@@ -63,6 +75,10 @@ class ProductListAdapter: ListAdapter<ProductListItem, ProductListAdapter.Produc
 //        val rupiahFormat = NumberFormat.getCurrencyInstance(localId)
 //        return rupiahFormat.format(price?.toInt())
 //    }
+
+    interface OnItemClickCallback {
+        fun onItemClicked(data: ProductListItem)
+    }
 
     companion object {
         private val DIFF_CALLBACK: DiffUtil.ItemCallback<ProductListItem> =

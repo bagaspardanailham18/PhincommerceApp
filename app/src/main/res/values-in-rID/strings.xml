@@ -30,4 +30,17 @@
     <string name="cancel">Batal</string>
     <string name="sort_by">Sort By</string>
     <string name="currency_code">Rp %1$s</string>
+    <string name="menu_cart">Keranjang Belanja</string>
+    <string name="data_not_found">Data Tidak Ditemukan</string>
+    <string name="stock_string">Stok</string>
+    <string name="stock_with_value_string">Stok : %1$s</string>
+    <string name="size_string">Ukuran</string>
+    <string name="type_string">Tipe</string>
+    <string name="weight_string">Berat</string>
+    <string name="double_dot">:</string>
+    <string name="description_string">Deskripsi</string>
+    <string name="lorem_string">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et integer turpis fermentum pulvinar adipiscing accumsan, dignissim viverra. Quisque hendrerit ac ipsum, malesuada odio netus. Eu, mauris ullamcorper neque ullamcorper arcu. Amet, condimentum adipiscing enim eu feugiat feugiat pharetra, tristique. Interdum ipsum amet, a nec. Fermentum in viverra suscipit at at sit. Metus condimentum augue erat.</string>
+    <string name="buy_string">Beli</string>
+    <string name="trolly_string">Keranjang</string>
+    <string name="total">Total</string>
 </resources>

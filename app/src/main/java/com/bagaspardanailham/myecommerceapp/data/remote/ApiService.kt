@@ -72,4 +72,11 @@ interface ApiService {
         @Query("search") search: String?,
         @Query("id_user") iduser: Int
     ) : GetFavoriteProductListResponse
+
+    @GET("api/ecommerce/get_detail_product?id_product=1")
+    suspend fun getProductDetail(
+        @Header("apikey") apikey: String,
+        @Header("Authorization") token: String,
+        @Query("id_product") idproduct: Int
+    ) : GetProductDetailResponse
 }

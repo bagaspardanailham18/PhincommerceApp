@@ -198,4 +198,33 @@ open class EcommerceRepository @Inject constructor(private val apiService: ApiSe
             }
         }
     }
+
+    suspend fun getProductDetail(accessToken: String, idProduct: Int) : LiveData<Result<GetProductDetailResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.getProductDetail(API_KEY, accessToken, idProduct)
+            emit(Result.Success(response))
+        } catch (throwable: Throwable) {
+            if (throwable is HttpException) {
+                when (throwable.code()) {
+                    401 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    404 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    500 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    else -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                }
+            } else {
+                emit(
+                    Result.Error(false, null, null)
+                )
+            }
+        }
+    }
 }

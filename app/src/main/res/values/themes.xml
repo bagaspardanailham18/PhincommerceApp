@@ -19,9 +19,23 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="circleImageView10" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">10%</item>
+    </style>
+
     <style name="RatingBar" parent="Theme.AppCompat">
         <item name="colorControlNormal">@color/light_grey</item>
         <item name="colorControlActivated">@color/black</item>
+    </style>
+
+    <style name="NoBackgroundDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@null</item>
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
 </resources>

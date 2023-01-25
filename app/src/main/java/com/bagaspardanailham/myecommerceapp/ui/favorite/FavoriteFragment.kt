@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.remote.response.GetFavoriteProductListResponse
-import com.bagaspardanailham.myecommerceapp.data.remote.response.GetProductListResponse
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentFavoriteBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.ui.home.HomeViewModel
@@ -101,14 +100,14 @@ class FavoriteFragment : Fragment() {
                             binding.shimmerProduct.stopShimmer()
                             binding.shimmerProduct.visibility = View.GONE
                             if (result.data.success?.data?.size!! > 0) {
-                                binding.tvErrorMsg.visibility = View.GONE
+                                binding.tvDataNotfound.visibility = View.GONE
                                 binding.rvProduct.visibility = View.VISIBLE
                                 binding.floatingBtnFilter.visibility = View.VISIBLE
                                 setProductRv(result.data, sort)
                             } else {
-                                binding.tvErrorMsg.visibility = View.VISIBLE
-                                binding.tvErrorMsg.text = "Data Not Found"
+                                binding.tvDataNotfound.visibility = View.VISIBLE
                                 binding.rvProduct.visibility = View.GONE
+                                binding.floatingBtnFilter.visibility = View.GONE
                             }
                         }
                         is Result.Error -> {
@@ -116,7 +115,7 @@ class FavoriteFragment : Fragment() {
                             binding.shimmerProduct.visibility = View.GONE
                             binding.rvProduct.visibility = View.GONE
                             binding.floatingBtnFilter.visibility = View.VISIBLE
-                            binding.tvErrorMsg.text = result.errorBody.toString()
+                            Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -134,13 +133,12 @@ class FavoriteFragment : Fragment() {
                             binding.shimmerProduct.stopShimmer()
                             binding.shimmerProduct.visibility = View.GONE
                             if (result.data.success?.data?.size!! > 0) {
-                                binding.tvErrorMsg.visibility = View.GONE
+                                binding.tvDataNotfound.visibility = View.GONE
                                 binding.rvProduct.visibility = View.VISIBLE
                                 binding.floatingBtnFilter.visibility = View.VISIBLE
                                 setProductRv(result.data, sort)
                             } else {
-                                binding.tvErrorMsg.text = "No Data"
-                                binding.tvErrorMsg.visibility = View.VISIBLE
+                                binding.tvDataNotfound.visibility = View.VISIBLE
                                 binding.rvProduct.visibility = View.GONE
                             }
                         }
@@ -149,7 +147,7 @@ class FavoriteFragment : Fragment() {
                             binding.shimmerProduct.visibility = View.GONE
                             binding.rvProduct.visibility = View.GONE
                             binding.floatingBtnFilter.visibility = View.GONE
-                            binding.tvErrorMsg.text = result.errorBody.toString()
+                            Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

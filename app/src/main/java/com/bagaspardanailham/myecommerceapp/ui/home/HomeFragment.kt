@@ -4,25 +4,31 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnScrollChangeListener
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentHomeBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.GetProductListResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.internal.ViewUtils.hideKeyboard
@@ -60,6 +66,7 @@ class HomeFragment : Fragment() {
         return root
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -84,6 +91,43 @@ class HomeFragment : Fragment() {
         binding.floatingBtnFilter.setOnClickListener {
             showFilterDialog()
         }
+
+        binding.rvProduct.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            private var isScrolledDown = false
+            private var isNotScrolled = false
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+
+                if (newState == RecyclerView.SCROLL_STATE_SETTLING && isScrolledDown) {
+                    if (isNotScrolled) {
+                        lifecycleScope.launch {
+                            delay(2000)
+                            binding.floatingBtnFilter.visibility = View.VISIBLE
+                        }
+                    } else {
+                        binding.floatingBtnFilter.visibility = View.GONE
+                    }
+                } else {
+                    if (isNotScrolled) {
+                        lifecycleScope.launch {
+                            delay(2000)
+                            binding.floatingBtnFilter.visibility = View.VISIBLE
+                        }
+                    } else {
+                        binding.floatingBtnFilter.visibility = View.GONE
+                    }
+                }
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                isScrolledDown = dy < 0
+                isNotScrolled = dy == 0
+            }
+        })
     }
 
     private fun setProductData(query: String?, sort: Int) {
@@ -104,14 +148,14 @@ class HomeFragment : Fragment() {
                             binding.shimmerProduct.stopShimmer()
                             binding.shimmerProduct.visibility = View.GONE
                             if (result.data.success?.data?.size!! > 0) {
-                                binding.tvErrorMsg.visibility = View.GONE
+                                binding.tvDataNotfound.visibility = View.GONE
                                 binding.rvProduct.visibility = View.VISIBLE
                                 binding.floatingBtnFilter.visibility = View.VISIBLE
                                 setProductRv(result.data, sort)
                             } else {
-                                binding.tvErrorMsg.visibility = View.VISIBLE
-                                binding.tvErrorMsg.text = "Data Not Found"
+                                binding.tvDataNotfound.visibility = View.VISIBLE
                                 binding.rvProduct.visibility = View.GONE
+                                binding.floatingBtnFilter.visibility = View.GONE
                             }
                         }
                         is Result.Error -> {
@@ -119,7 +163,7 @@ class HomeFragment : Fragment() {
                             binding.shimmerProduct.visibility = View.GONE
                             binding.rvProduct.visibility = View.GONE
                             binding.floatingBtnFilter.visibility = View.VISIBLE
-                            binding.tvErrorMsg.text = result.errorBody.toString()
+                            Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -137,13 +181,12 @@ class HomeFragment : Fragment() {
                             binding.shimmerProduct.stopShimmer()
                             binding.shimmerProduct.visibility = View.GONE
                             if (result.data.success?.data?.size!! > 0) {
-                                binding.tvErrorMsg.visibility = View.GONE
+                                binding.tvDataNotfound.visibility = View.GONE
                                 binding.rvProduct.visibility = View.VISIBLE
                                 binding.floatingBtnFilter.visibility = View.VISIBLE
                                 setProductRv(result.data, sort)
                             } else {
-                                binding.tvErrorMsg.text = "No Data"
-                                binding.tvErrorMsg.visibility = View.VISIBLE
+                                binding.tvDataNotfound.visibility = View.VISIBLE
                                 binding.rvProduct.visibility = View.GONE
                             }
                         }
@@ -152,7 +195,7 @@ class HomeFragment : Fragment() {
                             binding.shimmerProduct.visibility = View.GONE
                             binding.rvProduct.visibility = View.GONE
                             binding.floatingBtnFilter.visibility = View.GONE
-                            binding.tvErrorMsg.text = result.errorBody.toString()
+                            Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -196,6 +239,12 @@ class HomeFragment : Fragment() {
                 adapter.notifyDataSetChanged()
             }
         }
+
+        adapter.setOnItemClickCallback(object : ProductListAdapter.OnItemClickCallback {
+            override fun onItemClicked(data: ProductListItem) {
+                findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToProductDetailActivity().setIdProduct(data.id!!))
+            }
+        })
     }
 
 //    private fun showShimmer(state: Boolean) {
