@@ -73,10 +73,29 @@ interface ApiService {
         @Query("id_user") iduser: Int
     ) : GetFavoriteProductListResponse
 
-    @GET("api/ecommerce/get_detail_product?id_product=1")
+    @GET("api/ecommerce/get_detail_product")
     suspend fun getProductDetail(
         @Header("apikey") apikey: String,
         @Header("Authorization") token: String,
-        @Query("id_product") idproduct: Int
+        @Query("id_product") idproduct: Int?,
+        @Query("id_user") isuser: Int?
     ) : GetProductDetailResponse
+
+    @FormUrlEncoded
+    @POST("api/ecommerce/add_favorite")
+    suspend fun addFavoriteProduct(
+        @Header("apikey") apikey: String,
+        @Header("Authorization") token: String,
+        @Field("id_product") idproduct: Int?,
+        @Field("id_user") iduser: Int?
+    ) : AddFavoriteResponse
+
+    @FormUrlEncoded
+    @POST("api/ecommerce/remove_favorite")
+    suspend fun removeFavoriteProduct(
+        @Header("apikey") apikey: String,
+        @Header("Authorization") token: String,
+        @Field("id_product") idproduct: Int?,
+        @Field("id_user") iduser: Int?
+    ) : RemoveFavoriteResponse
 }

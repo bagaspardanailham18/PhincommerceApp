@@ -43,4 +43,5 @@
     <string name="buy_string">Beli</string>
     <string name="trolly_string">Keranjang</string>
     <string name="total">Total</string>
+    <string name="buy_now">Beli Sekarang - %1$S</string>
 </resources>

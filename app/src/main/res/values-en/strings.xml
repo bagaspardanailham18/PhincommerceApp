@@ -43,4 +43,5 @@
     <string name="buy_string">Buy</string>
     <string name="trolly_string">Trolley</string>
     <string name="total">Total</string>
+    <string name="buy_now">Buy Now - %1$S</string>
 </resources>

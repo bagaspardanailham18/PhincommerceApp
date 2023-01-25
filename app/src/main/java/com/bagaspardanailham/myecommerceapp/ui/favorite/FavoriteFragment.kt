@@ -10,10 +10,14 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.Result
+import com.bagaspardanailham.myecommerceapp.data.remote.response.FavoriteProductItem
 import com.bagaspardanailham.myecommerceapp.data.remote.response.GetFavoriteProductListResponse
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentFavoriteBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
@@ -60,6 +64,7 @@ class FavoriteFragment : Fragment() {
 
         adapter = FavoriteProductListAdapter()
         setProductData(queryString, 0)
+        setupRvWhenRefresh()
 
         binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(q: String?): Boolean {
@@ -82,72 +87,77 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun setProductData(query: String?, sort: Int) {
-        lifecycleScope.launch(Dispatchers.Main) {
-            val token = authViewModel.getUserPref().first()?.authTokenKey.toString()
-            val userId = authViewModel.getUserPref().first()?.id.toString().toInt()
-            if (query.toString().isNotEmpty()) {
-                delay(2000)
-                queryString = query.toString()
-                favoriteViewModel.getFavoriteProductList(token, query, userId).observe(viewLifecycleOwner) { result ->
-                    when (result) {
-                        is Result.Loading -> {
-                            binding.shimmerProduct.startShimmer()
-                            binding.shimmerProduct.visibility = View.VISIBLE
-                            binding.rvProduct.visibility = View.GONE
-                            binding.floatingBtnFilter.visibility = View.GONE
-                        }
-                        is Result.Success -> {
-                            binding.shimmerProduct.stopShimmer()
-                            binding.shimmerProduct.visibility = View.GONE
-                            if (result.data.success?.data?.size!! > 0) {
-                                binding.tvDataNotfound.visibility = View.GONE
-                                binding.rvProduct.visibility = View.VISIBLE
-                                binding.floatingBtnFilter.visibility = View.VISIBLE
-                                setProductRv(result.data, sort)
-                            } else {
-                                binding.tvDataNotfound.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                val token = authViewModel.getUserPref().first()?.authTokenKey.toString()
+                val userId = authViewModel.getUserPref().first()?.id.toString().toInt()
+                binding.swipeToRefresh.isRefreshing = true
+                if (query.toString().isNotEmpty()) {
+                    delay(2000)
+                    queryString = query.toString()
+                    favoriteViewModel.getFavoriteProductList(token, query, userId).observe(viewLifecycleOwner) { result ->
+                        when (result) {
+                            is Result.Loading -> {
+                                binding.shimmerProduct.startShimmer()
+                                binding.shimmerProduct.visibility = View.VISIBLE
                                 binding.rvProduct.visibility = View.GONE
                                 binding.floatingBtnFilter.visibility = View.GONE
                             }
-                        }
-                        is Result.Error -> {
-                            binding.shimmerProduct.stopShimmer()
-                            binding.shimmerProduct.visibility = View.GONE
-                            binding.rvProduct.visibility = View.GONE
-                            binding.floatingBtnFilter.visibility = View.VISIBLE
-                            Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            } else {
-                queryString = query.toString()
-                favoriteViewModel.getFavoriteProductList(token, null, userId).observe(viewLifecycleOwner) { result ->
-                    when (result) {
-                        is Result.Loading -> {
-                            binding.shimmerProduct.startShimmer()
-                            binding.shimmerProduct.visibility = View.VISIBLE
-                            binding.rvProduct.visibility = View.GONE
-                            binding.floatingBtnFilter.visibility = View.GONE
-                        }
-                        is Result.Success -> {
-                            binding.shimmerProduct.stopShimmer()
-                            binding.shimmerProduct.visibility = View.GONE
-                            if (result.data.success?.data?.size!! > 0) {
-                                binding.tvDataNotfound.visibility = View.GONE
-                                binding.rvProduct.visibility = View.VISIBLE
-                                binding.floatingBtnFilter.visibility = View.VISIBLE
-                                setProductRv(result.data, sort)
-                            } else {
-                                binding.tvDataNotfound.visibility = View.VISIBLE
+                            is Result.Success -> {
+                                binding.shimmerProduct.stopShimmer()
+                                binding.shimmerProduct.visibility = View.GONE
+                                binding.swipeToRefresh.isRefreshing = false
+                                if (result.data.success?.data?.size!! > 0) {
+                                    binding.tvDataNotfound.visibility = View.GONE
+                                    binding.rvProduct.visibility = View.VISIBLE
+                                    binding.floatingBtnFilter.visibility = View.VISIBLE
+                                    setProductRv(result.data, sort)
+                                } else {
+                                    binding.tvDataNotfound.visibility = View.VISIBLE
+                                    binding.rvProduct.visibility = View.GONE
+                                    binding.floatingBtnFilter.visibility = View.GONE
+                                }
+                            }
+                            is Result.Error -> {
+                                binding.shimmerProduct.stopShimmer()
+                                binding.shimmerProduct.visibility = View.GONE
                                 binding.rvProduct.visibility = View.GONE
+                                binding.floatingBtnFilter.visibility = View.VISIBLE
+                                Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
                             }
                         }
-                        is Result.Error -> {
-                            binding.shimmerProduct.stopShimmer()
-                            binding.shimmerProduct.visibility = View.GONE
-                            binding.rvProduct.visibility = View.GONE
-                            binding.floatingBtnFilter.visibility = View.GONE
-                            Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    queryString = query.toString()
+                    favoriteViewModel.getFavoriteProductList(token, null, userId).observe(viewLifecycleOwner) { result ->
+                        when (result) {
+                            is Result.Loading -> {
+                                binding.shimmerProduct.startShimmer()
+                                binding.shimmerProduct.visibility = View.VISIBLE
+                                binding.rvProduct.visibility = View.GONE
+                                binding.floatingBtnFilter.visibility = View.GONE
+                            }
+                            is Result.Success -> {
+                                binding.shimmerProduct.stopShimmer()
+                                binding.shimmerProduct.visibility = View.GONE
+                                binding.swipeToRefresh.isRefreshing = false
+                                if (result.data.success?.data?.size!! > 0) {
+                                    binding.tvDataNotfound.visibility = View.GONE
+                                    binding.rvProduct.visibility = View.VISIBLE
+                                    binding.floatingBtnFilter.visibility = View.VISIBLE
+                                    setProductRv(result.data, sort)
+                                } else {
+                                    binding.tvDataNotfound.visibility = View.VISIBLE
+                                    binding.rvProduct.visibility = View.GONE
+                                }
+                            }
+                            is Result.Error -> {
+                                binding.shimmerProduct.stopShimmer()
+                                binding.shimmerProduct.visibility = View.GONE
+                                binding.rvProduct.visibility = View.GONE
+                                binding.floatingBtnFilter.visibility = View.GONE
+                                Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }
@@ -191,6 +201,13 @@ class FavoriteFragment : Fragment() {
                 adapter.notifyDataSetChanged()
             }
         }
+
+        adapter.setOnItemClickCallback(object : FavoriteProductListAdapter.OnItemClickCallback {
+            override fun onItemClicked(data: FavoriteProductItem) {
+                findNavController().navigate(FavoriteFragmentDirections.actionNavigationFavoriteToProductDetailActivity().setIdProduct(data.id!!))
+            }
+
+        })
     }
 
     private fun showFilterDialog() {
@@ -214,6 +231,12 @@ class FavoriteFragment : Fragment() {
                 dialog.dismiss()
             }
             .show()
+    }
+
+    private fun setupRvWhenRefresh() {
+        binding.swipeToRefresh.setOnRefreshListener {
+            setProductData("", 0)
+        }
     }
 
     override fun onDestroyView() {

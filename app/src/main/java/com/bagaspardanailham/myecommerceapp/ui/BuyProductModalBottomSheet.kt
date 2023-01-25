@@ -61,14 +61,26 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?): Botto
 
         viewModel.quantity.observe(requireActivity()) {
             binding?.tvQuantity?.text = it.toString()
+            if (it < product?.stock!!) {
+                binding?.btnIncreaseQuantity?.background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_rounded_black)
+            }
             if (it == product?.stock) {
                 binding?.btnIncreaseQuantity?.background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_rounded_lightgrey)
+                binding?.btnDecreaseQuantity?.background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_rounded_black)
+            }
+            if (it > 1) {
                 binding?.btnDecreaseQuantity?.background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_rounded_black)
             }
             if (it == 1) {
                 binding?.btnIncreaseQuantity?.background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_rounded_black)
                 binding?.btnDecreaseQuantity?.background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_rounded_lightgrey)
             }
+        }
+
+        viewModel.setPrice(product?.harga!!.toInt())
+
+        viewModel.price.observe(requireActivity()) {
+            binding?.btnBuy?.text = String.format(resources.getString(R.string.buy_now), dec.format(it).toString())
         }
     }
 

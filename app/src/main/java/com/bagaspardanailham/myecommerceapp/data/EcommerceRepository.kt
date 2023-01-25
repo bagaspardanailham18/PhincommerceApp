@@ -199,12 +199,70 @@ open class EcommerceRepository @Inject constructor(private val apiService: ApiSe
         }
     }
 
-    suspend fun getProductDetail(accessToken: String, idProduct: Int) : LiveData<Result<GetProductDetailResponse>> = liveData {
+    suspend fun getProductDetail(accessToken: String, idProduct: Int?, idUser: Int?) : LiveData<Result<GetProductDetailResponse>> = liveData {
         emit(Result.Loading)
         try {
-            val response = apiService.getProductDetail(API_KEY, accessToken, idProduct)
+            val response = apiService.getProductDetail(API_KEY, accessToken, idProduct, idUser)
             emit(Result.Success(response))
         } catch (throwable: Throwable) {
+            if (throwable is HttpException) {
+                when (throwable.code()) {
+                    401 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    404 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    500 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    else -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                }
+            } else {
+                emit(
+                    Result.Error(false, null, null)
+                )
+            }
+        }
+    }
+
+    suspend fun addProductToFavorite(accessToken: String, idProduct: Int?, idUser: Int?): LiveData<Result<AddFavoriteResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.addFavoriteProduct(API_KEY, accessToken, idProduct, idUser)
+            emit(Result.Success(response))
+        } catch (throwable : Throwable) {
+            if (throwable is HttpException) {
+                when (throwable.code()) {
+                    401 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    404 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    500 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    else -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                }
+            } else {
+                emit(
+                    Result.Error(false, null, null)
+                )
+            }
+        }
+    }
+
+    suspend fun removeProductFromFavorite(accessToken: String, idProduct: Int?, idUser: Int?): LiveData<Result<RemoveFavoriteResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.removeFavoriteProduct(API_KEY, accessToken, idProduct, idUser)
+            emit(Result.Success(response))
+        } catch (throwable : Throwable) {
             if (throwable is HttpException) {
                 when (throwable.code()) {
                     401 -> emit(

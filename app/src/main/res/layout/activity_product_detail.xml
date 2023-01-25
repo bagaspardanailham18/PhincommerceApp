@@ -49,25 +49,51 @@
             android:layout_height="wrap_content"
             android:paddingBottom="50dp">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/tv_img_carousel"
+<!--            <com.google.android.material.card.MaterialCardView-->
+<!--                android:id="@+id/tv_img_carousel"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="194dp"-->
+<!--                android:layout_marginStart="18dp"-->
+<!--                android:layout_marginTop="28dp"-->
+<!--                android:layout_marginEnd="18dp"-->
+<!--                app:cardBackgroundColor="@color/background"-->
+<!--                app:cardCornerRadius="10dp"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent">-->
+
+<!--            </com.google.android.material.card.MaterialCardView>-->
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/img_slider_viewpager"
                 android:layout_width="0dp"
-                android:layout_height="194dp"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="28dp"
-                android:layout_marginEnd="18dp"
-                app:cardBackgroundColor="@color/background"
-                app:cardCornerRadius="10dp"
+                android:layout_height="220dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                android:id="@+id/dots_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:dotsColor="@color/lighter_grey"
+                app:dotsCornerRadius="8dp"
+                app:dotsSize="8dp"
+                app:dotsSpacing="4dp"
+                app:dotsWidthFactor="2.5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/img_slider_viewpager"
+                app:progressMode="true"
+                app:selectedDotColor="@color/background" />
 
             <TextView
                 android:id="@+id/tv_product_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginEnd="8dp"
                 android:maxLines="4"
                 android:fontFamily="@font/poppinsregular"
@@ -76,7 +102,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/tv_product_price"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_img_carousel"
+                app:layout_constraintTop_toBottomOf="@+id/dots_indicator"
                 tools:text="Jam Tangan" />
 
             <TextView

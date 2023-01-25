@@ -11,12 +11,19 @@ import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.remote.response.FavoriteProductItem
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
 import com.bagaspardanailham.myecommerceapp.databinding.ItemRowProductBinding
+import com.bagaspardanailham.myecommerceapp.ui.home.ProductListAdapter
 import com.bumptech.glide.Glide
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 class FavoriteProductListAdapter: ListAdapter<FavoriteProductItem, FavoriteProductListAdapter.FavoriteProductListVH>(DIFF_CALLBACK) {
+
+    private lateinit var onItemClickCallback: OnItemClickCallback
+
+    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteProductListVH {
         val binding = ItemRowProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -44,6 +51,10 @@ class FavoriteProductListAdapter: ListAdapter<FavoriteProductItem, FavoriteProdu
                 tvItemPrice.text = String.format(itemView.resources.getString(R.string.currency_code), dec.format(data.harga?.toInt()).toString())
                 tvItemRating.rating = data.rate?.toFloat()!!
                 tvItemDate.text = formattingDate(data.date)
+
+                itemView.setOnClickListener {
+                    onItemClickCallback.onItemClicked(data)
+                }
             }
         }
     }
@@ -54,6 +65,10 @@ class FavoriteProductListAdapter: ListAdapter<FavoriteProductItem, FavoriteProdu
         val inputDate = format.parse(date.toString())
         val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale("in", "ID"))
         return dateFormat.format(inputDate as Date)
+    }
+
+    interface OnItemClickCallback {
+        fun onItemClicked(data: FavoriteProductItem)
     }
 
     companion object {

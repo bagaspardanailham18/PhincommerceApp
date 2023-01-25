@@ -65,5 +65,8 @@ data class ProductDetailItem(
 	val type: String? = null,
 
 	@field:SerializedName("desc")
-	val desc: String? = null
+	val desc: String? = null,
+
+	@field:SerializedName("isFavorite")
+	val isFavorite: Boolean
 )
