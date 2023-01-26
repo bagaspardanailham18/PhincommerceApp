@@ -44,4 +44,7 @@
     <string name="total">Total</string>
     <string name="buy_now">Buy Now - %1$S</string>
     <string name="menu_share">Share</string>
+    <string name="order_is_successfull">Your Order Is Successfull</string>
+    <string name="give_your_rating">Give Your Rating</string>
+    <string name="submit_string">Submit</string>
 </resources>

@@ -2,20 +2,17 @@ package com.bagaspardanailham.myecommerceapp.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 
-data class ChangeImageResponse(
+data class UpdateRateResponse(
 
 	@field:SerializedName("success")
-	val success: ChangeImageSuccess
+	val success: UpdateRateSuccess? = null
 )
 
-data class ChangeImageSuccess(
-
-	@field:SerializedName("path")
-	val path: String,
+data class UpdateRateSuccess(
 
 	@field:SerializedName("message")
-	val message: String,
+	val message: String? = null,
 
 	@field:SerializedName("status")
-	val status: Int
+	val status: Int? = null
 )

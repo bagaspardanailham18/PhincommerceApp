@@ -285,4 +285,62 @@ open class EcommerceRepository @Inject constructor(private val apiService: ApiSe
             }
         }
     }
+
+    suspend fun updateStock(accessToken: String, data: DataStock): LiveData<Result<UpdateStockResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.updateStock(API_KEY, accessToken, data)
+            emit(Result.Success(response))
+        } catch (throwable : Throwable) {
+            if (throwable is HttpException) {
+                when (throwable.code()) {
+                    401 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    404 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    500 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    else -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                }
+            } else {
+                emit(
+                    Result.Error(false, null, null)
+                )
+            }
+        }
+    }
+
+    suspend fun updateRate(accessToken: String, idProduct: Int?, rate: String): LiveData<Result<UpdateRateResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.updateRate(API_KEY, accessToken, idProduct, rate)
+            emit(Result.Success(response))
+        } catch (throwable: Throwable) {
+            if (throwable is HttpException) {
+                when (throwable.code()) {
+                    401 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    404 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    500 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                    else -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                    )
+                }
+            } else {
+                emit(
+                    Result.Error(false, null, null)
+                )
+            }
+        }
+    }
 }

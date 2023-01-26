@@ -3,10 +3,15 @@ package com.bagaspardanailham.myecommerceapp.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.bagaspardanailham.myecommerceapp.data.DataStock
+import com.bagaspardanailham.myecommerceapp.data.DataStockItem
+import com.bagaspardanailham.myecommerceapp.data.EcommerceRepository
 import com.bumptech.glide.Glide.init
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class BuyProductModalBottomSheetVM : ViewModel() {
+@HiltViewModel
+class BuyProductModalBottomSheetVM @Inject constructor(val repository: EcommerceRepository) : ViewModel() {
 
     private var _quantity = MutableLiveData<Int>()
     val quantity: LiveData<Int> = _quantity
@@ -41,5 +46,8 @@ class BuyProductModalBottomSheetVM : ViewModel() {
         initPrice = productPrice
         _price.value = productPrice
     }
+
+    suspend fun updateStock(accessToken: String, idProduct: String, stock: Int?) = repository.updateStock(accessToken, DataStock(
+        listOf(DataStockItem(idProduct, stock))))
 
 }

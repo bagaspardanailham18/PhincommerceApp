@@ -1,5 +1,6 @@
 package com.bagaspardanailham.myecommerceapp.data.remote
 
+import com.bagaspardanailham.myecommerceapp.data.DataStock
 import com.bagaspardanailham.myecommerceapp.data.remote.response.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -98,4 +99,20 @@ interface ApiService {
         @Field("id_product") idproduct: Int?,
         @Field("id_user") iduser: Int?
     ) : RemoveFavoriteResponse
+
+    @POST("api/ecommerce/update-stock")
+    suspend fun updateStock(
+        @Header("apikey") apikey: String,
+        @Header("Authorization") token: String,
+        @Body dataStock: DataStock
+    ) : UpdateStockResponse
+
+    @FormUrlEncoded
+    @PUT("api/ecommerce/update_rate/{id_product}")
+    suspend fun updateRate(
+        @Header("apikey") apikey: String,
+        @Header("Authorization") token: String,
+        @Path("id_product") idproduct: Int?,
+        @Field("rate") rate: String
+    ) : UpdateRateResponse
 }
