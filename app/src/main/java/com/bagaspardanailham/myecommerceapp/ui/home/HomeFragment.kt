@@ -92,6 +92,8 @@ class HomeFragment : Fragment() {
             showFilterDialog()
         }
 
+        showFabFilterState(false)
+
         binding.rvProduct.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             private var isScrolledDown = false
@@ -104,19 +106,19 @@ class HomeFragment : Fragment() {
                     if (isNotScrolled) {
                         lifecycleScope.launch {
                             delay(2000)
-                            binding.floatingBtnFilter.visibility = View.VISIBLE
+                            showFabFilterState(true)
                         }
                     } else {
-                        binding.floatingBtnFilter.visibility = View.GONE
+                        showFabFilterState(false)
                     }
                 } else {
                     if (isNotScrolled) {
                         lifecycleScope.launch {
                             delay(2000)
-                            binding.floatingBtnFilter.visibility = View.VISIBLE
+                            showFabFilterState(true)
                         }
                     } else {
-                        binding.floatingBtnFilter.visibility = View.GONE
+                        showFabFilterState(false)
                     }
                 }
             }
@@ -124,8 +126,19 @@ class HomeFragment : Fragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                isScrolledDown = dy < 0
-                isNotScrolled = dy == 0
+                if (dy <= 0) {
+                    lifecycleScope.launch {
+                        delay(2000)
+                        showFabFilterState(true)
+                    }
+                }
+
+                if (dy >= 0) {
+                    lifecycleScope.launch {
+                        delay(2000)
+                        showFabFilterState(true)
+                    }
+                }
             }
         })
     }
@@ -311,6 +324,14 @@ class HomeFragment : Fragment() {
                 dialog.dismiss()
             }
             .show()
+    }
+
+    private fun showFabFilterState(state: Boolean) {
+        if (state) {
+            binding.floatingBtnFilter.visibility = View.VISIBLE
+        } else  {
+            binding.floatingBtnFilter.visibility = View.GONE
+        }
     }
 
     private fun hideKeyboard(activity: Activity) {

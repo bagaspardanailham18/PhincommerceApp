@@ -75,11 +75,13 @@ class ProductDetailActivity : AppCompatActivity() {
                         is Result.Loading -> {
                             shimmerProductDetail.startShimmer()
                             shimmerProductDetail.visibility = View.VISIBLE
+                            scrollView.visibility = View.GONE
                             bottomAppBarLayout.visibility = View.GONE
                         }
                         is Result.Success -> {
                             shimmerProductDetail.stopShimmer()
                             shimmerProductDetail.visibility = View.GONE
+                            scrollView.visibility = View.VISIBLE
                             bottomAppBarLayout.visibility = View.VISIBLE
                             populateData(result.data.success?.data)
                             setAction(result.data.success?.data)
@@ -170,5 +172,10 @@ class ProductDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
     }
 }
