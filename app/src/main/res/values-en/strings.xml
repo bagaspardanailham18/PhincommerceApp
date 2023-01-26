@@ -44,4 +44,14 @@
     <string name="trolly_string">Trolley</string>
     <string name="total">Total</string>
     <string name="buy_now">Buy Now - %1$S</string>
+    <string name="menu_share">Share</string>
+    <string name="order_is_successfull">Your Order Is Successfull</string>
+    <string name="give_your_rating">Give Your Rating</string>
+    <string name="submit_string">Submit</string>
+    <string name="success_add_product_to_trolly">Added To Trolley</string>
+    <string name="success_remove_product_from_trolly">Removed From Trolley</string>
+    <string name="failed_add_product_to_trolly">Not Enough Stock</string>
+    <string name="product_is_already_exist_in_trolly">This Product Is Already Exist In Trolly</string>
+    <string name="select_all_string">Select All</string>
+    <string name="trolley_string">Trolley</string>
 </resources>

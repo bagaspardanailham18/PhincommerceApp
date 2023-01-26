@@ -1,19 +1,17 @@
 package com.bagaspardanailham.myecommerceapp.data
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import com.bagaspardanailham.myecommerceapp.R
+import com.bagaspardanailham.myecommerceapp.data.local.EcommerceDatabase
 import com.bagaspardanailham.myecommerceapp.data.remote.ApiService
 import javax.inject.Inject
 import javax.inject.Singleton
 import com.bagaspardanailham.myecommerceapp.data.local.PreferenceDataStore
+import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 import com.bagaspardanailham.myecommerceapp.data.remote.response.*
-import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.json.JSONObject
@@ -23,7 +21,7 @@ import retrofit2.HttpException
 import retrofit2.Response
 
 @Singleton
-open class EcommerceRepository @Inject constructor(private val apiService: ApiService) {
+open class EcommerceRepository @Inject constructor(private val apiService: ApiService, private val ecommerceDatabase: EcommerceDatabase) {
 
     companion object {
         const val API_KEY = "TuIBt77u7tZHi8n7WqUC"
@@ -341,6 +339,47 @@ open class EcommerceRepository @Inject constructor(private val apiService: ApiSe
                     Result.Error(false, null, null)
                 )
             }
+        }
+    }
+
+    // Call Room Database
+
+    suspend fun addProductToTrolly(context: Context, dataProduct: TrolleyEntity): LiveData<RoomResult<String>> = liveData {
+        emit(RoomResult.Loading)
+        try {
+            ecommerceDatabase.ecommerceDao().addProductToTrolley(dataProduct)
+            emit(RoomResult.Success(context.resources.getString(R.string.success_add_product_to_trolly)))
+        } catch (e: Exception) {
+            emit(RoomResult.Error(context.resources.getString(R.string.failed_add_product_to_trolly)))
+        }
+    }
+
+    fun getAllProductFromTrolly(): LiveData<List<TrolleyEntity>> {
+        return ecommerceDatabase.ecommerceDao().getAllProduct()
+    }
+
+    fun getProductById(id: Int?): LiveData<List<TrolleyEntity>> {
+        return ecommerceDatabase.ecommerceDao().getProductById(id)
+    }
+
+    suspend fun updateProductQuantity(context: Context, id: Int?, quantity: Int?): LiveData<RoomResult<String>> = liveData {
+        emit(RoomResult.Loading)
+        try {
+            ecommerceDatabase.ecommerceDao().updateProductQuantity(quantity, id)
+            emit(RoomResult.Success(""))
+        } catch (e: Exception) {
+            emit(RoomResult.Error(""))
+        }
+    }
+
+    suspend fun removeProductFromTrolly(context: Context, id: Int?, name: String?, price: String?, image: String?, quantity: Int?): LiveData<RoomResult<String>> = liveData {
+        emit(RoomResult.Loading)
+        try {
+            ecommerceDatabase.ecommerceDao()
+                .deleteProductFromTrolly(TrolleyEntity(image, name, quantity, price, id))
+            emit(RoomResult.Success(context.resources.getString(R.string.success_remove_product_from_trolly)))
+        } catch (e: Exception) {
+            emit(RoomResult.Error(e.message.toString()))
         }
     }
 }

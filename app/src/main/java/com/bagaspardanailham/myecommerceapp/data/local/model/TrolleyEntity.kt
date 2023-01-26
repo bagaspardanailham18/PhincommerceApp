@@ -9,13 +9,16 @@ import com.google.gson.annotations.SerializedName
 @Entity(tableName = "trolley")
 data class TrolleyEntity(
     @ColumnInfo(name = "image")
-    val image: String? = null,
+    val image: String?,
 
     @ColumnInfo(name = "name_product")
-    val nameProduct: String? = null,
+    val nameProduct: String?,
+
+    @ColumnInfo(name = "quantity")
+    val quantity: Int? = 1,
 
     @ColumnInfo(name = "harga")
-    val harga: String? = null,
+    val harga: String?,
 
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "id")

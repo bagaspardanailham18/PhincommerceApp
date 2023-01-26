@@ -136,7 +136,7 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?): Botto
                             val gson = Gson()
                             val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
                             val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
-                            Toast.makeText(requireActivity(), errorResponse.error.toString(), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireActivity(), errorResponse.error?.message.toString(), Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

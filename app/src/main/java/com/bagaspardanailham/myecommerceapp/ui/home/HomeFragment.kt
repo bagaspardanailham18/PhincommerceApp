@@ -72,6 +72,7 @@ class HomeFragment : Fragment() {
 
         adapter = ProductListAdapter()
         setProductData(queryString, 0)
+        setupRvWhenRefresh()
 
         binding.searchBar.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(q: String?): Boolean {
@@ -160,6 +161,7 @@ class HomeFragment : Fragment() {
                         is Result.Success -> {
                             binding.shimmerProduct.stopShimmer()
                             binding.shimmerProduct.visibility = View.GONE
+                            binding.swipeToRefresh.isRefreshing = false
                             if (result.data.success?.data?.size!! > 0) {
                                 binding.tvDataNotfound.visibility = View.GONE
                                 binding.rvProduct.visibility = View.VISIBLE
@@ -174,6 +176,7 @@ class HomeFragment : Fragment() {
                         is Result.Error -> {
                             binding.shimmerProduct.stopShimmer()
                             binding.shimmerProduct.visibility = View.GONE
+                            binding.swipeToRefresh.isRefreshing = false
                             binding.rvProduct.visibility = View.GONE
                             binding.floatingBtnFilter.visibility = View.VISIBLE
                             Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
@@ -193,6 +196,7 @@ class HomeFragment : Fragment() {
                         is Result.Success -> {
                             binding.shimmerProduct.stopShimmer()
                             binding.shimmerProduct.visibility = View.GONE
+                            binding.swipeToRefresh.isRefreshing = false
                             if (result.data.success?.data?.size!! > 0) {
                                 binding.tvDataNotfound.visibility = View.GONE
                                 binding.rvProduct.visibility = View.VISIBLE
@@ -206,6 +210,7 @@ class HomeFragment : Fragment() {
                         is Result.Error -> {
                             binding.shimmerProduct.stopShimmer()
                             binding.shimmerProduct.visibility = View.GONE
+                            binding.swipeToRefresh.isRefreshing = false
                             binding.rvProduct.visibility = View.GONE
                             binding.floatingBtnFilter.visibility = View.GONE
                             Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
@@ -338,6 +343,12 @@ class HomeFragment : Fragment() {
         val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         imm.hideSoftInputFromWindow(activity.currentFocus?.windowToken, 0)
+    }
+
+    private fun setupRvWhenRefresh() {
+        binding.swipeToRefresh.setOnRefreshListener {
+            setProductData("", 0)
+        }
     }
 
     override fun onDestroyView() {

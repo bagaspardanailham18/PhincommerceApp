@@ -12,6 +12,8 @@ import androidx.navigation.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.Result
+import com.bagaspardanailham.myecommerceapp.data.RoomResult
+import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductDetailItem
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityProductDetailBinding
 import com.bagaspardanailham.myecommerceapp.ui.BuyProductModalBottomSheet
@@ -125,6 +127,17 @@ class ProductDetailActivity : AppCompatActivity() {
                 addProductToFavorite()
             }
         }
+        binding.btnTrolly.setOnClickListener {
+            lifecycleScope.launch {
+                productDetailViewModel.getProductById(product?.id).observe(this@ProductDetailActivity) { result ->
+                    if (result.isNotEmpty() || result.size > 0) {
+                        Toast.makeText(this@ProductDetailActivity, resources.getString(R.string.product_is_already_exist_in_trolly), Toast.LENGTH_SHORT).show()
+                    } else {
+                        addProductToTrolly(product)
+                    }
+                }
+            }
+        }
         binding.btnBuy.setOnClickListener {
             val buyProductBottomSheet = BuyProductModalBottomSheet(product)
             buyProductBottomSheet.show(supportFragmentManager, ProductDetailActivity::class.java.simpleName)
@@ -164,6 +177,37 @@ class ProductDetailActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun addProductToTrolly(product: ProductDetailItem?) {
+        if (product?.stock!! > 1) {
+            lifecycleScope.launch {
+                productDetailViewModel.addProductToTrolley(
+                    this@ProductDetailActivity,
+                    TrolleyEntity(
+                        product.image,
+                        product.nameProduct,
+                        1,
+                        product.harga,
+                        product.id
+                    )
+                ).observe(this@ProductDetailActivity) { result ->
+                    when (result) {
+                        is RoomResult.Loading -> {
+
+                        }
+                        is RoomResult.Success -> {
+                            Toast.makeText(this@ProductDetailActivity, result.data, Toast.LENGTH_SHORT).show()
+                        }
+                        is RoomResult.Error -> {
+                            Toast.makeText(this@ProductDetailActivity, result.message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+        } else {
+            Toast.makeText(this, resources.getString(R.string.failed_add_product_to_trolly), Toast.LENGTH_SHORT).show()
         }
     }
 

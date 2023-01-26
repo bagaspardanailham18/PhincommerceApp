@@ -1,7 +1,9 @@
 package com.bagaspardanailham.myecommerceapp.ui.detail
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.bagaspardanailham.myecommerceapp.data.EcommerceRepository
+import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -14,4 +16,7 @@ class ProductDetailViewModel @Inject constructor(private val repository: Ecommer
 
     suspend fun removeProductFromFavorite(accessToken: String, idProduct: Int?, idUser: Int?) = repository.removeProductFromFavorite(accessToken, idProduct, idUser)
 
+    suspend fun addProductToTrolley(context: Context, dataProduct: TrolleyEntity) = repository.addProductToTrolly(context, dataProduct)
+
+    fun getProductById(idProduct: Int?) = repository.getProductById(idProduct)
 }
