@@ -372,11 +372,11 @@ open class EcommerceRepository @Inject constructor(private val apiService: ApiSe
         }
     }
 
-    suspend fun removeProductFromTrolly(context: Context, id: Int?, name: String?, price: String?, image: String?, quantity: Int?): LiveData<RoomResult<String>> = liveData {
+    fun removeProductFromTrolly(context: Context, data: TrolleyEntity): LiveData<RoomResult<String>> = liveData {
         emit(RoomResult.Loading)
         try {
             ecommerceDatabase.ecommerceDao()
-                .deleteProductFromTrolly(TrolleyEntity(image, name, quantity, price, id))
+                .deleteProductFromTrolly(data)
             emit(RoomResult.Success(context.resources.getString(R.string.success_remove_product_from_trolly)))
         } catch (e: Exception) {
             emit(RoomResult.Error(e.message.toString()))
