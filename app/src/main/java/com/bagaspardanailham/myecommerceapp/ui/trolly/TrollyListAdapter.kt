@@ -5,11 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityTrollyBinding
 import com.bagaspardanailham.myecommerceapp.databinding.ItemRowTrollyBinding
 import com.bumptech.glide.Glide
+import java.text.DecimalFormat
 
 class TrollyListAdapter: ListAdapter<TrolleyEntity, TrollyListAdapter.TrollyListVH>(DIFF_CALLBACK) {
 
@@ -26,12 +28,14 @@ class TrollyListAdapter: ListAdapter<TrolleyEntity, TrollyListAdapter.TrollyList
     inner class TrollyListVH(val binding: ItemRowTrollyBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: TrolleyEntity) {
             with(binding) {
+                val dec = DecimalFormat("#,###.##")
+
                 Glide.with(itemView.context)
                     .load(data.image)
                     .into(tvItemImg)
 
                 tvItemName.text = data.nameProduct.toString()
-                tvItemPrice.text = data.harga.toString()
+                tvItemPrice.text = String.format(itemView.resources.getString(R.string.currency_code), dec.format(data.harga?.toInt()).toString())
                 tvItemQuantity.text = data.quantity.toString()
             }
         }

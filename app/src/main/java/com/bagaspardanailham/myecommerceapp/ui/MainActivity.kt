@@ -17,6 +17,7 @@ import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityMainBinding
 import com.bagaspardanailham.myecommerceapp.ui.profile.ProfileViewModel
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyActivity
+import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyViewModel
 import com.google.android.material.badge.BadgeDrawable
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel by viewModels<ProfileViewModel>()
+    private val trollyViewModel by viewModels<TrollyViewModel>()
 
     private var pendingCart: Int? = 12
     private lateinit var badgeCounter: TextView
@@ -47,11 +49,27 @@ class MainActivity : AppCompatActivity() {
 
         setLocale()
         setAction()
+        setBadgeCounter()
     }
 
     private fun setAction() {
         binding.menuCart.setOnClickListener {
             startActivity(Intent(this, TrollyActivity::class.java))
+        }
+    }
+
+    private fun setBadgeCounter() {
+        lifecycleScope.launch {
+            trollyViewModel.getAllProductFromTrolly().observe(this@MainActivity) { result ->
+                with(binding) {
+                    if (result.isNotEmpty()) {
+                        badgeCounter.visibility = View.VISIBLE
+                        tvCartSize.text = result.size.toString()
+                    } else {
+                        badgeCounter.visibility = View.GONE
+                    }
+                }
+            }
         }
     }
 
