@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.accessibility.AccessibilityEventCompat.setAction
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -45,6 +46,13 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         setLocale()
+        setAction()
+    }
+
+    private fun setAction() {
+        binding.menuCart.setOnClickListener {
+            startActivity(Intent(this, TrollyActivity::class.java))
+        }
     }
 
     private fun setLocale() {
@@ -75,41 +83,40 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("UnsafeOptInUsageError")
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-
-        val menuItem = menu?.findItem(R.id.menu_cart)
-
-        if (pendingCart == 0) {
-            menuItem?.actionView = null
-        } else {
-            menuItem?.setActionView(R.layout.cart_badge)
-            val view: View = menuItem!!.actionView
-            badgeCounter = view.findViewById(R.id.badge_counter)
-            badgeCounter.text = pendingCart.toString()
-        }
-
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_cart -> {
-
-                startActivity(Intent(this, TrollyActivity::class.java))
-
+//    @SuppressLint("UnsafeOptInUsageError")
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.main_menu, menu)
+//
+//        val menuItem = menu?.findItem(R.id.menu_cart)
+//
+//        if (pendingCart == 0) {
+//            menuItem?.actionView = null
+//        } else {
+//            menuItem?.setActionView(R.layout.cart_badge)
+//            val view: View = menuItem!!.actionView
+//            badgeCounter = view.findViewById(R.id.badge_counter)
+//            badgeCounter.text = pendingCart.toString()
+//        }
+//
+//        return super.onCreateOptionsMenu(menu)
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        when (item.itemId) {
+//            R.id.menu_cart -> {
+//                startActivity(Intent(this, TrollyActivity::class.java))
+//
 //                val badgeDrawable = binding.navView.getBadge(R.id.menu_chart)
 //                if (badgeDrawable != null) {
 //                    badgeDrawable.isVisible = false
 //                    badgeDrawable.clearNumber()
 //                }
-
-                //binding.navView.removeBadge(R.id.menu_chart)
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
+//
+//                binding.navView.removeBadge(R.id.menu_chart)
+//            }
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 
     private fun setupWindow() {
         setSupportActionBar(binding.customToolbar)

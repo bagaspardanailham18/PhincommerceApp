@@ -1,7 +1,9 @@
 package com.bagaspardanailham.myecommerceapp.ui.detail
 
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -44,8 +46,18 @@ class ProductDetailActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             accessToken = authViewModel.getUserPref().first()?.authTokenKey.toString()
-            productId = args.idProduct
+            //productId = args.idProduct
+            productId = intent.getIntExtra(EXTRA_ID, 0)
+            Log.d("productid", "ProductId : $productId")
             userId = authViewModel.getUserPref().first()?.id.toString().toInt()
+        }
+
+        if (productId == 0) {
+            val data: Uri? = intent.data
+            val id = data?.getQueryParameter("id")
+            if (id != null) {
+                productId = id.toInt()
+            }
         }
 
         setCustomToolbar()
@@ -221,5 +233,9 @@ class ProductDetailActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressedDispatcher.onBackPressed()
         return true
+    }
+
+    companion object {
+        const val EXTRA_ID = "extra_id"
     }
 }

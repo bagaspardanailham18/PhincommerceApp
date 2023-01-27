@@ -1,6 +1,7 @@
 package com.bagaspardanailham.myecommerceapp.ui.favorite
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,7 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.FavoriteProduct
 import com.bagaspardanailham.myecommerceapp.data.remote.response.GetFavoriteProductListResponse
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentFavoriteBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
+import com.bagaspardanailham.myecommerceapp.ui.detail.ProductDetailActivity
 import com.bagaspardanailham.myecommerceapp.ui.home.HomeViewModel
 import com.bagaspardanailham.myecommerceapp.ui.home.ProductListAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -204,7 +206,11 @@ class FavoriteFragment : Fragment() {
 
         adapter.setOnItemClickCallback(object : FavoriteProductListAdapter.OnItemClickCallback {
             override fun onItemClicked(data: FavoriteProductItem) {
-                findNavController().navigate(FavoriteFragmentDirections.actionNavigationFavoriteToProductDetailActivity().setIdProduct(data.id!!))
+                val intent = Intent(requireActivity(), ProductDetailActivity::class.java)
+                intent.putExtra(ProductDetailActivity.EXTRA_ID, data.id)
+                Toast.makeText(requireActivity(), data.id.toString(), Toast.LENGTH_SHORT).show()
+                startActivity(intent)
+                //findNavController().navigate(FavoriteFragmentDirections.actionNavigationFavoriteToProductDetailActivity().setIdProduct(data.id!!))
             }
 
         })

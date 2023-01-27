@@ -40,4 +40,5 @@
             app:argType="integer"
             android:defaultValue="0" />
     </activity>
+
 </navigation>

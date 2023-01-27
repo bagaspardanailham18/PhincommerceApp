@@ -48,10 +48,24 @@
         </activity>
         <activity
             android:name=".ui.detail.ProductDetailActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https"
+                    android:host="bagascommerce.com"
+                    android:pathPrefix="/product-detail" />
+                <data android:scheme="app" android:host="www.bagascommerce.com" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                    android:host="bagascommerce.com" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.CameraActivity"

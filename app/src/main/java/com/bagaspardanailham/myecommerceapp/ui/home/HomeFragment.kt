@@ -30,6 +30,7 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.GetProductListResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthActivity
+import com.bagaspardanailham.myecommerceapp.ui.detail.ProductDetailActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.google.gson.Gson
@@ -260,7 +261,11 @@ class HomeFragment : Fragment() {
 
         adapter.setOnItemClickCallback(object : ProductListAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ProductListItem) {
-                findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToProductDetailActivity().setIdProduct(data.id!!))
+                val intent = Intent(requireActivity(), ProductDetailActivity::class.java)
+                intent.putExtra(ProductDetailActivity.EXTRA_ID, data.id)
+                Toast.makeText(requireActivity(), data.id.toString(), Toast.LENGTH_SHORT).show()
+                startActivity(intent)
+                //findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToProductDetailActivity().setIdProduct(data.id!!))
             }
         })
     }
