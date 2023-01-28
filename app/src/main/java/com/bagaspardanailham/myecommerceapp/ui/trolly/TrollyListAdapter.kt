@@ -1,10 +1,14 @@
 package com.bagaspardanailham.myecommerceapp.ui.trolly
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.CompoundButton.OnCheckedChangeListener
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
@@ -16,21 +20,21 @@ import com.bagaspardanailham.myecommerceapp.databinding.ItemRowTrollyBinding
 import com.bumptech.glide.Glide
 import java.text.DecimalFormat
 
-class TrollyListAdapter: ListAdapter<TrolleyEntity, TrollyListAdapter.TrollyListVH>(DIFF_CALLBACK) {
+class TrollyListAdapter(
+    private val context: Context,
+    private val onAddQuantity: (TrolleyEntity) -> Unit,
+    private val onMinQuantity: (TrolleyEntity) -> Unit,
+    private val onCheckboxChecked: (TrolleyEntity) -> Unit
+    ): ListAdapter<TrolleyEntity, TrollyListAdapter.TrollyListVH>(DIFF_CALLBACK) {
 
     var isCheckedAll: Boolean = false
 
-    var quantity: Int = 1
+    private var masterTotalPrice = 0
 
     private lateinit var onItemClickCallback: OnItemClickCallback
-    private lateinit var onGetStockCallback: OnGetStockCallback
 
     fun setOnDeleteItemClickCallback(onItemClickCallback: OnItemClickCallback) {
         this.onItemClickCallback = onItemClickCallback
-    }
-
-    fun setOnGetStockCallback(onGetStockCallback: OnGetStockCallback) {
-        this.onGetStockCallback = onGetStockCallback
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrollyListVH {
@@ -42,66 +46,79 @@ class TrollyListAdapter: ListAdapter<TrolleyEntity, TrollyListAdapter.TrollyList
         val item = getItem(position)
         holder.bind(item)
 
-        if (isCheckedAll) {
-            holder.binding.cbSelectItem.isChecked = true
-        } else {
-            holder.binding.cbSelectItem.isChecked = false
-        }
-
 //        holder.binding.cbSelectItem.setOnCheckedChangeListener(object : OnCheckedChangeListener {
 //            override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
 //                TODO("Not yet implemented")
 //            }
 //        })
 
-        val getStock = onGetStockCallback.onGetStock(item.id)
+        with(holder.binding) {
+//            if (isCheckedAll) {
+//                cbSelectItem.isChecked = true
+//            } else {
+//                cbSelectItem.isChecked = false
+//            }
 
-            holder.binding.btnIncreaseQuantity.setOnClickListener {
-            increaseQuantity()
-            holder.binding.tvItemQuantity.text = quantity.toString()
-        }
-
-        holder.binding.btnDecreaseQuantity.setOnClickListener {
-            decreaseQuantity()
-            holder.binding.tvItemQuantity.text = quantity.toString()
+            cbSelectItem.isChecked = item.isChecked
+            tvItemQuantity.text = item.quantity.toString()
         }
     }
 
     inner class TrollyListVH(val binding: ItemRowTrollyBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: TrolleyEntity) {
+//            var itemTotalPrice = data.harga.toString().toInt().times(binding.tvItemQuantity.toString().toInt())
             with(binding) {
-                val dec = DecimalFormat("#,###.##")
 
                 Glide.with(itemView.context)
                     .load(data.image)
                     .into(tvItemImg)
 
+                val dec = DecimalFormat("#,###.##")
+                tvItemPrice.text = String.format(itemView.resources.getString(R.string.currency_code), dec.format(data.price?.toInt()).toString())
+
                 tvItemName.text = data.nameProduct.toString()
-                tvItemPrice.text = String.format(itemView.resources.getString(R.string.currency_code), dec.format(data.harga?.toInt()).toString())
 
                 itemBtnDelete.setOnClickListener {
                     onItemClickCallback.onItemClicked(data)
                 }
+
+                btnIncreaseQuantity.setOnClickListener {
+                    if (tvItemQuantity.text.toString().toInt() < data.stock!!) {
+                        onAddQuantity.invoke(data)
+                    }
+//                    if (quantity.value!! < data.stock!!) {
+//                        _quantity.value = _quantity.value?.plus(1)
+//                    }
+//                price = data.harga!!.toInt().times(quantity)
+//                totalPrice.plus(price)
+                }
+
+                btnDecreaseQuantity.setOnClickListener {
+                    if (tvItemQuantity.text.toString().toInt() == 1) {
+
+                    } else {
+                        onMinQuantity.invoke(data)
+                    }
+//                    if (quantity.value == 1) {
+//                        _quantity.value = 1
+//                    } else {
+//                        _quantity.value = _quantity.value?.minus(1)
+//                    }
+                }
+
+                cbSelectItem.setOnClickListener {
+                    onCheckboxChecked.invoke(
+                        data
+                    )
+                }
             }
         }
-    }
-
-    fun increaseQuantity() {
-        quantity = quantity.plus(1)
-    }
-
-    fun decreaseQuantity() {
-        quantity = quantity.minus(1)
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun selectAll(isChecked: Boolean) {
         isCheckedAll = isChecked
         notifyDataSetChanged()
-    }
-
-    interface OnGetStockCallback {
-        fun onGetStock(id: Int?)
     }
 
     interface OnItemClickCallback {

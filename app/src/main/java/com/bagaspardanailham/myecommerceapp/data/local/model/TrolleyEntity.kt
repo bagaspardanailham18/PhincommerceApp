@@ -17,8 +17,17 @@ data class TrolleyEntity(
     @ColumnInfo(name = "quantity")
     val quantity: Int? = 1,
 
-    @ColumnInfo(name = "harga")
-    val harga: String?,
+    @ColumnInfo(name = "price")
+    val price: String?,
+
+    @ColumnInfo(name = "item_total_price")
+    val itemTotalPrice: Int?,
+
+    @ColumnInfo(name = "stock")
+    val stock: Int? = null,
+
+    @ColumnInfo(name = "is_checked")
+    val isChecked: Boolean = false,
 
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "id")

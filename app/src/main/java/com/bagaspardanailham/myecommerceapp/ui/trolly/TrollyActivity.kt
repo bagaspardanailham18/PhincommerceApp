@@ -8,10 +8,8 @@ import android.widget.CompoundButton
 import android.widget.CompoundButton.OnCheckedChangeListener
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.core.view.accessibility.AccessibilityEventCompat.setAction
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.RoomResult
 import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityTrollyBinding
@@ -36,10 +34,60 @@ class TrollyActivity : AppCompatActivity() {
 
         setCustomToolbar()
 
-        adapter = TrollyListAdapter()
+        doActionClicked()
 
         setTrollyData()
         setAction()
+
+        lifecycleScope.launch {
+            trollyViewModel.getAllProductFromTrolly().observe(this@TrollyActivity) { result ->
+                var totalPrice = 0
+                var filterResult = result.filter { it.isChecked }
+                for (i in filterResult.indices) {
+                    totalPrice = totalPrice.plus(filterResult[i.toString().toInt()].itemTotalPrice!!)
+                }
+                Toast.makeText(this@TrollyActivity, totalPrice.toString(), Toast.LENGTH_SHORT).show()
+                binding.tvTotalPrice.text = totalPrice.toString()
+            }
+        }
+    }
+
+    private fun doActionClicked() {
+        adapter = TrollyListAdapter(
+            this,
+            {
+                val productId = it.id
+                val quantity = it.quantity
+                val price = it.price
+                lifecycleScope.launch {
+                    trollyViewModel.updateProductQuantity(
+                        productId,
+                        price?.toInt()?.times(quantity.toString().toInt().plus(1)),
+                        quantity?.plus(1)
+                    )
+                }
+            },
+            {
+                val productId = it.id
+                val quantity = it.quantity
+                val price = it.price
+                lifecycleScope.launch {
+                    trollyViewModel.updateProductQuantity(
+                        productId,
+                        price?.toInt()?.times(quantity.toString().toInt().minus(1)),
+                        quantity?.minus(1)
+                    )
+                }
+            },
+            {
+                val productId = it.id
+                val isChecked = !it.isChecked
+                lifecycleScope.launch {
+                    trollyViewModel.updateProductIsCheckedById(productId, isChecked)
+                }
+//                binding.tvTotalPrice.text = it.toString()
+            }
+        )
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -50,17 +98,12 @@ class TrollyActivity : AppCompatActivity() {
                     if (result.isNotEmpty()) {
                         cbSelectAll.visibility = View.VISIBLE
                         rvTrollyItem.visibility = View.VISIBLE
+                        bottomAppBarLayout.visibility = View.VISIBLE
                         rvTrollyItem.layoutManager = LinearLayoutManager(this@TrollyActivity)
                         adapter.submitList(result)
                         rvTrollyItem.adapter = adapter
                         rvTrollyItem.setHasFixedSize(true)
                         adapter.notifyDataSetChanged()
-
-                        adapter.setOnGetStockCallback(object : TrollyListAdapter.OnGetStockCallback {
-                            override fun onGetStock(id: Int?) {
-                                productDetailViewModel.getProductById(id)
-                            }
-                        })
 
                         adapter.setOnDeleteItemClickCallback(object: TrollyListAdapter.OnItemClickCallback {
                             override fun onItemClicked(data: TrolleyEntity) {
@@ -78,12 +121,12 @@ class TrollyActivity : AppCompatActivity() {
                                     }
                                 }
                             }
-
                         })
                     } else {
                         cbSelectAll.visibility = View.GONE
                         rvTrollyItem.visibility = View.GONE
                         tvDataNotfound.visibility = View.VISIBLE
+                        bottomAppBarLayout.visibility = View.GONE
                     }
                 }
             }
@@ -96,7 +139,6 @@ class TrollyActivity : AppCompatActivity() {
                 Toast.makeText(this@TrollyActivity, isChecked.toString(), Toast.LENGTH_SHORT).show()
                 adapter.selectAll(isChecked)
             }
-
         })
     }
 

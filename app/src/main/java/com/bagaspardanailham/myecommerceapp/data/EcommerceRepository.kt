@@ -9,16 +9,11 @@ import com.bagaspardanailham.myecommerceapp.data.local.EcommerceDatabase
 import com.bagaspardanailham.myecommerceapp.data.remote.ApiService
 import javax.inject.Inject
 import javax.inject.Singleton
-import com.bagaspardanailham.myecommerceapp.data.local.PreferenceDataStore
 import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 import com.bagaspardanailham.myecommerceapp.data.remote.response.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.HttpException
-import retrofit2.Response
 
 @Singleton
 open class EcommerceRepository @Inject constructor(private val apiService: ApiService, private val ecommerceDatabase: EcommerceDatabase) {
@@ -362,14 +357,16 @@ open class EcommerceRepository @Inject constructor(private val apiService: ApiSe
         return ecommerceDatabase.ecommerceDao().getProductById(id)
     }
 
-    suspend fun updateProductQuantity(context: Context, id: Int?, quantity: Int?): LiveData<RoomResult<String>> = liveData {
-        emit(RoomResult.Loading)
-        try {
-            ecommerceDatabase.ecommerceDao().updateProductQuantity(quantity, id)
-            emit(RoomResult.Success(""))
-        } catch (e: Exception) {
-            emit(RoomResult.Error(""))
-        }
+    suspend fun updateProductData(id: Int?, itemTotalPrice: Int?, quantity: Int?) {
+        ecommerceDatabase.ecommerceDao().updateProductData(quantity, itemTotalPrice, id)
+    }
+
+    suspend fun updateProductIsCheckedAll(isChecked: Boolean) {
+        ecommerceDatabase.ecommerceDao().updateProductIsCheckedAll(isChecked)
+    }
+
+    suspend fun updateProductIsCheckedById(id: Int?, isChecked: Boolean) {
+        ecommerceDatabase.ecommerceDao().updateProductIsCheckedById(isChecked, id)
     }
 
     fun removeProductFromTrolly(context: Context, data: TrolleyEntity): LiveData<RoomResult<String>> = liveData {

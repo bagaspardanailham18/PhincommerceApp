@@ -202,6 +202,9 @@ class ProductDetailActivity : AppCompatActivity() {
                         product.nameProduct,
                         1,
                         product.harga,
+                        product.harga?.toInt(),
+                        product.stock,
+                        false,
                         product.id
                     )
                 ).observe(this@ProductDetailActivity) { result ->

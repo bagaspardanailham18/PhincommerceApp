@@ -14,8 +14,14 @@ interface EcommerceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addProductToTrolley(trolly: TrolleyEntity)
 
-    @Query("UPDATE trolley SET quantity = :q WHERE id = :id")
-    suspend fun updateProductQuantity(q: Int?, id: Int?)
+    @Query("UPDATE trolley SET quantity = :q, item_total_price = :itemTotalPrice WHERE id = :id")
+    suspend fun updateProductData(q: Int?, itemTotalPrice: Int?, id: Int?)
+
+    @Query("UPDATE trolley SET is_checked = :isChecked")
+    suspend fun updateProductIsCheckedAll(isChecked: Boolean)
+
+    @Query("UPDATE trolley SET is_checked = :isChecked WHERE id = :id")
+    suspend fun updateProductIsCheckedById(isChecked: Boolean, id: Int?)
 
     @Query("SELECT * FROM trolley")
     fun getAllProduct(): LiveData<List<TrolleyEntity>>
