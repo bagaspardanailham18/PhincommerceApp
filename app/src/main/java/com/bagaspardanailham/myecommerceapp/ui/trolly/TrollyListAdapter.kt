@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 import com.bagaspardanailham.myecommerceapp.databinding.ItemRowTrollyBinding
+import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import java.text.DecimalFormat
 
@@ -73,8 +74,7 @@ class TrollyListAdapter(
                     .load(data.image)
                     .into(tvItemImg)
 
-                val dec = DecimalFormat("#,###.##")
-                tvItemPrice.text = String.format(itemView.resources.getString(R.string.currency_code), dec.format(data.price?.toInt()).toString())
+                tvItemPrice.text = data.price?.toInt()?.toRupiahFormat(context)
 
                 tvItemName.text = data.nameProduct.toString()
 

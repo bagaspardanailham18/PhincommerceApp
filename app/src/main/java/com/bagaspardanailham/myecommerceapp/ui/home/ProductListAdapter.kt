@@ -1,6 +1,7 @@
 package com.bagaspardanailham.myecommerceapp.ui.home
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.ColorFilter
@@ -14,13 +15,14 @@ import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
 import com.bagaspardanailham.myecommerceapp.databinding.ItemRowProductBinding
 import com.bagaspardanailham.myecommerceapp.ui.detail.ProductDetailActivity
+import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ProductListAdapter: ListAdapter<ProductListItem, ProductListAdapter.ProductListVH>(DIFF_CALLBACK) {
+class ProductListAdapter(private val context: Context): ListAdapter<ProductListItem, ProductListAdapter.ProductListVH>(DIFF_CALLBACK) {
 
     private lateinit var onItemClickCallback: OnItemClickCallback
 
@@ -51,7 +53,7 @@ class ProductListAdapter: ListAdapter<ProductListItem, ProductListAdapter.Produc
                     .load(data.image)
                     .into(tvItemProductImg)
                 tvItemName.text = data.nameProduct
-                tvItemPrice.text = String.format(itemView.resources.getString(R.string.currency_code), dec.format(data.harga?.toInt()).toString())
+                tvItemPrice.text = data.harga?.toInt()?.toRupiahFormat(context)
                 tvItemRating.rating = data.rate?.toFloat()!!
                 tvItemDate.text = formattingDate(data.date)
 

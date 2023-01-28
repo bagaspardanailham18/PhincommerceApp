@@ -1,6 +1,7 @@
 package com.bagaspardanailham.myecommerceapp.ui.favorite
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,12 +13,13 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.FavoriteProduct
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
 import com.bagaspardanailham.myecommerceapp.databinding.ItemRowProductBinding
 import com.bagaspardanailham.myecommerceapp.ui.home.ProductListAdapter
+import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class FavoriteProductListAdapter: ListAdapter<FavoriteProductItem, FavoriteProductListAdapter.FavoriteProductListVH>(DIFF_CALLBACK) {
+class FavoriteProductListAdapter(private val context: Context): ListAdapter<FavoriteProductItem, FavoriteProductListAdapter.FavoriteProductListVH>(DIFF_CALLBACK) {
 
     private lateinit var onItemClickCallback: OnItemClickCallback
 
@@ -41,14 +43,13 @@ class FavoriteProductListAdapter: ListAdapter<FavoriteProductItem, FavoriteProdu
                 iconFavorite.visibility = View.VISIBLE
                 //                val formatNumber = NumberFormat.getCurrencyInstance()
 //                formatNumber.maximumFractionDigits = 0
-                val dec = DecimalFormat("#,###.##")
 //                formatNumber.currency = Currency.getInstance("IDR")
 
                 Glide.with(itemView.context)
                     .load(data.image)
                     .into(tvItemProductImg)
                 tvItemName.text = data.nameProduct
-                tvItemPrice.text = String.format(itemView.resources.getString(R.string.currency_code), dec.format(data.harga?.toInt()).toString())
+                tvItemPrice.text = data.harga?.toInt()?.toRupiahFormat(context)
                 tvItemRating.rating = data.rate?.toFloat()!!
                 tvItemDate.text = formattingDate(data.date)
 

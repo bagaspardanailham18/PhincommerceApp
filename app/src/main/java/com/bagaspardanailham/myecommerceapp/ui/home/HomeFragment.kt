@@ -71,7 +71,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = ProductListAdapter()
+        adapter = ProductListAdapter(requireActivity())
         setProductData(queryString, 0)
         setupRvWhenRefresh()
 

@@ -64,7 +64,7 @@ class FavoriteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = FavoriteProductListAdapter()
+        adapter = FavoriteProductListAdapter(requireActivity())
         setProductData(queryString, 0)
         setupRvWhenRefresh()
 

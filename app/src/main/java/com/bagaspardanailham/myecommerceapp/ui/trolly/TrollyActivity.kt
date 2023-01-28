@@ -14,6 +14,7 @@ import com.bagaspardanailham.myecommerceapp.data.RoomResult
 import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityTrollyBinding
 import com.bagaspardanailham.myecommerceapp.ui.detail.ProductDetailViewModel
+import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -47,7 +48,9 @@ class TrollyActivity : AppCompatActivity() {
                     totalPrice = totalPrice.plus(filterResult[i.toString().toInt()].itemTotalPrice!!)
                 }
                 Toast.makeText(this@TrollyActivity, totalPrice.toString(), Toast.LENGTH_SHORT).show()
-                binding.tvTotalPrice.text = totalPrice.toString()
+                binding.tvTotalPrice.text = totalPrice.toRupiahFormat(this@TrollyActivity)
+
+                binding.cbSelectAll.isChecked = result.size == filterResult.size
             }
         }
     }
@@ -134,12 +137,15 @@ class TrollyActivity : AppCompatActivity() {
     }
 
     private fun setAction() {
-        binding.cbSelectAll.setOnCheckedChangeListener(object : OnCheckedChangeListener {
-            override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
-                Toast.makeText(this@TrollyActivity, isChecked.toString(), Toast.LENGTH_SHORT).show()
-                adapter.selectAll(isChecked)
+        binding.cbSelectAll.setOnClickListener {
+            lifecycleScope.launch {
+                if (binding.cbSelectAll.isChecked) {
+                    trollyViewModel.updateProductIsCheckedAll(true)
+                } else {
+                    trollyViewModel.updateProductIsCheckedAll(false)
+                }
             }
-        })
+        }
     }
 
     private fun setCustomToolbar() {

@@ -20,6 +20,7 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductDetailIt
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityProductDetailBinding
 import com.bagaspardanailham.myecommerceapp.ui.BuyProductModalBottomSheet
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
+import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -113,10 +114,9 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun populateData(data: ProductDetailItem?) {
-        val dec = DecimalFormat("#,###.##")
         with(binding) {
             tvProductName.text = data?.nameProduct
-            tvProductPrice.text = String.format(resources.getString(R.string.currency_code), dec.format(data?.harga?.toInt()).toString())
+            tvProductPrice.text = data?.harga?.toInt()?.toRupiahFormat(this@ProductDetailActivity)
             tvProductRating.rating = data?.rate.toString().toFloat()
             tvProductStock.text = data?.stock.toString()
             tvProductSize.text = data?.size
