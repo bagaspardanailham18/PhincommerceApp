@@ -13,6 +13,7 @@ import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bagaspardanailham.myecommerceapp.data.DataStockItem
 import com.bagaspardanailham.myecommerceapp.data.RoomResult
 import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityTrollyBinding
@@ -162,33 +163,40 @@ class TrollyActivity : AppCompatActivity() {
             }
         }
         binding.btnBuy.setOnClickListener {
-//            lifecycleScope.launch {
-//                trollyViewModel.getAllCheckedProductFromTrolly().observe(this@TrollyActivity) { result ->
-//                    lifecycleScope.launch {
-//                        trollyViewModel.updateStock(accessToken, result).observe(this@TrollyActivity) { buyResult ->
-//                            when (buyResult) {
-//                                is Result.Loading -> {
-//
-//                                }
-//                                is Result.Success -> {
-//                                    val intent = Intent(this@TrollyActivity, CheckoutActivity::class.java)
-//                                    intent.putExtra(CheckoutActivity.EXTRA_PRODUCT_ID, arrayListOf(result.data_stock))
-//                                    intent.putExtra(CheckoutActivity.EXTRA_ACCESS_TOKEN, accessToken)
-//                                    startActivity(intent)
-//                                    Toast.makeText(this@TrollyActivity, buyResult.data.success?.message, Toast.LENGTH_SHORT).show()
-//                                }
-//                                is Result.Error -> {
-//                                    val errorres = JSONObject(buyResult.errorBody?.string()).toString()
-//                                    val gson = Gson()
-//                                    val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
-//                                    val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
-//                                    Toast.makeText(this@TrollyActivity, errorResponse.error?.message.toString(), Toast.LENGTH_SHORT).show()
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+            lifecycleScope.launch {
+                trollyViewModel.getAllCheckedProductFromTrolly().observe(this@TrollyActivity) { result ->
+                    Log.d("trolly", result.toString())
+                    val dataStockItems = arrayListOf<DataStockItem>()
+                    val listOfProductId = arrayListOf<String>()
+                    for (i in result.indices) {
+                        dataStockItems.add(DataStockItem(result[i].id.toString(), result[i].quantity))
+                        listOfProductId.add(result[i].id.toString())
+                    }
+                    lifecycleScope.launch {
+                        trollyViewModel.updateStock(accessToken, dataStockItems).observe(this@TrollyActivity) { buyResult ->
+                            when (buyResult) {
+                                is Result.Loading -> {
+
+                                }
+                                is Result.Success -> {
+                                    val intent = Intent(this@TrollyActivity, CheckoutActivity::class.java)
+                                    intent.putExtra(CheckoutActivity.EXTRA_LIST_PRODUCT_ID, listOfProductId)
+                                    intent.putExtra(CheckoutActivity.EXTRA_ACCESS_TOKEN, accessToken)
+                                    startActivity(intent)
+                                    Toast.makeText(this@TrollyActivity, buyResult.data.success?.message, Toast.LENGTH_SHORT).show()
+                                }
+                                is Result.Error -> {
+                                    val errorres = JSONObject(buyResult.errorBody?.string()).toString()
+                                    val gson = Gson()
+                                    val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
+                                    val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
+                                    Toast.makeText(this@TrollyActivity, errorResponse.error?.message.toString(), Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

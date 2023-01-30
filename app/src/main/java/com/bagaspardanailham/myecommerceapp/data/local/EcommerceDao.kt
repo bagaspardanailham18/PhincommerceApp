@@ -28,8 +28,8 @@ interface EcommerceDao {
     @Query("SELECT * FROM trolley")
     fun getAllProduct(): LiveData<List<TrolleyEntity>>
 
-//    @Query("SELECT id, stock FROM trolley WHERE is_checked = '1'")
-//    fun getAllCheckedProduct(): LiveData<List<DataStockItem>>
+    @Query("SELECT * FROM trolley WHERE is_checked = '1'")
+    fun getAllCheckedProduct(): LiveData<List<TrolleyEntity>>
 
     @Query("SELECT * FROM trolley WHERE id = :id")
     fun getProductById(id: Int?): LiveData<List<TrolleyEntity>>

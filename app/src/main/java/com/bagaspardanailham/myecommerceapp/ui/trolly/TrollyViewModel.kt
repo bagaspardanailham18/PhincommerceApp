@@ -13,7 +13,7 @@ class TrollyViewModel @Inject constructor(private val repository: EcommerceRepos
 
     fun getAllProductFromTrolly() = repository.getAllProductFromTrolly()
 
-    //fun getAllCheckedProductFromTrolly() = repository.getAllCheckedProductFromTrolly()
+    fun getAllCheckedProductFromTrolly() = repository.getAllCheckedProductFromTrolly()
 
     suspend fun updateProductQuantity(id: Int?, itemTotalPrice: Int?, quantity: Int?) = repository.updateProductData(id, itemTotalPrice, quantity)
 

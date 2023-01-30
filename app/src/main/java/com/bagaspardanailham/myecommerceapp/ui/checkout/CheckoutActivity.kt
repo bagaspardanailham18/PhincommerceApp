@@ -3,6 +3,7 @@ package com.bagaspardanailham.myecommerceapp.ui.checkout
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -30,39 +31,71 @@ class CheckoutActivity : AppCompatActivity() {
         binding = ActivityCheckoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val productId = intent.getStringExtra(EXTRA_PRODUCT_ID).toString().toInt()
+        val productId = intent.getStringExtra(EXTRA_PRODUCT_ID)
+        val listProductId = intent.getStringArrayListExtra(EXTRA_LIST_PRODUCT_ID)
+
         val accessToken = intent.getStringExtra(EXTRA_ACCESS_TOKEN).toString()
-        val rate = binding.edtRating.rating.toString()
 
         binding.btnSubmit.setOnClickListener {
-            lifecycleScope.launch {
-                checkoutViewModel.updateRate(accessToken, productId, rate).observe(this@CheckoutActivity) { response ->
-                    when (response) {
-                        is Result.Loading -> {
-                            binding.progressBar.visibility = View.VISIBLE
-                        }
-                        is Result.Success -> {
-                            binding.progressBar.visibility = View.GONE
-                            startActivity(Intent(this@CheckoutActivity, MainActivity::class.java))
-                            Toast.makeText(this@CheckoutActivity, response.data.success?.message, Toast.LENGTH_SHORT).show()
-                            finishAffinity()
-                        }
-                        is Result.Error -> {
-                            binding.progressBar.visibility = View.GONE
-                            val errorres = JSONObject(response.errorBody?.string()).toString()
-                            val gson = Gson()
-                            val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
-                            val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
-                            Toast.makeText(this@CheckoutActivity, errorResponse.error.toString(), Toast.LENGTH_SHORT).show()
+            val rate = binding.edtRating.rating.toString()
+            if (!productId.isNullOrEmpty()) {
+                Log.d("checkout", "idProduct = $productId")
+                Toast.makeText(this, rate, Toast.LENGTH_SHORT).show()
+                lifecycleScope.launch {
+                    checkoutViewModel.updateRate(accessToken, productId.toString().toInt(), rate).observe(this@CheckoutActivity) { response ->
+                        when (response) {
+                            is Result.Loading -> {
+                                binding.progressBar.visibility = View.VISIBLE
+                            }
+                            is Result.Success -> {
+                                binding.progressBar.visibility = View.GONE
+                                startActivity(Intent(this@CheckoutActivity, MainActivity::class.java))
+                                Toast.makeText(this@CheckoutActivity, response.data.success?.message, Toast.LENGTH_SHORT).show()
+                                finishAffinity()
+                            }
+                            is Result.Error -> {
+                                binding.progressBar.visibility = View.GONE
+                                val errorres = JSONObject(response.errorBody?.string()).toString()
+                                val gson = Gson()
+                                val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
+                                val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
+                                Toast.makeText(this@CheckoutActivity, errorResponse.error.toString(), Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }
+            } else {
+                Log.d("checkout", "ListProductId = ${listProductId.toString()}")
+                binding.progressBar.visibility = View.VISIBLE
+                for (i in listProductId!!.indices) {
+                    lifecycleScope.launch {
+                        checkoutViewModel.updateRate(accessToken, listProductId[i].toInt(), rate).observe(this@CheckoutActivity) { response ->
+                            when (response) {
+                                is Result.Loading -> {
+
+                                }
+                                is Result.Success -> {
+                                    binding.progressBar.visibility = View.GONE
+                                    finishAffinity()
+                                }
+                                is Result.Error -> {
+                                    binding.progressBar.visibility = View.GONE
+                                }
+                            }
+                        }
+                    }
+                }
+                binding.progressBar.visibility = View.GONE
+                startActivity(Intent(this@CheckoutActivity, MainActivity::class.java))
+                finishAffinity()
+                Toast.makeText(this, rate, Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     companion object {
         const val EXTRA_PRODUCT_ID = "extra_product_id"
+        const val EXTRA_LIST_PRODUCT_ID = "extra_list_product_id"
         const val EXTRA_ACCESS_TOKEN = "extra_access_token"
     }
 }

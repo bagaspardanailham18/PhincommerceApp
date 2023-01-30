@@ -353,9 +353,9 @@ open class EcommerceRepository @Inject constructor(private val apiService: ApiSe
         return ecommerceDatabase.ecommerceDao().getAllProduct()
     }
 
-//    fun getAllCheckedProductFromTrolly(): LiveData<List<DataStockItem>> {
-//        return ecommerceDatabase.ecommerceDao().getAllCheckedProduct()
-//    }
+    fun getAllCheckedProductFromTrolly(): LiveData<List<TrolleyEntity>> {
+        return ecommerceDatabase.ecommerceDao().getAllCheckedProduct()
+    }
 
     fun getProductById(id: Int?): LiveData<List<TrolleyEntity>> {
         return ecommerceDatabase.ecommerceDao().getProductById(id)
