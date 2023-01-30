@@ -16,7 +16,7 @@ import androidx.core.view.accessibility.AccessibilityEventCompat.setAction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bagaspardanailham.myecommerceapp.R
-import com.bagaspardanailham.myecommerceapp.data.DataStock
+import com.bagaspardanailham.myecommerceapp.data.DataStockItem
 import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductDetailItem

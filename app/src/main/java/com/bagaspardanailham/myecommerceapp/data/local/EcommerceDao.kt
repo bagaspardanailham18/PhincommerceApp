@@ -6,6 +6,8 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.bagaspardanailham.myecommerceapp.data.DataStock
+import com.bagaspardanailham.myecommerceapp.data.DataStockItem
 import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 
 @Dao
@@ -25,6 +27,9 @@ interface EcommerceDao {
 
     @Query("SELECT * FROM trolley")
     fun getAllProduct(): LiveData<List<TrolleyEntity>>
+
+//    @Query("SELECT id, stock FROM trolley WHERE is_checked = '1'")
+//    fun getAllCheckedProduct(): LiveData<List<DataStockItem>>
 
     @Query("SELECT * FROM trolley WHERE id = :id")
     fun getProductById(id: Int?): LiveData<List<TrolleyEntity>>

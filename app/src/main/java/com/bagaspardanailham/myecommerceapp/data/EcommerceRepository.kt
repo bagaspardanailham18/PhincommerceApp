@@ -279,10 +279,10 @@ open class EcommerceRepository @Inject constructor(private val apiService: ApiSe
         }
     }
 
-    suspend fun updateStock(accessToken: String, data: DataStock): LiveData<Result<UpdateStockResponse>> = liveData {
+    suspend fun updateStock(accessToken: String, data: List<DataStockItem>): LiveData<Result<UpdateStockResponse>> = liveData {
         emit(Result.Loading)
         try {
-            val response = apiService.updateStock(API_KEY, accessToken, data)
+            val response = apiService.updateStock(API_KEY, accessToken, DataStock(data))
             emit(Result.Success(response))
         } catch (throwable : Throwable) {
             if (throwable is HttpException) {
@@ -352,6 +352,10 @@ open class EcommerceRepository @Inject constructor(private val apiService: ApiSe
     fun getAllProductFromTrolly(): LiveData<List<TrolleyEntity>> {
         return ecommerceDatabase.ecommerceDao().getAllProduct()
     }
+
+//    fun getAllCheckedProductFromTrolly(): LiveData<List<DataStockItem>> {
+//        return ecommerceDatabase.ecommerceDao().getAllCheckedProduct()
+//    }
 
     fun getProductById(id: Int?): LiveData<List<TrolleyEntity>> {
         return ecommerceDatabase.ecommerceDao().getProductById(id)
