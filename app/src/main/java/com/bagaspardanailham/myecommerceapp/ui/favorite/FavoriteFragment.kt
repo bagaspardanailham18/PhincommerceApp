@@ -28,11 +28,8 @@ import com.bagaspardanailham.myecommerceapp.ui.home.HomeViewModel
 import com.bagaspardanailham.myecommerceapp.ui.home.ProductListAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlin.text.Typography.dagger
 
 
@@ -53,6 +50,8 @@ class FavoriteFragment : Fragment() {
     private var queryString: String = ""
 
     private var febJob: Job? = null
+    private var searchJob: Job? = null
+    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,6 +71,10 @@ class FavoriteFragment : Fragment() {
         setProductData(queryString, 0)
         setupRvWhenRefresh()
 
+        setupAction()
+    }
+
+    private fun setupAction() {
         binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(q: String?): Boolean {
                 TODO("Not yet implemented")
@@ -90,110 +93,83 @@ class FavoriteFragment : Fragment() {
         binding.floatingBtnFilter.setOnClickListener {
             showFilterDialog()
         }
-
-        showFabFilterState(false)
-
-        binding.rvProduct.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                showFabFilterState(false)
-//                febJob?.cancel()
-//                febJob = lifecycleScope.launch(Dispatchers.Main) {
-//                    delay(2500)
-//                    showFabFilterState(true)
-//                }
-                if (dy <= 0) {
-                    febJob?.cancel()
-                    febJob = lifecycleScope.launch(Dispatchers.Main) {
-                        delay(2000)
-                        showFabFilterState(true)
-                    }
-                }
-
-                if (dy >= 0) {
-                    febJob?.cancel()
-                    febJob = lifecycleScope.launch(Dispatchers.Main) {
-                        delay(2000)
-                        showFabFilterState(true)
-                    }
-                }
-            }
-        })
     }
 
     private fun setProductData(query: String?, sort: Int) {
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                val token = authViewModel.getUserPref().first()?.authTokenKey.toString()
-                val userId = authViewModel.getUserPref().first()?.id.toString().toInt()
-                binding.swipeToRefresh.isRefreshing = true
-                if (query.toString().isNotEmpty()) {
-                    delay(2000)
-                    queryString = query.toString()
-                    favoriteViewModel.getFavoriteProductList(token, query, userId).observe(viewLifecycleOwner) { result ->
-                        when (result) {
-                            is Result.Loading -> {
-                                binding.shimmerProduct.startShimmer()
-                                binding.shimmerProduct.visibility = View.VISIBLE
+        searchJob = coroutineScope.launch {
+            val token = authViewModel.getUserPref().first()?.authTokenKey.toString()
+            val userId = authViewModel.getUserPref().first()?.id.toString().toInt()
+            if (query.toString().isNotEmpty()) {
+                delay(1000)
+                queryString = query.toString()
+                favoriteViewModel.getFavoriteProductList(token, query, userId).observe(viewLifecycleOwner) { result ->
+                    when (result) {
+                        is Result.Loading -> {
+                            binding.shimmerProduct.startShimmer()
+                            binding.shimmerProduct.visibility = View.VISIBLE
+                            binding.rvProduct.visibility = View.GONE
+                            binding.tvDataNotfound.visibility = View.GONE
+                            animationBtnFilter(true)
+                        }
+                        is Result.Success -> {
+                            binding.shimmerProduct.stopShimmer()
+                            binding.shimmerProduct.visibility = View.GONE
+                            binding.swipeToRefresh.isRefreshing = false
+                            if (result.data.success?.data?.size!! > 0) {
+                                binding.tvDataNotfound.visibility = View.GONE
+                                binding.rvProduct.visibility = View.VISIBLE
+                                setProductRv(result.data, sort)
+                                isDataEmpty(false)
+                                animationBtnFilter(false)
+                            } else {
+                                binding.tvDataNotfound.visibility = View.VISIBLE
                                 binding.rvProduct.visibility = View.GONE
-                                binding.floatingBtnFilter.visibility = View.GONE
-                            }
-                            is Result.Success -> {
-                                binding.shimmerProduct.stopShimmer()
-                                binding.shimmerProduct.visibility = View.GONE
-                                binding.swipeToRefresh.isRefreshing = false
-                                if (result.data.success?.data?.size!! > 0) {
-                                    binding.tvDataNotfound.visibility = View.GONE
-                                    binding.rvProduct.visibility = View.VISIBLE
-                                    binding.floatingBtnFilter.visibility = View.VISIBLE
-                                    setProductRv(result.data, sort)
-                                } else {
-                                    binding.tvDataNotfound.visibility = View.VISIBLE
-                                    binding.rvProduct.visibility = View.GONE
-                                    binding.floatingBtnFilter.visibility = View.GONE
-                                }
-                            }
-                            is Result.Error -> {
-                                binding.shimmerProduct.stopShimmer()
-                                binding.shimmerProduct.visibility = View.GONE
-                                binding.rvProduct.visibility = View.GONE
-                                binding.floatingBtnFilter.visibility = View.VISIBLE
-                                Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
+                                isDataEmpty(true)
+                                animationBtnFilter(true)
                             }
                         }
+                        is Result.Error -> {
+                            binding.shimmerProduct.stopShimmer()
+                            binding.shimmerProduct.visibility = View.GONE
+                            binding.rvProduct.visibility = View.GONE
+                            animationBtnFilter(true)
+                            Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
+                        }
                     }
-                } else {
-                    queryString = query.toString()
-                    favoriteViewModel.getFavoriteProductList(token, null, userId).observe(viewLifecycleOwner) { result ->
-                        when (result) {
-                            is Result.Loading -> {
-                                binding.shimmerProduct.startShimmer()
-                                binding.shimmerProduct.visibility = View.VISIBLE
+                }
+            } else {
+                queryString = query.toString()
+                favoriteViewModel.getFavoriteProductList(token, null, userId).observe(viewLifecycleOwner) { result ->
+                    when (result) {
+                        is Result.Loading -> {
+                            binding.shimmerProduct.startShimmer()
+                            binding.shimmerProduct.visibility = View.VISIBLE
+                            binding.rvProduct.visibility = View.GONE
+                            binding.tvDataNotfound.visibility = View.GONE
+                            animationBtnFilter(true)
+                        }
+                        is Result.Success -> {
+                            binding.shimmerProduct.stopShimmer()
+                            binding.shimmerProduct.visibility = View.GONE
+                            binding.swipeToRefresh.isRefreshing = false
+                            if (result.data.success?.data?.size!! > 0) {
+                                binding.tvDataNotfound.visibility = View.GONE
+                                binding.rvProduct.visibility = View.VISIBLE
+                                setProductRv(result.data, sort)
+                                animationBtnFilter(false)
+                            } else {
+                                binding.tvDataNotfound.visibility = View.VISIBLE
                                 binding.rvProduct.visibility = View.GONE
-                                binding.floatingBtnFilter.visibility = View.GONE
+                                animationBtnFilter(true)
                             }
-                            is Result.Success -> {
-                                binding.shimmerProduct.stopShimmer()
-                                binding.shimmerProduct.visibility = View.GONE
-                                binding.swipeToRefresh.isRefreshing = false
-                                if (result.data.success?.data?.size!! > 0) {
-                                    binding.tvDataNotfound.visibility = View.GONE
-                                    binding.rvProduct.visibility = View.VISIBLE
-                                    binding.floatingBtnFilter.visibility = View.VISIBLE
-                                    setProductRv(result.data, sort)
-                                } else {
-                                    binding.tvDataNotfound.visibility = View.VISIBLE
-                                    binding.rvProduct.visibility = View.GONE
-                                }
-                            }
-                            is Result.Error -> {
-                                binding.shimmerProduct.stopShimmer()
-                                binding.shimmerProduct.visibility = View.GONE
-                                binding.rvProduct.visibility = View.GONE
-                                binding.floatingBtnFilter.visibility = View.GONE
-                                Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
-                            }
+                        }
+                        is Result.Error -> {
+                            binding.shimmerProduct.stopShimmer()
+                            binding.shimmerProduct.visibility = View.GONE
+                            binding.rvProduct.visibility = View.GONE
+                            binding.swipeToRefresh.isRefreshing = false
+                            animationBtnFilter(true)
+                            Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -203,12 +179,10 @@ class FavoriteFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setProductRv(result: GetFavoriteProductListResponse, sort: Int) {
-        val lim = LinearLayoutManager(requireActivity())
         when (sort) {
             0 -> {
                 adapter.submitList(result.success?.data)
                 binding.apply {
-                    rvProduct.layoutManager = lim
                     rvProduct.adapter = adapter
                     rvProduct.setHasFixedSize(true)
                 }
@@ -219,7 +193,6 @@ class FavoriteFragment : Fragment() {
                     it?.nameProduct
                 })
                 binding.apply {
-                    rvProduct.layoutManager = lim
                     rvProduct.adapter = adapter
                     rvProduct.setHasFixedSize(true)
                 }
@@ -230,7 +203,6 @@ class FavoriteFragment : Fragment() {
                     it?.nameProduct
                 })
                 binding.apply {
-                    rvProduct.layoutManager = lim
                     rvProduct.adapter = adapter
                     rvProduct.setHasFixedSize(true)
                 }
@@ -275,7 +247,49 @@ class FavoriteFragment : Fragment() {
         if (state) {
             binding.floatingBtnFilter.visibility = View.VISIBLE
         } else  {
+            binding.floatingBtnFilter.hide()
+        }
+    }
+
+    private fun isDataEmpty(state: Boolean) {
+        if (state) {
+            binding.floatingBtnFilter.hide()
             binding.floatingBtnFilter.visibility = View.GONE
+        } else {
+            binding.floatingBtnFilter.show()
+            binding.floatingBtnFilter.visibility = View.VISIBLE
+        }
+    }
+
+    private fun animationBtnFilter(isDataEmpty: Boolean) {
+        if (isDataEmpty) {
+            isDataEmpty(true)
+            binding.floatingBtnFilter.visibility = View.GONE
+        } else {
+            isDataEmpty(false)
+            binding.floatingBtnFilter.visibility = View.GONE
+
+            binding.rvProduct.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    binding.floatingBtnFilter.visibility = View.GONE
+                    if (dy >= 0) {
+                        febJob?.cancel()
+                        febJob = coroutineScope.launch {
+                            delay(1000)
+                            binding.floatingBtnFilter.visibility = View.VISIBLE
+                        }
+                    } else if (dy <= 0) {
+                        febJob?.cancel()
+                        febJob = coroutineScope.launch {
+                            delay(1000)
+                            binding.floatingBtnFilter.visibility = View.VISIBLE
+                        }
+                    }
+
+                }
+            })
         }
     }
 

@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.View.OnScrollChangeListener
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -36,11 +37,8 @@ import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 @AndroidEntryPoint
@@ -57,6 +55,8 @@ class HomeFragment : Fragment() {
     private var queryString: String = ""
 
     private var febJob: Job? = null
+    private var searchJob: Job? = null
+    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -78,6 +78,10 @@ class HomeFragment : Fragment() {
         setProductData(queryString, 0)
         setupRvWhenRefresh()
 
+        setupAction()
+    }
+
+    private fun setupAction() {
         binding.searchBar.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(q: String?): Boolean {
                 TODO("Not yet implemented")
@@ -96,28 +100,13 @@ class HomeFragment : Fragment() {
         binding.floatingBtnFilter.setOnClickListener {
             showFilterDialog()
         }
-
-        showFabFilterState(true)
-
-        binding.rvProduct.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                showFabFilterState(false)
-                febJob?.cancel()
-                febJob = lifecycleScope.launch(Dispatchers.Main) {
-                    delay(2500)
-                    showFabFilterState(true)
-                }
-            }
-        })
     }
 
     private fun setProductData(query: String?, sort: Int) {
-        lifecycleScope.launch(Dispatchers.Main) {
+        searchJob = coroutineScope.launch {
             val token = authViewModel.getUserPref().first()?.authTokenKey.toString()
             if (query.toString().isNotEmpty()) {
-                delay(2000)
+                delay(1000)
                 queryString = query.toString()
                 homeViewModel.getProductList(token, query).observe(viewLifecycleOwner) { result ->
                     when (result) {
@@ -125,7 +114,7 @@ class HomeFragment : Fragment() {
                             binding.shimmerProduct.startShimmer()
                             binding.shimmerProduct.visibility = View.VISIBLE
                             binding.rvProduct.visibility = View.GONE
-                            binding.floatingBtnFilter.visibility = View.GONE
+                            animationBtnFilter(true)
                         }
                         is Result.Success -> {
                             binding.shimmerProduct.stopShimmer()
@@ -134,12 +123,14 @@ class HomeFragment : Fragment() {
                             if (result.data.success?.data?.size!! > 0) {
                                 binding.tvDataNotfound.visibility = View.GONE
                                 binding.rvProduct.visibility = View.VISIBLE
-                                binding.floatingBtnFilter.visibility = View.VISIBLE
                                 setProductRv(result.data, sort)
+                                isDataEmpty(false)
+                                animationBtnFilter(false)
                             } else {
                                 binding.tvDataNotfound.visibility = View.VISIBLE
                                 binding.rvProduct.visibility = View.GONE
-                                binding.floatingBtnFilter.visibility = View.GONE
+                                isDataEmpty(true)
+                                animationBtnFilter(true)
                             }
                         }
                         is Result.Error -> {
@@ -147,7 +138,7 @@ class HomeFragment : Fragment() {
                             binding.shimmerProduct.visibility = View.GONE
                             binding.swipeToRefresh.isRefreshing = false
                             binding.rvProduct.visibility = View.GONE
-                            binding.floatingBtnFilter.visibility = View.VISIBLE
+                            animationBtnFilter(true)
                             Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
                         }
                     }
@@ -160,7 +151,7 @@ class HomeFragment : Fragment() {
                             binding.shimmerProduct.startShimmer()
                             binding.shimmerProduct.visibility = View.VISIBLE
                             binding.rvProduct.visibility = View.GONE
-                            binding.floatingBtnFilter.visibility = View.GONE
+                            animationBtnFilter(true)
                         }
                         is Result.Success -> {
                             binding.shimmerProduct.stopShimmer()
@@ -169,11 +160,12 @@ class HomeFragment : Fragment() {
                             if (result.data.success?.data?.size!! > 0) {
                                 binding.tvDataNotfound.visibility = View.GONE
                                 binding.rvProduct.visibility = View.VISIBLE
-                                binding.floatingBtnFilter.visibility = View.VISIBLE
                                 setProductRv(result.data, sort)
+                                animationBtnFilter(false)
                             } else {
                                 binding.tvDataNotfound.visibility = View.VISIBLE
                                 binding.rvProduct.visibility = View.GONE
+                                animationBtnFilter(true)
                             }
                         }
                         is Result.Error -> {
@@ -181,7 +173,7 @@ class HomeFragment : Fragment() {
                             binding.shimmerProduct.visibility = View.GONE
                             binding.swipeToRefresh.isRefreshing = false
                             binding.rvProduct.visibility = View.GONE
-                            binding.floatingBtnFilter.visibility = View.GONE
+                            animationBtnFilter(true)
                             Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
                         }
                     }
@@ -192,12 +184,10 @@ class HomeFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setProductRv(result: GetProductListResponse, sort: Int) {
-        val lim = LinearLayoutManager(requireActivity())
         when (sort) {
             0 -> {
                 adapter.submitList(result.success?.data)
                 binding.apply {
-                    rvProduct.layoutManager = lim
                     rvProduct.adapter = adapter
                     rvProduct.setHasFixedSize(true)
                 }
@@ -208,7 +198,6 @@ class HomeFragment : Fragment() {
                     it?.nameProduct
                 })
                 binding.apply {
-                    rvProduct.layoutManager = lim
                     rvProduct.adapter = adapter
                     rvProduct.setHasFixedSize(true)
                 }
@@ -219,7 +208,6 @@ class HomeFragment : Fragment() {
                     it?.nameProduct
                 })
                 binding.apply {
-                    rvProduct.layoutManager = lim
                     rvProduct.adapter = adapter
                     rvProduct.setHasFixedSize(true)
                 }
@@ -306,7 +294,49 @@ class HomeFragment : Fragment() {
         if (state) {
             binding.floatingBtnFilter.visibility = View.VISIBLE
         } else  {
+            binding.floatingBtnFilter.hide()
+        }
+    }
+
+    private fun isDataEmpty(state: Boolean) {
+        if (state) {
+            binding.floatingBtnFilter.hide()
             binding.floatingBtnFilter.visibility = View.GONE
+        } else {
+            binding.floatingBtnFilter.show()
+            binding.floatingBtnFilter.visibility = View.VISIBLE
+        }
+    }
+
+    private fun animationBtnFilter(isDataEmpty: Boolean) {
+        if (isDataEmpty) {
+            isDataEmpty(true)
+            binding.floatingBtnFilter.visibility = View.GONE
+        } else {
+            isDataEmpty(false)
+            binding.floatingBtnFilter.visibility = View.GONE
+
+            binding.rvProduct.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    binding.floatingBtnFilter.visibility = View.GONE
+                    if (dy >= 0) {
+                        febJob?.cancel()
+                        febJob = coroutineScope.launch {
+                            delay(1000)
+                            binding.floatingBtnFilter.visibility = View.VISIBLE
+                        }
+                    } else if (dy <= 0) {
+                        febJob?.cancel()
+                        febJob = coroutineScope.launch {
+                            delay(1000)
+                            binding.floatingBtnFilter.visibility = View.VISIBLE
+                        }
+                    }
+
+                }
+            })
         }
     }
 

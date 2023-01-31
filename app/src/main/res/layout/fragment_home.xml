@@ -43,12 +43,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include layout="@layout/shimmer_effect_layout" />
-            <include layout="@layout/shimmer_effect_layout" />
-            <include layout="@layout/shimmer_effect_layout" />
-            <include layout="@layout/shimmer_effect_layout" />
-            <include layout="@layout/shimmer_effect_layout" />
-            <include layout="@layout/shimmer_effect_layout" />
+            <include layout="@layout/shimmer_product_list" />
+            <include layout="@layout/shimmer_product_list" />
+            <include layout="@layout/shimmer_product_list" />
+            <include layout="@layout/shimmer_product_list" />
+            <include layout="@layout/shimmer_product_list" />
+            <include layout="@layout/shimmer_product_list" />
 
         </LinearLayout>
 
@@ -71,6 +71,7 @@
             android:layout_marginTop="31dp"
             android:visibility="gone"
             android:clipToPadding="true"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_row_product" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

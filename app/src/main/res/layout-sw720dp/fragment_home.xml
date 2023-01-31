@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="?android:actionBarSize"
-    android:paddingBottom="?android:actionBarSize"
-    tools:context=".ui.favorite.FavoriteFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_bar"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginHorizontal="30dp"
@@ -38,10 +35,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_bar">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <GridLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="center_horizontal"
+            android:columnCount="1">
 
             <include layout="@layout/shimmer_product_list" />
             <include layout="@layout/shimmer_product_list" />
@@ -49,8 +47,10 @@
             <include layout="@layout/shimmer_product_list" />
             <include layout="@layout/shimmer_product_list" />
             <include layout="@layout/shimmer_product_list" />
+            <include layout="@layout/shimmer_product_list" />
+            <include layout="@layout/shimmer_product_list" />
 
-        </LinearLayout>
+        </GridLayout>
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 
@@ -71,22 +71,23 @@
             android:layout_marginTop="31dp"
             android:visibility="gone"
             android:clipToPadding="true"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:spanCount="2"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             tools:listitem="@layout/item_row_product" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/rv_product_searched"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_marginTop="31dp"-->
-<!--        android:visibility="gone"-->
-<!--        tools:listitem="@layout/item_row_product"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/search_bar" />-->
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/rv_product_searched"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:layout_marginTop="31dp"-->
+    <!--        android:visibility="gone"-->
+    <!--        tools:listitem="@layout/item_row_product"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/search_bar" />-->
 
     <LinearLayout
         android:id="@+id/tv_data_notfound"
