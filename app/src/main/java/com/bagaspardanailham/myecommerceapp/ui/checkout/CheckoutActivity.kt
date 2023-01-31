@@ -13,6 +13,7 @@ import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityCheckoutBinding
 import com.bagaspardanailham.myecommerceapp.ui.MainActivity
+import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyViewModel
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +26,7 @@ class CheckoutActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCheckoutBinding
 
     private val checkoutViewModel by viewModels<CheckoutViewModel>()
+    private val trollyViewModel by viewModels<TrollyViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +41,6 @@ class CheckoutActivity : AppCompatActivity() {
         binding.btnSubmit.setOnClickListener {
             val rate = binding.edtRating.rating.toString()
             if (!productId.isNullOrEmpty()) {
-                Log.d("checkout", "idProduct = $productId")
-                Toast.makeText(this, rate, Toast.LENGTH_SHORT).show()
                 lifecycleScope.launch {
                     checkoutViewModel.updateRate(accessToken, productId.toString().toInt(), rate).observe(this@CheckoutActivity) { response ->
                         when (response) {
@@ -65,10 +65,10 @@ class CheckoutActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                Log.d("checkout", "ListProductId = ${listProductId.toString()}")
                 binding.progressBar.visibility = View.VISIBLE
                 for (i in listProductId!!.indices) {
                     lifecycleScope.launch {
+                        trollyViewModel.deleteProductByIdFromTrolly(this@CheckoutActivity, listProductId[i].toInt())
                         checkoutViewModel.updateRate(accessToken, listProductId[i].toInt(), rate).observe(this@CheckoutActivity) { response ->
                             when (response) {
                                 is Result.Loading -> {
@@ -88,7 +88,6 @@ class CheckoutActivity : AppCompatActivity() {
                 binding.progressBar.visibility = View.GONE
                 startActivity(Intent(this@CheckoutActivity, MainActivity::class.java))
                 finishAffinity()
-                Toast.makeText(this, rate, Toast.LENGTH_SHORT).show()
             }
         }
     }

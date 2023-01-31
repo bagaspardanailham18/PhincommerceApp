@@ -1,5 +1,6 @@
 package com.bagaspardanailham.myecommerceapp.ui.detail
 
+import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -34,8 +35,6 @@ class ProductDetailActivity : AppCompatActivity() {
     private val productDetailViewModel by viewModels<ProductDetailViewModel>()
     private val authViewModel by viewModels<AuthViewModel>()
 
-    private val args: ProductDetailActivityArgs by navArgs()
-
     private lateinit var accessToken: String
     private var productId: Int? = 0
     private var userId: Int? = 0
@@ -44,22 +43,6 @@ class ProductDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        lifecycleScope.launch {
-            accessToken = authViewModel.getUserPref().first()?.authTokenKey.toString()
-            //productId = args.idProduct
-            productId = intent.getIntExtra(EXTRA_ID, 0)
-            Log.d("productid", "ProductId : $productId")
-            userId = authViewModel.getUserPref().first()?.id.toString().toInt()
-        }
-
-        if (productId == 0) {
-            val data: Uri? = intent.data
-            val id = data?.getQueryParameter("id")
-            if (id != null) {
-                productId = id.toInt()
-            }
-        }
 
         setCustomToolbar()
         setContentData()
@@ -73,7 +56,10 @@ class ProductDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_share -> {
-                Toast.makeText(this, "Share Product", Toast.LENGTH_SHORT).show()
+                val shareIntent = Intent(Intent.ACTION_SEND)
+                shareIntent.type="text/plain"
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "https://bagascommerce.com/product-detail?id=$productId")
+                startActivity(Intent.createChooser(shareIntent,"Share To"))
             }
         }
         return super.onOptionsItemSelected(item)
@@ -81,9 +67,17 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun setContentData() {
         lifecycleScope.launch {
-//            val accessToken = authViewModel.getUserPref().first()?.authTokenKey.toString()
-//            val productId = args.idProduct
-//            val userId = authViewModel.getUserPref().first()?.id.toString().toInt()
+            accessToken = authViewModel.getUserPref().first()?.authTokenKey.toString()
+            //productId = args.idProduct
+            productId = intent.getIntExtra(EXTRA_ID, 0)
+            userId = authViewModel.getUserPref().first()?.id.toString().toInt()
+            if (productId == 0) {
+                val data: Uri? = intent.data
+                val id = data?.getQueryParameter("id")
+                if (id != null) {
+                    productId = id.toInt()
+                }
+            }
             productDetailViewModel.getProductDetail(accessToken, productId, userId).observe(this@ProductDetailActivity) { result ->
                 with(binding) {
                     when (result) {

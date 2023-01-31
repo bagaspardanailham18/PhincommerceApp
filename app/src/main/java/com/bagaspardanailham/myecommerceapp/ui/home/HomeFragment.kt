@@ -37,6 +37,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -54,6 +55,8 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: ProductListAdapter
 
     private var queryString: String = ""
+
+    private var febJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -94,52 +97,17 @@ class HomeFragment : Fragment() {
             showFilterDialog()
         }
 
-        showFabFilterState(false)
+        showFabFilterState(true)
 
         binding.rvProduct.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
-            private var isScrolledDown = false
-            private var isNotScrolled = false
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-
-                if (newState == RecyclerView.SCROLL_STATE_SETTLING && isScrolledDown) {
-                    if (isNotScrolled) {
-                        lifecycleScope.launch {
-                            delay(2000)
-                            showFabFilterState(true)
-                        }
-                    } else {
-                        showFabFilterState(false)
-                    }
-                } else {
-                    if (isNotScrolled) {
-                        lifecycleScope.launch {
-                            delay(2000)
-                            showFabFilterState(true)
-                        }
-                    } else {
-                        showFabFilterState(false)
-                    }
-                }
-            }
-
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-
-                if (dy <= 0) {
-                    lifecycleScope.launch {
-                        delay(2000)
-                        showFabFilterState(true)
-                    }
-                }
-
-                if (dy >= 0) {
-                    lifecycleScope.launch {
-                        delay(2000)
-                        showFabFilterState(true)
-                    }
+                showFabFilterState(false)
+                febJob?.cancel()
+                febJob = lifecycleScope.launch(Dispatchers.Main) {
+                    delay(2500)
+                    showFabFilterState(true)
                 }
             }
         })
@@ -263,9 +231,7 @@ class HomeFragment : Fragment() {
             override fun onItemClicked(data: ProductListItem) {
                 val intent = Intent(requireActivity(), ProductDetailActivity::class.java)
                 intent.putExtra(ProductDetailActivity.EXTRA_ID, data.id)
-                Toast.makeText(requireActivity(), data.id.toString(), Toast.LENGTH_SHORT).show()
                 startActivity(intent)
-                //findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToProductDetailActivity().setIdProduct(data.id!!))
             }
         })
     }

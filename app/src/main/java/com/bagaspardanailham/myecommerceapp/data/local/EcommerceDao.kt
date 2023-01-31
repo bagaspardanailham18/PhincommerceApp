@@ -37,4 +37,7 @@ interface EcommerceDao {
     @Delete
     suspend fun deleteProductFromTrolly(trolly: TrolleyEntity)
 
+    @Query("DELETE FROM trolley WHERE id = :id")
+    suspend fun deleteProductByIdFromTrolly(id: Int?)
+
 }

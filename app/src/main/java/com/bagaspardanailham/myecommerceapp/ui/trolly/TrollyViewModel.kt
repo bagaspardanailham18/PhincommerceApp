@@ -23,6 +23,8 @@ class TrollyViewModel @Inject constructor(private val repository: EcommerceRepos
 
     fun deleteProductFromTrolly(context: Context, data: TrolleyEntity) = repository.removeProductFromTrolly(context, data)
 
+    suspend fun deleteProductByIdFromTrolly(context: Context, id: Int?) = repository.removeProductByIdFromTrolly(context, id)
+
     suspend fun updateStock(accessToken: String, data: List<DataStockItem>) =
         repository.updateStock(accessToken, data)
 }

@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.remote.response.FavoriteProductItem
@@ -28,6 +29,7 @@ import com.bagaspardanailham.myecommerceapp.ui.home.ProductListAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -49,6 +51,8 @@ class FavoriteFragment : Fragment() {
     private lateinit var adapter: FavoriteProductListAdapter
 
     private var queryString: String = ""
+
+    private var febJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -86,6 +90,36 @@ class FavoriteFragment : Fragment() {
         binding.floatingBtnFilter.setOnClickListener {
             showFilterDialog()
         }
+
+        showFabFilterState(false)
+
+        binding.rvProduct.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                showFabFilterState(false)
+//                febJob?.cancel()
+//                febJob = lifecycleScope.launch(Dispatchers.Main) {
+//                    delay(2500)
+//                    showFabFilterState(true)
+//                }
+                if (dy <= 0) {
+                    febJob?.cancel()
+                    febJob = lifecycleScope.launch(Dispatchers.Main) {
+                        delay(2000)
+                        showFabFilterState(true)
+                    }
+                }
+
+                if (dy >= 0) {
+                    febJob?.cancel()
+                    febJob = lifecycleScope.launch(Dispatchers.Main) {
+                        delay(2000)
+                        showFabFilterState(true)
+                    }
+                }
+            }
+        })
     }
 
     private fun setProductData(query: String?, sort: Int) {
@@ -208,9 +242,7 @@ class FavoriteFragment : Fragment() {
             override fun onItemClicked(data: FavoriteProductItem) {
                 val intent = Intent(requireActivity(), ProductDetailActivity::class.java)
                 intent.putExtra(ProductDetailActivity.EXTRA_ID, data.id)
-                Toast.makeText(requireActivity(), data.id.toString(), Toast.LENGTH_SHORT).show()
                 startActivity(intent)
-                //findNavController().navigate(FavoriteFragmentDirections.actionNavigationFavoriteToProductDetailActivity().setIdProduct(data.id!!))
             }
 
         })
@@ -237,6 +269,14 @@ class FavoriteFragment : Fragment() {
                 dialog.dismiss()
             }
             .show()
+    }
+
+    private fun showFabFilterState(state: Boolean) {
+        if (state) {
+            binding.floatingBtnFilter.visibility = View.VISIBLE
+        } else  {
+            binding.floatingBtnFilter.visibility = View.GONE
+        }
     }
 
     private fun setupRvWhenRefresh() {

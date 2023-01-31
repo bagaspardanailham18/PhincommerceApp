@@ -63,7 +63,6 @@ class TrollyActivity : AppCompatActivity() {
                 for (i in filterResult.indices) {
                     totalPrice = totalPrice.plus(filterResult[i.toString().toInt()].itemTotalPrice!!)
                 }
-                Toast.makeText(this@TrollyActivity, totalPrice.toString(), Toast.LENGTH_SHORT).show()
                 binding.tvTotalPrice.text = totalPrice.toRupiahFormat(this@TrollyActivity)
 
                 binding.cbSelectAll.isChecked = result.size == filterResult.size
@@ -165,7 +164,6 @@ class TrollyActivity : AppCompatActivity() {
         binding.btnBuy.setOnClickListener {
             lifecycleScope.launch {
                 trollyViewModel.getAllCheckedProductFromTrolly().observe(this@TrollyActivity) { result ->
-                    Log.d("trolly", result.toString())
                     val dataStockItems = arrayListOf<DataStockItem>()
                     val listOfProductId = arrayListOf<String>()
                     for (i in result.indices) {

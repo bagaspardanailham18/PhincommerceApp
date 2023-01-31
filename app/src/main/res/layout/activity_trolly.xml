@@ -33,15 +33,26 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/cb_select_all"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/layout_cb_select_all"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
-        android:text="@string/select_all_string"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingTop="15dp"
+        android:background="@color/white"
+        android:elevation="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout2">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/cb_select_all"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/select_all_string" />
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_trolly_item"
@@ -52,7 +63,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cb_select_all"
+        app:layout_constraintTop_toBottomOf="@+id/layout_cb_select_all"
         tools:listitem="@layout/item_row_trolly" />
 
     <LinearLayout

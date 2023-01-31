@@ -380,7 +380,11 @@ open class EcommerceRepository @Inject constructor(private val apiService: ApiSe
                 .deleteProductFromTrolly(data)
             emit(RoomResult.Success(context.resources.getString(R.string.success_remove_product_from_trolly)))
         } catch (e: Exception) {
-            emit(RoomResult.Error(e.message.toString()))
+            emit(RoomResult.Success(context.resources.getString(R.string.success_remove_product_from_trolly)))
         }
+    }
+
+    suspend fun removeProductByIdFromTrolly(context: Context, id: Int?) {
+        ecommerceDatabase.ecommerceDao().deleteProductByIdFromTrolly(id)
     }
 }
