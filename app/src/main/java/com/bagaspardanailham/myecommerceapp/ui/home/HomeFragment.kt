@@ -113,31 +113,31 @@ class HomeFragment : Fragment() {
                         is Result.Loading -> {
                             binding.shimmerProduct.startShimmer()
                             binding.shimmerProduct.visibility = View.VISIBLE
-                            binding.rvProduct.visibility = View.GONE
+                            binding.rvProduct.visibility = View.INVISIBLE
                             animationBtnFilter(true)
                         }
                         is Result.Success -> {
                             binding.shimmerProduct.stopShimmer()
-                            binding.shimmerProduct.visibility = View.GONE
+                            binding.shimmerProduct.visibility = View.INVISIBLE
                             binding.swipeToRefresh.isRefreshing = false
                             if (result.data.success?.data?.size!! > 0) {
-                                binding.tvDataNotfound.visibility = View.GONE
+                                binding.tvDataNotfound.visibility = View.INVISIBLE
                                 binding.rvProduct.visibility = View.VISIBLE
                                 setProductRv(result.data, sort)
                                 isDataEmpty(false)
                                 animationBtnFilter(false)
                             } else {
                                 binding.tvDataNotfound.visibility = View.VISIBLE
-                                binding.rvProduct.visibility = View.GONE
+                                binding.rvProduct.visibility = View.INVISIBLE
                                 isDataEmpty(true)
                                 animationBtnFilter(true)
                             }
                         }
                         is Result.Error -> {
                             binding.shimmerProduct.stopShimmer()
-                            binding.shimmerProduct.visibility = View.GONE
+                            binding.shimmerProduct.visibility = View.INVISIBLE
                             binding.swipeToRefresh.isRefreshing = false
-                            binding.rvProduct.visibility = View.GONE
+                            binding.rvProduct.visibility = View.INVISIBLE
                             animationBtnFilter(true)
                             Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
                         }
@@ -150,29 +150,29 @@ class HomeFragment : Fragment() {
                         is Result.Loading -> {
                             binding.shimmerProduct.startShimmer()
                             binding.shimmerProduct.visibility = View.VISIBLE
-                            binding.rvProduct.visibility = View.GONE
+                            binding.rvProduct.visibility = View.INVISIBLE
                             animationBtnFilter(true)
                         }
                         is Result.Success -> {
                             binding.shimmerProduct.stopShimmer()
-                            binding.shimmerProduct.visibility = View.GONE
+                            binding.shimmerProduct.visibility = View.INVISIBLE
                             binding.swipeToRefresh.isRefreshing = false
                             if (result.data.success?.data?.size!! > 0) {
-                                binding.tvDataNotfound.visibility = View.GONE
+                                binding.tvDataNotfound.visibility = View.INVISIBLE
                                 binding.rvProduct.visibility = View.VISIBLE
                                 setProductRv(result.data, sort)
                                 animationBtnFilter(false)
                             } else {
                                 binding.tvDataNotfound.visibility = View.VISIBLE
-                                binding.rvProduct.visibility = View.GONE
+                                binding.rvProduct.visibility = View.INVISIBLE
                                 animationBtnFilter(true)
                             }
                         }
                         is Result.Error -> {
                             binding.shimmerProduct.stopShimmer()
-                            binding.shimmerProduct.visibility = View.GONE
+                            binding.shimmerProduct.visibility = View.INVISIBLE
                             binding.swipeToRefresh.isRefreshing = false
-                            binding.rvProduct.visibility = View.GONE
+                            binding.rvProduct.visibility = View.INVISIBLE
                             animationBtnFilter(true)
                             Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
                         }
@@ -301,7 +301,7 @@ class HomeFragment : Fragment() {
     private fun isDataEmpty(state: Boolean) {
         if (state) {
             binding.floatingBtnFilter.hide()
-            binding.floatingBtnFilter.visibility = View.GONE
+            binding.floatingBtnFilter.visibility = View.INVISIBLE
         } else {
             binding.floatingBtnFilter.show()
             binding.floatingBtnFilter.visibility = View.VISIBLE
@@ -311,16 +311,16 @@ class HomeFragment : Fragment() {
     private fun animationBtnFilter(isDataEmpty: Boolean) {
         if (isDataEmpty) {
             isDataEmpty(true)
-            binding.floatingBtnFilter.visibility = View.GONE
+            binding.floatingBtnFilter.visibility = View.INVISIBLE
         } else {
             isDataEmpty(false)
-            binding.floatingBtnFilter.visibility = View.GONE
+            binding.floatingBtnFilter.visibility = View.INVISIBLE
 
             binding.rvProduct.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    binding.floatingBtnFilter.visibility = View.GONE
+                    binding.floatingBtnFilter.visibility = View.INVISIBLE
                     if (dy >= 0) {
                         febJob?.cancel()
                         febJob = coroutineScope.launch {

@@ -1,9 +1,11 @@
 package com.bagaspardanailham.myecommerceapp.ui.detail
 
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -22,6 +24,7 @@ import com.bagaspardanailham.myecommerceapp.databinding.ActivityProductDetailBin
 import com.bagaspardanailham.myecommerceapp.ui.BuyProductModalBottomSheet
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
+import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -38,6 +41,8 @@ class ProductDetailActivity : AppCompatActivity() {
     private lateinit var accessToken: String
     private var productId: Int? = 0
     private var userId: Int? = 0
+
+    private lateinit var detailData: ProductDetailItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,9 +61,19 @@ class ProductDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_share -> {
+                val image = binding.tempImage?.drawable
+
+                val mBitmap = (image as BitmapDrawable).bitmap
+                val path = MediaStore.Images.Media.insertImage(contentResolver, mBitmap, "image title", null)
+
+                val uri = Uri.parse(path)
+
                 val shareIntent = Intent(Intent.ACTION_SEND)
-                shareIntent.type="text/plain"
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "https://bagascommerce.com/product-detail?id=$productId")
+                shareIntent.type="image/*"
+                shareIntent.putExtra(Intent.EXTRA_TEXT,
+                    "Name : ${detailData.nameProduct}\nStock : ${detailData.stock}\nWeight : ${detailData.weight}\nSize : ${detailData.size}\nLink : https://bagascommerce.com/product-detail?id=$productId"
+                )
+                shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
                 startActivity(Intent.createChooser(shareIntent,"Share To"))
             }
         }
@@ -93,6 +108,7 @@ class ProductDetailActivity : AppCompatActivity() {
                             scrollView.visibility = View.VISIBLE
                             bottomAppBarLayout.visibility = View.VISIBLE
                             populateData(result.data.success?.data)
+                            detailData = result.data.success?.data!!
                             setAction(result.data.success?.data)
                         }
                         is Result.Error -> {
@@ -122,6 +138,10 @@ class ProductDetailActivity : AppCompatActivity() {
 
             imgSliderViewpager.adapter = ImageViewPagerAdapter(this@ProductDetailActivity, data.imageProduct)
             dotsIndicator.attachTo(imgSliderViewpager)
+            Glide.with(this@ProductDetailActivity)
+                .load(data.image)
+                .centerCrop()
+                .into(tempImage!!)
         }
     }
 
