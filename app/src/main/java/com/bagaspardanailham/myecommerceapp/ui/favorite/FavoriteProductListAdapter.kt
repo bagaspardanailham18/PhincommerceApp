@@ -41,9 +41,6 @@ class FavoriteProductListAdapter(private val context: Context): ListAdapter<Favo
         fun bind(data: FavoriteProductItem) {
             with(binding) {
                 iconFavorite.visibility = View.VISIBLE
-                //                val formatNumber = NumberFormat.getCurrencyInstance()
-//                formatNumber.maximumFractionDigits = 0
-//                formatNumber.currency = Currency.getInstance("IDR")
 
                 Glide.with(itemView.context)
                     .load(data.image)

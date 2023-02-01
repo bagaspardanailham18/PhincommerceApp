@@ -44,10 +44,6 @@ class ProductListAdapter(private val context: Context): ListAdapter<ProductListI
         fun bind(data: ProductListItem) {
             with(binding) {
                 iconFavorite.visibility = View.GONE
-//                val formatNumber = NumberFormat.getCurrencyInstance()
-//                formatNumber.maximumFractionDigits = 0
-                val dec = DecimalFormat("#,###.##")
-//                formatNumber.currency = Currency.getInstance("IDR")
 
                 Glide.with(itemView.context)
                     .load(data.image)
@@ -71,12 +67,6 @@ class ProductListAdapter(private val context: Context): ListAdapter<ProductListI
         val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale("in", "ID"))
         return dateFormat.format(inputDate as Date)
     }
-
-//    private fun formatingCurrency(price: String?): String {
-//        val localId = Locale("in", "ID")
-//        val rupiahFormat = NumberFormat.getCurrencyInstance(localId)
-//        return rupiahFormat.format(price?.toInt())
-//    }
 
     interface OnItemClickCallback {
         fun onItemClicked(data: ProductListItem)

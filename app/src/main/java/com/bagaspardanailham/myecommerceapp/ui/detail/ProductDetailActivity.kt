@@ -1,10 +1,13 @@
 package com.bagaspardanailham.myecommerceapp.ui.detail
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.StrictMode
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
@@ -25,9 +28,14 @@ import com.bagaspardanailham.myecommerceapp.ui.BuyProductModalBottomSheet
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
+import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import okio.IOException
+import java.io.File
+import java.io.FileOutputStream
+import java.lang.Exception
 import java.text.DecimalFormat
 
 @AndroidEntryPoint
@@ -40,6 +48,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private lateinit var accessToken: String
     private var productId: Int? = 0
+    private lateinit var productImgUrl: String
     private var userId: Int? = 0
 
     private lateinit var detailData: ProductDetailItem
@@ -55,6 +64,10 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.swipeToRefresh?.setOnRefreshListener {
             setContentData()
         }
+
+        // for Image send ignore URI error
+        val builder: StrictMode.VmPolicy.Builder = StrictMode.VmPolicy.Builder()
+        StrictMode.setVmPolicy(builder.build())
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -65,20 +78,41 @@ class ProductDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_share -> {
-                val image = binding.tempImage?.drawable
+                Picasso.get().load(productImgUrl).into(object : com.squareup.picasso.Target {
+                    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                        val intent = Intent(Intent.ACTION_SEND)
+                        intent.type = "image/*"
+                        intent.putExtra(
+                            Intent.EXTRA_TEXT,
+                            "Name : ${detailData.nameProduct}\nStock : ${detailData.stock}\nWeight : ${detailData.weight}\nSize : ${detailData.size}\nLink : https://bagascommerce.com/product-detail?id=$productId"
+                        )
+                        intent.putExtra(Intent.EXTRA_STREAM, getBitmapFromView(bitmap))
+                        startActivity(Intent.createChooser(intent, "Share To"))
+                    }
 
-                val mBitmap = (image as BitmapDrawable).bitmap
-                val path = MediaStore.Images.Media.insertImage(contentResolver, mBitmap, "image title", null)
+                    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+                        Log.v("IMG Downloader", "Bitmap Failed...");
+                    }
 
-                val uri = Uri.parse(path)
+                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+                        Log.v("IMG Downloader", "Bitmap Preparing Load...");
+                    }
 
-                val shareIntent = Intent(Intent.ACTION_SEND)
-                shareIntent.type="image/*"
-                shareIntent.putExtra(Intent.EXTRA_TEXT,
-                    "Name : ${detailData.nameProduct}\nStock : ${detailData.stock}\nWeight : ${detailData.weight}\nSize : ${detailData.size}\nLink : https://bagascommerce.com/product-detail?id=$productId"
-                )
-                shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
-                startActivity(Intent.createChooser(shareIntent,"Share To"))
+                })
+//                val image = binding.tempImage?.drawable
+//
+//                val mBitmap = (image as BitmapDrawable).bitmap
+//                val path = MediaStore.Images.Media.insertImage(contentResolver, mBitmap, "image title", null)
+//
+//                val uri = Uri.parse(path)
+//
+//                val shareIntent = Intent(Intent.ACTION_SEND)
+//                shareIntent.type="image/*"
+//                shareIntent.putExtra(Intent.EXTRA_TEXT,
+//                    "Name : ${detailData.nameProduct}\nStock : ${detailData.stock}\nWeight : ${detailData.weight}\nSize : ${detailData.size}\nLink : https://bagascommerce.com/product-detail?id=$productId"
+//                )
+//                shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+//                startActivity(Intent.createChooser(shareIntent,"Share To"))
             }
         }
         return super.onOptionsItemSelected(item)
@@ -87,7 +121,6 @@ class ProductDetailActivity : AppCompatActivity() {
     private fun setContentData() {
         lifecycleScope.launch {
             accessToken = authViewModel.getUserPref().first()?.authTokenKey.toString()
-            //productId = args.idProduct
             productId = intent.getIntExtra(EXTRA_ID, 0)
             userId = authViewModel.getUserPref().first()?.id.toString().toInt()
             if (productId == 0) {
@@ -144,6 +177,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
             imgSliderViewpager.adapter = ImageViewPagerAdapter(this@ProductDetailActivity, data.imageProduct)
             dotsIndicator.attachTo(imgSliderViewpager)
+            productImgUrl = data.image.toString()
             Glide.with(this@ProductDetailActivity)
                 .load(data.image)
                 .centerCrop()
@@ -244,6 +278,21 @@ class ProductDetailActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, resources.getString(R.string.failed_add_product_to_trolly), Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun getBitmapFromView(bmp: Bitmap?): Uri? {
+        var bmpUri: Uri? = null
+        try {
+            val file = File(this.externalCacheDir, System.currentTimeMillis().toString() + ".jpg")
+
+            val out = FileOutputStream(file)
+            bmp?.compress(Bitmap.CompressFormat.JPEG, 90, out)
+            out.close()
+            bmpUri = Uri.fromFile(file)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return bmpUri
     }
 
     private fun setCustomToolbar() {
