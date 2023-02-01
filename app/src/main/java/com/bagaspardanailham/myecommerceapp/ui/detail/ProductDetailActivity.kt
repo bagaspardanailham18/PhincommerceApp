@@ -51,6 +51,10 @@ class ProductDetailActivity : AppCompatActivity() {
 
         setCustomToolbar()
         setContentData()
+
+        binding.swipeToRefresh?.setOnRefreshListener {
+            setContentData()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -103,6 +107,7 @@ class ProductDetailActivity : AppCompatActivity() {
                             bottomAppBarLayout.visibility = View.GONE
                         }
                         is Result.Success -> {
+                            binding.swipeToRefresh?.isRefreshing = false
                             shimmerProductDetail.stopShimmer()
                             shimmerProductDetail.visibility = View.GONE
                             scrollView.visibility = View.VISIBLE
@@ -112,6 +117,7 @@ class ProductDetailActivity : AppCompatActivity() {
                             setAction(result.data.success?.data)
                         }
                         is Result.Error -> {
+                            binding.swipeToRefresh?.isRefreshing = false
                             shimmerProductDetail.stopShimmer()
                             shimmerProductDetail.visibility = View.GONE
                             bottomAppBarLayout.visibility = View.GONE
