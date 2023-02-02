@@ -1,4 +1,4 @@
-package com.bagaspardanailham.myecommerceapp.data.local
+package com.bagaspardanailham.myecommerceapp.data.local.preferences
 
 data class UserPreferencesModel(
     val authTokenKey: String,

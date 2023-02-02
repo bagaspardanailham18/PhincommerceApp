@@ -115,4 +115,10 @@ interface ApiService {
         @Path("id_product") idproduct: Int?,
         @Field("rate") rate: String
     ) : UpdateRateResponse
+
+    @GET("api/ecommerce/get_list_product_paging")
+    suspend fun getProductListPaging(
+        @Query("search") search: String?,
+        @Query("offset") offset: Int
+    ) : GetProductListPagingResponse
 }

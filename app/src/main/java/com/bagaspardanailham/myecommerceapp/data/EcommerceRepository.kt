@@ -4,8 +4,12 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
 import com.bagaspardanailham.myecommerceapp.R
-import com.bagaspardanailham.myecommerceapp.data.local.EcommerceDatabase
+import com.bagaspardanailham.myecommerceapp.data.local.room.EcommerceDatabase
 import com.bagaspardanailham.myecommerceapp.data.remote.ApiService
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -386,5 +390,17 @@ open class EcommerceRepository @Inject constructor(private val apiService: ApiSe
 
     suspend fun removeProductByIdFromTrolly(context: Context, id: Int?) {
         ecommerceDatabase.ecommerceDao().deleteProductByIdFromTrolly(id)
+    }
+
+    fun getProductListPaging(search: String?): LiveData<PagingData<ProductListPagingItem>> {
+        return Pager(
+            config = PagingConfig(
+                initialLoadSize = 5,
+                pageSize = 5
+            ),
+            pagingSourceFactory = {
+                ProductPagingSource(search, apiService)
+            }
+        ).liveData
     }
 }

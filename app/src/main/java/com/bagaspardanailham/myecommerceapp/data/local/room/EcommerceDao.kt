@@ -1,4 +1,4 @@
-package com.bagaspardanailham.myecommerceapp.data.local
+package com.bagaspardanailham.myecommerceapp.data.local.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

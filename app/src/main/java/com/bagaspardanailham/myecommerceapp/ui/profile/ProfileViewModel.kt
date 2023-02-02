@@ -3,9 +3,8 @@ package com.bagaspardanailham.myecommerceapp.ui.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bagaspardanailham.myecommerceapp.data.EcommerceRepository
-import com.bagaspardanailham.myecommerceapp.data.local.LocalSettingPreferencesModel
-import com.bagaspardanailham.myecommerceapp.data.local.PreferenceDataStore
-import com.bagaspardanailham.myecommerceapp.data.local.UserPreferencesModel
+import com.bagaspardanailham.myecommerceapp.data.local.preferences.LocalSettingPreferencesModel
+import com.bagaspardanailham.myecommerceapp.data.local.preferences.PreferenceDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch

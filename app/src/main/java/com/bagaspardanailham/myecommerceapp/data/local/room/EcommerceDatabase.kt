@@ -1,4 +1,4 @@
-package com.bagaspardanailham.myecommerceapp.data.local
+package com.bagaspardanailham.myecommerceapp.data.local.room
 
 import android.content.Context
 import androidx.room.Database

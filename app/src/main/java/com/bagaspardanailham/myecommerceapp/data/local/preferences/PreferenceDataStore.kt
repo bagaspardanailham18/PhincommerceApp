@@ -1,4 +1,4 @@
-package com.bagaspardanailham.myecommerceapp.data.local
+package com.bagaspardanailham.myecommerceapp.data.local.preferences
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

@@ -54,4 +54,5 @@
     <string name="select_all_string">Select All</string>
     <string name="trolley_string">Trolley</string>
     <string name="total_price">Total Price</string>
+    <string name="retry">Retry</string>
 </resources>

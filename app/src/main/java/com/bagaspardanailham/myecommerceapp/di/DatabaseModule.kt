@@ -1,7 +1,7 @@
 package com.bagaspardanailham.myecommerceapp.di
 
 import android.content.Context
-import com.bagaspardanailham.myecommerceapp.data.local.EcommerceDatabase
+import com.bagaspardanailham.myecommerceapp.data.local.room.EcommerceDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

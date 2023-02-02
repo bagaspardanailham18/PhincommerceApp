@@ -2,8 +2,8 @@ package com.bagaspardanailham.myecommerceapp.ui.auth
 
 import androidx.lifecycle.*
 import com.bagaspardanailham.myecommerceapp.data.EcommerceRepository
-import com.bagaspardanailham.myecommerceapp.data.local.PreferenceDataStore
-import com.bagaspardanailham.myecommerceapp.data.local.UserPreferencesModel
+import com.bagaspardanailham.myecommerceapp.data.local.preferences.PreferenceDataStore
+import com.bagaspardanailham.myecommerceapp.data.local.preferences.UserPreferencesModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch

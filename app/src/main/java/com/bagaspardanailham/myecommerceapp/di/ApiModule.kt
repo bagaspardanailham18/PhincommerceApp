@@ -3,7 +3,6 @@ package com.bagaspardanailham.myecommerceapp.di
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.bagaspardanailham.myecommerceapp.data.local.PreferenceDataStore
 import com.bagaspardanailham.myecommerceapp.data.remote.*
 import dagger.Module
 import dagger.Provides

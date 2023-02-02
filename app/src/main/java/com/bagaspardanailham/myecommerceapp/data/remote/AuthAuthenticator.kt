@@ -1,21 +1,11 @@
 package com.bagaspardanailham.myecommerceapp.data.remote
 
-import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
-import com.bagaspardanailham.myecommerceapp.data.EcommerceRepository
-import com.bagaspardanailham.myecommerceapp.data.local.PreferenceDataStore
-import com.bagaspardanailham.myecommerceapp.data.remote.response.LoginResponse
-import com.bumptech.glide.load.engine.Resource
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
-import com.bagaspardanailham.myecommerceapp.data.Result
-import com.bagaspardanailham.myecommerceapp.data.TokenResult
 import com.bagaspardanailham.myecommerceapp.data.remote.response.RefreshTokenResponse
 import javax.inject.Inject
 

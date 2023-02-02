@@ -8,11 +8,13 @@ import android.graphics.ColorFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
+import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListPagingItem
 import com.bagaspardanailham.myecommerceapp.databinding.ItemRowProductBinding
 import com.bagaspardanailham.myecommerceapp.ui.detail.ProductDetailActivity
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
@@ -22,7 +24,7 @@ import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ProductListAdapter(private val context: Context): ListAdapter<ProductListItem, ProductListAdapter.ProductListVH>(DIFF_CALLBACK) {
+class ProductListAdapter(private val context: Context): PagingDataAdapter<ProductListPagingItem, ProductListAdapter.ProductListVH>(DIFF_CALLBACK) {
 
     private lateinit var onItemClickCallback: OnItemClickCallback
 
@@ -37,11 +39,13 @@ class ProductListAdapter(private val context: Context): ListAdapter<ProductListI
 
     override fun onBindViewHolder(holder: ProductListVH, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        if (item != null) {
+            holder.bind(item)
+        }
     }
 
     inner class ProductListVH(val binding: ItemRowProductBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: ProductListItem) {
+        fun bind(data: ProductListPagingItem) {
             with(binding) {
                 iconFavorite.visibility = View.GONE
 
@@ -69,22 +73,22 @@ class ProductListAdapter(private val context: Context): ListAdapter<ProductListI
     }
 
     interface OnItemClickCallback {
-        fun onItemClicked(data: ProductListItem)
+        fun onItemClicked(data: ProductListPagingItem)
     }
 
     companion object {
-        private val DIFF_CALLBACK: DiffUtil.ItemCallback<ProductListItem> =
-            object : DiffUtil.ItemCallback<ProductListItem>() {
+        private val DIFF_CALLBACK: DiffUtil.ItemCallback<ProductListPagingItem> =
+            object : DiffUtil.ItemCallback<ProductListPagingItem>() {
                 override fun areItemsTheSame(
-                    oldItem: ProductListItem,
-                    newItem: ProductListItem
+                    oldItem: ProductListPagingItem,
+                    newItem: ProductListPagingItem
                 ): Boolean {
                     return oldItem.nameProduct == newItem.nameProduct
                 }
 
                 override fun areContentsTheSame(
-                    oldItem: ProductListItem,
-                    newItem: ProductListItem
+                    oldItem: ProductListPagingItem,
+                    newItem: ProductListPagingItem
                 ): Boolean {
                     return oldItem == newItem
                 }
