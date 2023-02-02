@@ -349,6 +349,8 @@ class HomeFragment : Fragment() {
     private fun setupRvWhenRefresh() {
         binding.swipeToRefresh.setOnRefreshListener {
             setProductData("", 0)
+            binding.searchBar.setQuery("", false)
+            binding.searchBar.clearFocus()
         }
     }
 
