@@ -55,4 +55,6 @@
     <string name="trolley_string">Trolley</string>
     <string name="total_price">Total Price</string>
     <string name="retry">Retry</string>
+    <string name="other_products">Other Products</string>
+    <string name="search_history">Search History</string>
 </resources>

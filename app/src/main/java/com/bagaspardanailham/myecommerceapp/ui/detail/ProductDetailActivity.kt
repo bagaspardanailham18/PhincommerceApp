@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.Result
@@ -26,6 +27,8 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductDetailIt
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityProductDetailBinding
 import com.bagaspardanailham.myecommerceapp.ui.BuyProductModalBottomSheet
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
+import com.bagaspardanailham.myecommerceapp.ui.favorite.FavoriteProductListAdapter
+import com.bagaspardanailham.myecommerceapp.ui.home.ProductListAdapter
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
@@ -46,6 +49,8 @@ class ProductDetailActivity : AppCompatActivity() {
     private val productDetailViewModel by viewModels<ProductDetailViewModel>()
     private val authViewModel by viewModels<AuthViewModel>()
 
+    private lateinit var adapter: OtherProductListAdapter
+
     private lateinit var accessToken: String
     private var productId: Int? = 0
     private lateinit var productImgUrl: String
@@ -60,6 +65,10 @@ class ProductDetailActivity : AppCompatActivity() {
 
         setCustomToolbar()
         setContentData()
+        setOtherProductData()
+        setProductSearchHistoryData()
+
+        adapter = OtherProductListAdapter(this)
 
         binding.swipeToRefresh?.setOnRefreshListener {
             setContentData()
@@ -182,6 +191,52 @@ class ProductDetailActivity : AppCompatActivity() {
                 .load(data.image)
                 .centerCrop()
                 .into(tempImage!!)
+        }
+    }
+
+    private fun setOtherProductData() {
+        lifecycleScope.launch {
+            productDetailViewModel.getOtherProducts(userId).observe(this@ProductDetailActivity) { result ->
+                when (result) {
+                    is Result.Loading -> {
+
+                    }
+                    is Result.Success -> {
+                        with(binding) {
+                            rvOtherProduct?.layoutManager = LinearLayoutManager(this@ProductDetailActivity)
+                            rvOtherProduct?.adapter = adapter
+                            rvOtherProduct?.setHasFixedSize(true)
+                            adapter.submitList(result.data.success?.data)
+                        }
+                    }
+                    is Result.Error -> {
+
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setProductSearchHistoryData() {
+        lifecycleScope.launch {
+            productDetailViewModel.getProductSearchHistory(userId).observe(this@ProductDetailActivity) { result ->
+                when (result) {
+                    is Result.Loading -> {
+
+                    }
+                    is Result.Success -> {
+                        with(binding) {
+                            rvProductSearchHistory?.layoutManager = LinearLayoutManager(this@ProductDetailActivity)
+                            rvProductSearchHistory?.adapter = adapter
+                            rvProductSearchHistory?.setHasFixedSize(true)
+                            adapter.submitList(result.data.success?.data)
+                        }
+                    }
+                    is Result.Error -> {
+
+                    }
+                }
+            }
         }
     }
 

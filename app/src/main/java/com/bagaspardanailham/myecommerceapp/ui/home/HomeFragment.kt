@@ -109,6 +109,8 @@ class HomeFragment : Fragment() {
                 delay(1000)
                 queryString = query.toString()
                 homeViewModel.productListPaging(query).observe(viewLifecycleOwner) { result ->
+                    binding.shimmerProduct.startShimmer()
+                    binding.shimmerProduct.visibility = View.VISIBLE
                     if (!result.equals(null)) {
                         binding.shimmerProduct.stopShimmer()
                         binding.shimmerProduct.visibility = View.INVISIBLE
@@ -121,6 +123,8 @@ class HomeFragment : Fragment() {
                     } else {
                         binding.tvDataNotfound.visibility = View.VISIBLE
                         binding.rvProduct.visibility = View.INVISIBLE
+                        binding.shimmerProduct.stopShimmer()
+                        binding.shimmerProduct.visibility = View.INVISIBLE
                         Toast.makeText(requireActivity(), "Tidak Ada", Toast.LENGTH_SHORT).show()
                         //animationBtnFilter(true)
                     }
@@ -163,6 +167,8 @@ class HomeFragment : Fragment() {
             } else {
                 queryString = query.toString()
                 homeViewModel.productListPaging(null).observe(viewLifecycleOwner) { result ->
+                    binding.shimmerProduct.startShimmer()
+                    binding.shimmerProduct.visibility = View.VISIBLE
                     if (!result.equals(null)) {
                         binding.shimmerProduct.stopShimmer()
                         binding.shimmerProduct.visibility = View.INVISIBLE
@@ -173,6 +179,8 @@ class HomeFragment : Fragment() {
                         Toast.makeText(requireActivity(), "Ada Data", Toast.LENGTH_SHORT).show()
                         //animationBtnFilter(false)
                     } else {
+                        binding.shimmerProduct.stopShimmer()
+                        binding.shimmerProduct.visibility = View.INVISIBLE
                         binding.tvDataNotfound.visibility = View.VISIBLE
                         binding.rvProduct.visibility = View.INVISIBLE
                         Toast.makeText(requireActivity(), "Tidak Ada Data", Toast.LENGTH_SHORT).show()
@@ -206,15 +214,15 @@ class HomeFragment : Fragment() {
         })
     }
 
-//    private fun showShimmer(state: Boolean) {
-//        if (state) {
-//            binding.shimmerProduct.startShimmer()
-//            binding.shimmerProduct.visibility = View.VISIBLE
-//        } else {
-//            binding.shimmerProduct.stopShimmer()
-//            binding.shimmerProduct.visibility = View.GONE
-//        }
-//    }
+    private fun showShimmer(state: Boolean) {
+        if (state) {
+            binding.shimmerProduct.startShimmer()
+            binding.shimmerProduct.visibility = View.VISIBLE
+        } else {
+            binding.shimmerProduct.stopShimmer()
+            binding.shimmerProduct.visibility = View.GONE
+        }
+    }
 //
 //    private fun showDataNotFound(state: Boolean) {
 //        if (state) {

@@ -121,4 +121,14 @@ interface ApiService {
         @Query("search") search: String?,
         @Query("offset") offset: Int
     ) : GetProductListPagingResponse
+
+    @GET("api/ecommerce/get_list_product_other")
+    suspend fun getOtherProducts(
+        @Query("id_user") iduser: Int?
+    ) : GetOtherProductListResponse
+
+    @GET("api/ecommerce/get_list_product_riwayat")
+    suspend fun getProductSearchHistory(
+        @Query("id_user") iduser: Int?
+    ) : GetProductSearchHistoryResponse
 }

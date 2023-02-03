@@ -1,4 +1,4 @@
-package com.bagaspardanailham.myecommerceapp.ui.favorite
+package com.bagaspardanailham.myecommerceapp.ui.detail
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,14 +10,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
 import com.bagaspardanailham.myecommerceapp.databinding.ItemRowProductBinding
-import com.bagaspardanailham.myecommerceapp.ui.home.ProductListAdapter
+import com.bagaspardanailham.myecommerceapp.ui.favorite.FavoriteProductListAdapter
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
-import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class FavoriteProductListAdapter(private val context: Context): ListAdapter<ProductListItem, FavoriteProductListAdapter.FavoriteProductListVH>(DIFF_CALLBACK) {
+class OtherProductListAdapter(private val context: Context): ListAdapter<ProductListItem, OtherProductListAdapter.OtherProductListVH>(DIFF_CALLBACK) {
 
     private lateinit var onItemClickCallback: OnItemClickCallback
 
@@ -25,20 +24,21 @@ class FavoriteProductListAdapter(private val context: Context): ListAdapter<Prod
         this.onItemClickCallback = onItemClickCallback
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteProductListVH {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OtherProductListVH {
         val binding = ItemRowProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return FavoriteProductListVH(binding)
+        return OtherProductListVH(binding)
     }
 
-    override fun onBindViewHolder(holder: FavoriteProductListVH, position: Int) {
+    override fun onBindViewHolder(holder: OtherProductListVH, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        if (item != null) {
+            holder.bind(item)
+        }
     }
 
-    inner class FavoriteProductListVH(private val binding: ItemRowProductBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class OtherProductListVH(val binding: ItemRowProductBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: ProductListItem) {
             with(binding) {
-                iconFavorite.visibility = View.VISIBLE
 
                 Glide.with(itemView.context)
                     .load(data.image)

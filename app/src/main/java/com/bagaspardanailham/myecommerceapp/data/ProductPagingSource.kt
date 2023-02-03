@@ -19,8 +19,8 @@ class ProductPagingSource(private val search: String?, private val apiService: A
 
             LoadResult.Page(
                 data = responseData.success!!.data,
-                prevKey = if (position == INITIAL_PAGE_INDEX) null else position - 1,
-                nextKey = if (responseData.success.data.isEmpty()) null else position + 1
+                prevKey = null,
+                nextKey = if (responseData.success.data.isEmpty()) null else position + 5
             )
         } catch (e: Exception) {
             return LoadResult.Error(e)

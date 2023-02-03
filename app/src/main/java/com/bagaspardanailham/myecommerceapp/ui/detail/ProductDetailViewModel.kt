@@ -19,4 +19,8 @@ class ProductDetailViewModel @Inject constructor(private val repository: Ecommer
     suspend fun addProductToTrolley(context: Context, dataProduct: TrolleyEntity) = repository.addProductToTrolly(context, dataProduct)
 
     fun getProductById(idProduct: Int?) = repository.getProductById(idProduct)
+
+    suspend fun getOtherProducts(idUser: Int?) = repository.getOtherProductList(idUser)
+
+    suspend fun getProductSearchHistory(idUser: Int?) = repository.getProductSearchHistory(idUser)
 }

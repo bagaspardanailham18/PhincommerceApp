@@ -2,13 +2,13 @@ package com.bagaspardanailham.myecommerceapp.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 
-data class GetFavoriteProductListResponse(
+data class GetOtherProductListResponse(
 
 	@field:SerializedName("success")
-	val success: GetFavoriteProductListSuccess? = null
+	val success: GetOtherProductSuccess? = null
 )
 
-data class GetFavoriteProductListSuccess(
+data class GetOtherProductSuccess(
 
 	@field:SerializedName("data")
 	val data: List<ProductListItem?>? = null,

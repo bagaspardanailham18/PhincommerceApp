@@ -19,8 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.Result
-import com.bagaspardanailham.myecommerceapp.data.remote.response.FavoriteProductItem
 import com.bagaspardanailham.myecommerceapp.data.remote.response.GetFavoriteProductListResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentFavoriteBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.ui.detail.ProductDetailActivity
@@ -211,7 +211,7 @@ class FavoriteFragment : Fragment() {
         }
 
         adapter.setOnItemClickCallback(object : FavoriteProductListAdapter.OnItemClickCallback {
-            override fun onItemClicked(data: FavoriteProductItem) {
+            override fun onItemClicked(data: ProductListItem) {
                 val intent = Intent(requireActivity(), ProductDetailActivity::class.java)
                 intent.putExtra(ProductDetailActivity.EXTRA_ID, data.id)
                 startActivity(intent)
