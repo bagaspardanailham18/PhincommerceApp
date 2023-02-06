@@ -1,4 +1,4 @@
-package com.bagaspardanailham.myecommerceapp.ui.profile
+package com.bagaspardanailham.myecommerceapp.ui.main.profile
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

@@ -19,15 +19,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.core.widget.NestedScrollView
+            <me.didik.component.StickyNestedScrollView
                 android:id="@+id/scrollView"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="?actionBarSize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                android:paddingBottom="?actionBarSize"
+                tools:context="me.didik.stickynestedscrollview.MainActivity"
+                tools:showIn="@layout/activity_product_detail">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -84,10 +88,10 @@
                             android:layout_marginStart="28dp"
                             android:layout_marginTop="12dp"
                             android:layout_marginEnd="8dp"
-                            android:maxLines="4"
                             android:fontFamily="@font/poppinsregular"
-                            android:textSize="18sp"
+                            android:maxLines="4"
                             android:textColor="@color/black"
+                            android:textSize="18sp"
                             app:layout_constraintEnd_toStartOf="@+id/tv_product_price"
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="parent"
@@ -333,12 +337,13 @@
                             android:layout_marginTop="15dp"
                             android:fontFamily="@font/poppinsregular"
                             android:lineHeight="18sp"
+                            android:text="@string/lorem_string"
                             android:textSize="12sp"
                             app:layout_constraintEnd_toEndOf="@+id/tableLayout"
+                            app:layout_constraintHorizontal_bias="1.0"
                             app:layout_constraintStart_toStartOf="@+id/tableLayout"
                             app:layout_constraintTop_toBottomOf="@+id/tableLayout"
-                            tools:targetApi="p"
-                            android:text="@string/lorem_string" />
+                            tools:targetApi="p" />
 
                         <ImageView
                             android:id="@+id/temp_image"
@@ -359,76 +364,106 @@
                         android:layout_marginTop="30dp"
                         android:background="@color/lighter_grey" />
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
+                    <LinearLayout
+                        android:id="@+id/layout_rv_other_pruduct"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:orientation="vertical"
                         android:paddingBottom="18dp">
 
                         <TextView
                             android:id="@+id/textView6"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="16dp"
-                            android:fontFamily="@font/poppinsregular"
+                            android:background="@color/white"
+                            android:padding="14dp"
+                            android:elevation="1dp"
+                            android:fontFamily="@font/poppinsmedium"
+                            android:tag="sticky"
                             android:text="@string/other_products"
-                            android:textSize="12sp"
                             android:textColor="@color/black"
+                            android:textSize="14sp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_other_product"
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="50dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView6"
-                            android:layout_marginTop="50dp"
                             tools:itemCount="3"
                             tools:listitem="@layout/item_row_product" />
 
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/tv_other_product_empty"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/other_product_is_empty"
+                            android:fontFamily="@font/poppinsregular"
+                            android:textSize="14sp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:visibility="gone"/>
+
+                    </LinearLayout>
 
                     <com.google.android.material.divider.MaterialDivider
                         android:layout_width="match_parent"
                         android:layout_height="10dp"
                         android:background="@color/lighter_grey" />
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
+                    <LinearLayout
+                        android:id="@+id/layout_rv_search_history"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:orientation="vertical"
                         android:paddingBottom="18dp">
 
                         <TextView
                             android:id="@+id/title_search_history"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="16dp"
-                            android:fontFamily="@font/poppinsregular"
+                            android:background="@color/white"
+                            android:padding="14dp"
+                            android:elevation="1dp"
+                            android:fontFamily="@font/poppinsmedium"
+                            android:tag="sticky"
                             android:text="@string/search_history"
-                            android:textSize="12sp"
                             android:textColor="@color/black"
+                            android:textSize="14sp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_product_search_history"
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="50dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/title_search_history"
-                            android:layout_marginTop="50dp"
                             tools:itemCount="3"
                             tools:listitem="@layout/item_row_product" />
 
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/tv_search_history_product_empty"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/other_product_is_empty"
+                            android:fontFamily="@font/poppinsregular"
+                            android:textSize="14sp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:visibility="gone"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </androidx.core.widget.NestedScrollView>
+            </me.didik.component.StickyNestedScrollView>
 
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/shimmer_product_detail"

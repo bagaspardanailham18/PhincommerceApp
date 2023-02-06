@@ -1,30 +1,25 @@
-package com.bagaspardanailham.myecommerceapp.ui.home
+package com.bagaspardanailham.myecommerceapp.ui.main.favorite
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.graphics.Color
-import android.graphics.ColorFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
-import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListPagingItem
 import com.bagaspardanailham.myecommerceapp.databinding.ItemRowProductBinding
-import com.bagaspardanailham.myecommerceapp.ui.detail.ProductDetailActivity
+import com.bagaspardanailham.myecommerceapp.ui.main.home.ProductListAdapter
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import java.text.DecimalFormat
-import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ProductListAdapter(private val context: Context): PagingDataAdapter<ProductListPagingItem, ProductListAdapter.ProductListVH>(DIFF_CALLBACK) {
+class FavoriteProductListAdapter(private val context: Context): ListAdapter<ProductListItem, FavoriteProductListAdapter.FavoriteProductListVH>(
+    DIFF_CALLBACK
+) {
 
     private lateinit var onItemClickCallback: OnItemClickCallback
 
@@ -32,22 +27,20 @@ class ProductListAdapter(private val context: Context): PagingDataAdapter<Produc
         this.onItemClickCallback = onItemClickCallback
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductListVH {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteProductListVH {
         val binding = ItemRowProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductListVH(binding)
+        return FavoriteProductListVH(binding)
     }
 
-    override fun onBindViewHolder(holder: ProductListVH, position: Int) {
+    override fun onBindViewHolder(holder: FavoriteProductListVH, position: Int) {
         val item = getItem(position)
-        if (item != null) {
-            holder.bind(item)
-        }
+        holder.bind(item)
     }
 
-    inner class ProductListVH(val binding: ItemRowProductBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: ProductListPagingItem) {
+    inner class FavoriteProductListVH(private val binding: ItemRowProductBinding): RecyclerView.ViewHolder(binding.root) {
+        fun bind(data: ProductListItem) {
             with(binding) {
-                iconFavorite.visibility = View.GONE
+                iconFavorite.visibility = View.VISIBLE
 
                 Glide.with(itemView.context)
                     .load(data.image)
@@ -73,26 +66,27 @@ class ProductListAdapter(private val context: Context): PagingDataAdapter<Produc
     }
 
     interface OnItemClickCallback {
-        fun onItemClicked(data: ProductListPagingItem)
+        fun onItemClicked(data: ProductListItem)
     }
 
     companion object {
-        private val DIFF_CALLBACK: DiffUtil.ItemCallback<ProductListPagingItem> =
-            object : DiffUtil.ItemCallback<ProductListPagingItem>() {
+        private val DIFF_CALLBACK: DiffUtil.ItemCallback<ProductListItem> =
+            object : DiffUtil.ItemCallback<ProductListItem>() {
                 override fun areItemsTheSame(
-                    oldItem: ProductListPagingItem,
-                    newItem: ProductListPagingItem
+                    oldItem: ProductListItem,
+                    newItem: ProductListItem
                 ): Boolean {
                     return oldItem.nameProduct == newItem.nameProduct
                 }
 
                 override fun areContentsTheSame(
-                    oldItem: ProductListPagingItem,
-                    newItem: ProductListPagingItem
+                    oldItem: ProductListItem,
+                    newItem: ProductListItem
                 ): Boolean {
                     return oldItem == newItem
                 }
 
             }
     }
+
 }

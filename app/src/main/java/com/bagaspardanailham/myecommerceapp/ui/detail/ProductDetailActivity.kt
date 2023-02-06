@@ -15,6 +15,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,11 +25,10 @@ import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.RoomResult
 import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductDetailItem
+import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityProductDetailBinding
 import com.bagaspardanailham.myecommerceapp.ui.BuyProductModalBottomSheet
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
-import com.bagaspardanailham.myecommerceapp.ui.favorite.FavoriteProductListAdapter
-import com.bagaspardanailham.myecommerceapp.ui.home.ProductListAdapter
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
@@ -42,7 +42,7 @@ import java.lang.Exception
 import java.text.DecimalFormat
 
 @AndroidEntryPoint
-class ProductDetailActivity : AppCompatActivity() {
+class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemClickCallback {
 
     private lateinit var binding: ActivityProductDetailBinding
 
@@ -57,6 +57,10 @@ class ProductDetailActivity : AppCompatActivity() {
     private var userId: Int? = 0
 
     private lateinit var detailData: ProductDetailItem
+
+    private lateinit var imgViewPagerAdapter: ImageViewPagerAdapter
+
+    private lateinit var imgPrevDialog: ImagePreviewDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -144,15 +148,15 @@ class ProductDetailActivity : AppCompatActivity() {
                     when (result) {
                         is Result.Loading -> {
                             shimmerProductDetail.startShimmer()
-                            shimmerProductDetail.visibility = View.VISIBLE
-                            scrollView.visibility = View.GONE
+                            shimmerProductDetail.isVisible = true
+                            scrollView.isVisible = false
                             bottomAppBarLayout.visibility = View.GONE
                         }
                         is Result.Success -> {
                             binding.swipeToRefresh?.isRefreshing = false
                             shimmerProductDetail.stopShimmer()
-                            shimmerProductDetail.visibility = View.GONE
-                            scrollView.visibility = View.VISIBLE
+                            shimmerProductDetail.isVisible = false
+                            scrollView.isVisible = true
                             bottomAppBarLayout.visibility = View.VISIBLE
                             populateData(result.data.success?.data)
                             detailData = result.data.success?.data!!
@@ -161,7 +165,7 @@ class ProductDetailActivity : AppCompatActivity() {
                         is Result.Error -> {
                             binding.swipeToRefresh?.isRefreshing = false
                             shimmerProductDetail.stopShimmer()
-                            shimmerProductDetail.visibility = View.GONE
+                            shimmerProductDetail.isVisible = false
                             bottomAppBarLayout.visibility = View.GONE
                             Toast.makeText(this@ProductDetailActivity, result.errorBody.toString(), Toast.LENGTH_SHORT).show()
                         }
@@ -184,7 +188,7 @@ class ProductDetailActivity : AppCompatActivity() {
             supportActionBar?.title = data?.nameProduct
             btnToggleFavorite.isChecked = data!!.isFavorite
 
-            imgSliderViewpager.adapter = ImageViewPagerAdapter(this@ProductDetailActivity, data.imageProduct)
+            imgSliderViewpager.adapter = ImageViewPagerAdapter(this@ProductDetailActivity, data.imageProduct, this@ProductDetailActivity)
             dotsIndicator.attachTo(imgSliderViewpager)
             productImgUrl = data.image.toString()
             Glide.with(this@ProductDetailActivity)
@@ -203,10 +207,15 @@ class ProductDetailActivity : AppCompatActivity() {
                     }
                     is Result.Success -> {
                         with(binding) {
-                            rvOtherProduct?.layoutManager = LinearLayoutManager(this@ProductDetailActivity)
-                            rvOtherProduct?.adapter = adapter
-                            rvOtherProduct?.setHasFixedSize(true)
-                            adapter.submitList(result.data.success?.data)
+                            if (result.data.success?.data?.size!! > 0) {
+                                rvOtherProduct?.layoutManager = LinearLayoutManager(this@ProductDetailActivity)
+                                rvOtherProduct?.adapter = adapter
+                                rvOtherProduct?.setHasFixedSize(true)
+                                adapter.submitList(result.data.success.data)
+                                setOnItemClicked()
+                            } else {
+                                binding.tvOtherProductEmpty?.visibility = View.VISIBLE
+                            }
                         }
                     }
                     is Result.Error -> {
@@ -226,10 +235,15 @@ class ProductDetailActivity : AppCompatActivity() {
                     }
                     is Result.Success -> {
                         with(binding) {
-                            rvProductSearchHistory?.layoutManager = LinearLayoutManager(this@ProductDetailActivity)
-                            rvProductSearchHistory?.adapter = adapter
-                            rvProductSearchHistory?.setHasFixedSize(true)
-                            adapter.submitList(result.data.success?.data)
+                            if (result.data.success?.data?.size!! > 0) {
+                                rvProductSearchHistory?.layoutManager = LinearLayoutManager(this@ProductDetailActivity)
+                                rvProductSearchHistory?.adapter = adapter
+                                rvProductSearchHistory?.setHasFixedSize(true)
+                                adapter.submitList(result.data.success.data)
+                                setOnItemClicked()
+                            } else {
+                                binding.tvSearchHistoryProductEmpty?.visibility = View.VISIBLE
+                            }
                         }
                     }
                     is Result.Error -> {
@@ -239,6 +253,18 @@ class ProductDetailActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun setOnItemClicked() {
+        adapter.setOnItemClickCallback(object : OtherProductListAdapter.OnItemClickCallback {
+            override fun onItemClicked(data: ProductListItem) {
+                val intent = Intent(this@ProductDetailActivity, ProductDetailActivity::class.java)
+                intent.putExtra(EXTRA_ID, data.id)
+                startActivity(intent)
+            }
+
+        })
+    }
+
 
     private fun setAction(product: ProductDetailItem?) {
         binding.btnToggleFavorite.setOnClickListener {
@@ -364,5 +390,10 @@ class ProductDetailActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_ID = "extra_id"
+    }
+
+    override fun onItemClicked(data: String?) {
+        imgPrevDialog = ImagePreviewDialog(this@ProductDetailActivity, data)
+        imgPrevDialog.showImagePreview()
     }
 }

@@ -15,7 +15,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityMainBinding
-import com.bagaspardanailham.myecommerceapp.ui.profile.ProfileViewModel
+import com.bagaspardanailham.myecommerceapp.ui.main.profile.ProfileViewModel
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyActivity
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyViewModel
 import com.google.android.material.badge.BadgeDrawable

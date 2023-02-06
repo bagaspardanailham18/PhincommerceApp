@@ -1,4 +1,4 @@
-package com.bagaspardanailham.myecommerceapp.ui.favorite
+package com.bagaspardanailham.myecommerceapp.ui.main.favorite
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -24,8 +24,8 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentFavoriteBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.ui.detail.ProductDetailActivity
-import com.bagaspardanailham.myecommerceapp.ui.home.HomeViewModel
-import com.bagaspardanailham.myecommerceapp.ui.home.ProductListAdapter
+import com.bagaspardanailham.myecommerceapp.ui.main.home.HomeViewModel
+import com.bagaspardanailham.myecommerceapp.ui.main.home.ProductListAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*

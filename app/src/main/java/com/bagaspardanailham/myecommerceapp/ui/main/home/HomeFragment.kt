@@ -1,4 +1,4 @@
-package com.bagaspardanailham.myecommerceapp.ui.home
+package com.bagaspardanailham.myecommerceapp.ui.main.home
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -17,11 +17,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
+import androidx.core.content.ContextCompat.startActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,6 +45,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import org.json.JSONObject
 
@@ -78,7 +83,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = ProductListAdapter(requireActivity())
-        setProductData(queryString, 0)
+        setProductData(queryString)
         setupRvWhenRefresh()
 
         setupAction()
@@ -92,9 +97,9 @@ class HomeFragment : Fragment() {
 
             override fun onQueryTextChange(q: String?): Boolean {
                 if (q?.length == 0 || q.toString() == "") {
-                    setProductData("", 0)
+                    setProductData("")
                 } else {
-                    setProductData(q, 0)
+                    setProductData(q)
                 }
                 return true
             }
@@ -102,89 +107,41 @@ class HomeFragment : Fragment() {
 
     }
 
-    private fun setProductData(query: String?, sort: Int) {
+    private fun setProductData(query: String?) {
+        adapter.addLoadStateListener { loadState ->
+            binding.shimmerProduct.isVisible = loadState.refresh == LoadState.Loading
+            binding.rvProduct.isVisible = loadState.refresh != LoadState.Loading
+
+            if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
+                isDataEmpty(true)
+            } else {
+                isDataEmpty(false)
+            }
+        }
+
         searchJob = coroutineScope.launch {
-            val token = authViewModel.getUserPref().first()?.authTokenKey.toString()
-            if (query.toString().isNotEmpty()) {
-                delay(1000)
+            if (query.toString().isNotEmpty() || query != "") {
+                delay(2000)
                 queryString = query.toString()
-                homeViewModel.productListPaging(query).observe(viewLifecycleOwner) { result ->
-                    binding.shimmerProduct.startShimmer()
-                    binding.shimmerProduct.visibility = View.VISIBLE
-                    if (!result.equals(null)) {
-                        binding.shimmerProduct.stopShimmer()
-                        binding.shimmerProduct.visibility = View.INVISIBLE
+
+                homeViewModel.getProductListPaging(query.toString()).observe(viewLifecycleOwner) { result ->
+                    if (result != null) {
                         binding.swipeToRefresh.isRefreshing = false
-                        binding.tvDataNotfound.visibility = View.INVISIBLE
-                        binding.rvProduct.visibility = View.VISIBLE
-                        setProductRv(result, sort)
-                        Toast.makeText(requireActivity(), "Ada data", Toast.LENGTH_SHORT).show()
-                        //animationBtnFilter(false)
+                        isDataEmpty(false)
+                        setProductRv(result)
                     } else {
-                        binding.tvDataNotfound.visibility = View.VISIBLE
-                        binding.rvProduct.visibility = View.INVISIBLE
-                        binding.shimmerProduct.stopShimmer()
-                        binding.shimmerProduct.visibility = View.INVISIBLE
-                        Toast.makeText(requireActivity(), "Tidak Ada", Toast.LENGTH_SHORT).show()
-                        //animationBtnFilter(true)
+                        isDataEmpty(true)
                     }
-
-
-//                    when (result) {
-//                        is Result.Loading -> {
-//                            binding.shimmerProduct.startShimmer()
-//                            binding.shimmerProduct.visibility = View.VISIBLE
-//                            binding.rvProduct.visibility = View.INVISIBLE
-//                            animationBtnFilter(true)
-//                        }
-//                        is Result.Success -> {
-//                            binding.shimmerProduct.stopShimmer()
-//                            binding.shimmerProduct.visibility = View.INVISIBLE
-//                            binding.swipeToRefresh.isRefreshing = false
-//                            if (result.data.success?.data?.size!! > 0) {
-//                                binding.tvDataNotfound.visibility = View.INVISIBLE
-//                                binding.rvProduct.visibility = View.VISIBLE
-//                                setProductRv(result.data, sort)
-//                                isDataEmpty(false)
-//                                animationBtnFilter(false)
-//                            } else {
-//                                binding.tvDataNotfound.visibility = View.VISIBLE
-//                                binding.rvProduct.visibility = View.INVISIBLE
-//                                isDataEmpty(true)
-//                                animationBtnFilter(true)
-//                            }
-//                        }
-//                        is Result.Error -> {
-//                            binding.shimmerProduct.stopShimmer()
-//                            binding.shimmerProduct.visibility = View.INVISIBLE
-//                            binding.swipeToRefresh.isRefreshing = false
-//                            binding.rvProduct.visibility = View.INVISIBLE
-//                            animationBtnFilter(true)
-//                            Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
-//                        }
-//                    }
                 }
             } else {
                 queryString = query.toString()
-                homeViewModel.productListPaging(null).observe(viewLifecycleOwner) { result ->
-                    binding.shimmerProduct.startShimmer()
-                    binding.shimmerProduct.visibility = View.VISIBLE
-                    if (!result.equals(null)) {
-                        binding.shimmerProduct.stopShimmer()
-                        binding.shimmerProduct.visibility = View.INVISIBLE
+                homeViewModel.getProductListPaging("").observe(viewLifecycleOwner) { result ->
+                    if (result != null) {
                         binding.swipeToRefresh.isRefreshing = false
-                        binding.tvDataNotfound.visibility = View.INVISIBLE
-                        binding.rvProduct.visibility = View.VISIBLE
-                        setProductRv(result, sort)
-                        Toast.makeText(requireActivity(), "Ada Data", Toast.LENGTH_SHORT).show()
-                        //animationBtnFilter(false)
+                        isDataEmpty(false)
+                        setProductRv(result)
                     } else {
-                        binding.shimmerProduct.stopShimmer()
-                        binding.shimmerProduct.visibility = View.INVISIBLE
-                        binding.tvDataNotfound.visibility = View.VISIBLE
-                        binding.rvProduct.visibility = View.INVISIBLE
-                        Toast.makeText(requireActivity(), "Tidak Ada Data", Toast.LENGTH_SHORT).show()
-                        //animationBtnFilter(true)
+                        isDataEmpty(true)
                     }
                 }
             }
@@ -192,7 +149,7 @@ class HomeFragment : Fragment() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setProductRv(result: PagingData<ProductListPagingItem>, sort: Int) {
+    private fun setProductRv(result: PagingData<ProductListPagingItem>) {
         binding.apply {
             rvProduct.adapter = adapter.withLoadStateFooter(
                 footer = LoadingStateAdapter {
@@ -223,15 +180,14 @@ class HomeFragment : Fragment() {
             binding.shimmerProduct.visibility = View.GONE
         }
     }
-//
-//    private fun showDataNotFound(state: Boolean) {
-//        if (state) {
-//            binding.tvErrorMsg.visibility = View.VISIBLE
-//            binding.tvErrorMsg.text = "Data Not Found"
-//        } else {
-//            binding.tvErrorMsg.visibility = View.GONE
-//        }
-//    }
+
+    private fun isDataEmpty(state: Boolean) {
+        if (state) {
+            binding.tvDataNotfound.visibility = View.VISIBLE
+        } else {
+            binding.tvDataNotfound.visibility = View.GONE
+        }
+    }
 //
 //    private fun showRvProduct(state: Boolean) {
 //        if (state) {
@@ -336,9 +292,34 @@ class HomeFragment : Fragment() {
         imm.hideSoftInputFromWindow(activity.currentFocus?.windowToken, 0)
     }
 
+    private inline fun CombinedLoadStates.decideOnState(
+        showLoading: (Boolean) -> Unit,
+        showEmptyState: (Boolean) -> Unit,
+        showError: (String) -> Unit
+    ) {
+        showLoading(refresh is LoadState.Loading)
+
+        showEmptyState(
+            source.append is LoadState.NotLoading
+                    && source.append.endOfPaginationReached
+                    && adapter.itemCount == 0
+        )
+
+        val errorState = source.append as? LoadState.Error
+            ?: source.prepend as? LoadState.Error
+            ?: source.refresh as? LoadState.Error
+            ?: append as? LoadState.Error
+            ?: prepend as? LoadState.Error
+            ?: refresh as? LoadState.Error
+
+        errorState?.let { showError(it.error.toString()) }
+    }
+
     private fun setupRvWhenRefresh() {
         binding.swipeToRefresh.setOnRefreshListener {
-            setProductData("", 0)
+            adapter.refresh()
+            setProductData("")
+            binding.rvProduct.visibility = View.GONE
             binding.searchBar.setQuery("", false)
             binding.searchBar.clearFocus()
         }
@@ -350,4 +331,5 @@ class HomeFragment : Fragment() {
         febJob?.cancel()
         searchJob?.cancel()
     }
+
 }

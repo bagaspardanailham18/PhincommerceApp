@@ -15,6 +15,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 import com.bagaspardanailham.myecommerceapp.data.remote.response.*
+import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.HttpException
@@ -396,7 +397,8 @@ open class EcommerceRepository @Inject constructor(private val apiService: ApiSe
         return Pager(
             config = PagingConfig(
                 initialLoadSize = 5,
-                pageSize = 5
+                pageSize = 5,
+                prefetchDistance = 1
             ),
             pagingSourceFactory = {
                 ProductPagingSource(search, apiService)

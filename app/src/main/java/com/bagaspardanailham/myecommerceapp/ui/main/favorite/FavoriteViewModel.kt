@@ -1,4 +1,4 @@
-package com.bagaspardanailham.myecommerceapp.ui.favorite
+package com.bagaspardanailham.myecommerceapp.ui.main.favorite
 
 import androidx.lifecycle.ViewModel
 import com.bagaspardanailham.myecommerceapp.data.EcommerceRepository

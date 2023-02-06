@@ -13,7 +13,8 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.ImageProductIte
 import com.bumptech.glide.Glide
 import java.util.*
 
-class ImageViewPagerAdapter(val context: Context, val imgList: List<ImageProductItem?>?): PagerAdapter() {
+class ImageViewPagerAdapter(val context: Context, val imgList: List<ImageProductItem?>?, val listener: OnItemClickCallback): PagerAdapter() {
+
     override fun getCount(): Int {
         return imgList!!.size
     }
@@ -35,7 +36,13 @@ class ImageViewPagerAdapter(val context: Context, val imgList: List<ImageProduct
 
         tvItemImgTitle.text = imgList?.get(position)?.titleProduct
 
+        itemView.setOnClickListener { listener.onItemClicked(imgList?.get(position)?.imageProduct) }
+
         return itemView
+    }
+
+    interface OnItemClickCallback {
+        fun onItemClicked(data: String?)
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {

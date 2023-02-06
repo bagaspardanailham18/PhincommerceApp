@@ -1,4 +1,4 @@
-package com.bagaspardanailham.myecommerceapp.ui.profile
+package com.bagaspardanailham.myecommerceapp.ui.main.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

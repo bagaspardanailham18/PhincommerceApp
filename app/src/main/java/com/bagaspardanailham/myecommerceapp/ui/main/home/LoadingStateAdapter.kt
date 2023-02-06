@@ -1,4 +1,4 @@
-package com.bagaspardanailham.myecommerceapp.ui.home
+package com.bagaspardanailham.myecommerceapp.ui.main.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

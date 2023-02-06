@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingTop="?android:actionBarSize"
     android:paddingBottom="?android:actionBarSize"
-    tools:context=".ui.home.HomeFragment">
+    tools:context=".ui.main.home.HomeFragment">
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_bar"

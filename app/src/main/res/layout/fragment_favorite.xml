@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingTop="?android:actionBarSize"
     android:paddingBottom="?android:actionBarSize"
-    tools:context=".ui.favorite.FavoriteFragment">
+    tools:context=".ui.main.favorite.FavoriteFragment">
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_bar"

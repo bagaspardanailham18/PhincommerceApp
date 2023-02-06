@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
 import com.bagaspardanailham.myecommerceapp.databinding.ItemRowProductBinding
-import com.bagaspardanailham.myecommerceapp.ui.favorite.FavoriteProductListAdapter
+import com.bagaspardanailham.myecommerceapp.ui.main.favorite.FavoriteProductListAdapter
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import java.text.SimpleDateFormat
