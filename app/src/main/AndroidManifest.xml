@@ -33,6 +33,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
+            android:name=".ui.notification.NotificationActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ui.trolly.TrollyActivity"
             android:exported="false">
             <meta-data
@@ -49,15 +56,19 @@
         <activity
             android:name=".ui.detail.ProductDetailActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https"
+
+                <data
                     android:host="bagascommerce.com"
-                    android:pathPrefix="/product-detail" />
-                <data android:scheme="app" android:host="www.bagascommerce.com" />
+                    android:pathPrefix="/product-detail"
+                    android:scheme="https" />
+                <data
+                    android:host="www.bagascommerce.com"
+                    android:scheme="app" />
             </intent-filter>
         </activity>
         <activity
@@ -113,6 +124,21 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <service
+            android:name=".service.MyFirebaseNotification"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <!--
+ Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/black" />
     </application>
 
 </manifest>

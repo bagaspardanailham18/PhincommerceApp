@@ -21,6 +21,7 @@ import com.bagaspardanailham.myecommerceapp.databinding.FragmentLoginBinding
 import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog
 import com.bagaspardanailham.myecommerceapp.ui.MainActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.delay
@@ -78,31 +79,33 @@ class LoginFragment : Fragment() {
                     binding?.layoutEdtEmail?.error = "Wrong email format"
                     return
                 } else {
-                    lifecycleScope.launch {
-                        viewModel.loginUser(email, password).observe(viewLifecycleOwner) { result ->
-                            when (result) {
-                                is Result.Loading -> {
-                                    loading.startLoading()
-                                }
-                                is Result.Success -> {
-                                    loading.isDismiss()
-                                    result.data.success?.apply {
-                                        val authToken = accessToken.toString()
-                                        val refreshToken = refreshToken.toString()
-                                        val id = dataUser?.id
-                                        val name = dataUser?.name.toString()
-                                        val email = dataUser?.email.toString()
-                                        val phone = dataUser?.phone.toString()
-                                        val gender = dataUser?.gender.toString()
-                                        val imgPath = dataUser?.path.toString()
+                    FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                        val token = task.result
+                        lifecycleScope.launch {
+                            viewModel.loginUser(email, password, token).observe(viewLifecycleOwner) { result ->
+                                when (result) {
+                                    is Result.Loading -> {
+                                        loading.startLoading()
+                                    }
+                                    is Result.Success -> {
+                                        loading.isDismiss()
+                                        result.data.success?.apply {
+                                            val authToken = accessToken.toString()
+                                            val refreshToken = refreshToken.toString()
+                                            val id = dataUser?.id
+                                            val name = dataUser?.name.toString()
+                                            val email = dataUser?.email.toString()
+                                            val phone = dataUser?.phone.toString()
+                                            val gender = dataUser?.gender.toString()
+                                            val imgPath = dataUser?.path.toString()
 
-                                        lifecycleScope.launch {
-                                            viewModel.saveToken(authToken, refreshToken, id, name, email, phone, gender, imgPath)
-                                        }
+                                            lifecycleScope.launch {
+                                                viewModel.saveToken(authToken, refreshToken, id, name, email, phone, gender, imgPath)
+                                            }
 
-                                        Log.d("AuthToken", "Auth Token : $authToken")
-                                        Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show()
-                                        Log.d("pref", """
+                                            Log.d("AuthToken", "Auth Token : $authToken")
+                                            Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show()
+                                            Log.d("pref", """
                                             authToken : $authToken,
                                             refreshToken : $refreshToken,
                                             id : $id,
@@ -112,19 +115,20 @@ class LoginFragment : Fragment() {
                                             gender : $gender,
                                             imgPath : $imgPath
                                         """.trimIndent())
-                                    }
+                                        }
 
-                                    val intent = Intent(requireActivity(), MainActivity::class.java)
-                                    startActivity(intent)
-                                    requireActivity().finish()
-                                }
-                                is Result.Error -> {
-                                    loading.isDismiss()
-                                    val errorres = JSONObject(result.errorBody?.string()).toString()
-                                    val gson = Gson()
-                                    val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
-                                    val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
-                                    Toast.makeText(requireActivity(), errorResponse.error?.message, Toast.LENGTH_SHORT).show()
+                                        val intent = Intent(requireActivity(), MainActivity::class.java)
+                                        startActivity(intent)
+                                        requireActivity().finish()
+                                    }
+                                    is Result.Error -> {
+                                        loading.isDismiss()
+                                        val errorres = JSONObject(result.errorBody?.string()).toString()
+                                        val gson = Gson()
+                                        val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
+                                        val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
+                                        Toast.makeText(requireActivity(), errorResponse.error?.message, Toast.LENGTH_SHORT).show()
+                                    }
                                 }
                             }
                         }

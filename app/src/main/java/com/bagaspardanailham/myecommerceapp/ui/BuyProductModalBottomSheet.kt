@@ -23,6 +23,7 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductDetailIt
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentBuyProductBottomSheetBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.ui.checkout.CheckoutActivity
+import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.Gson
@@ -67,28 +68,35 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?): Botto
             idProduct = product?.id.toString()
         }
 
-        val dec = DecimalFormat("#,###.##")
+        setProductInfo()
+        setQuantity()
+        setTotalPrice()
 
+        setAction()
+
+    }
+
+    private fun setProductInfo() {
         with(binding) {
             Glide.with(requireContext())
                 .load(product?.image)
                 .into(this!!.tvBottomImg)
 
-            tvBottomPrice.text = String.format(resources.getString(R.string.currency_code), dec.format(product?.harga?.toInt()).toString())
-            tvBottomStok.text = String.format(resources.getString(R.string.stock_with_value_string), product?.stock.toString())
+            tvBottomPrice.text = product?.harga?.toInt()?.toRupiahFormat(requireContext())
+            tvBottomStok.text = if (product?.stock == 1) getString(R.string.out_of_stock) else String.format(resources.getString(R.string.stock_with_value_string), product?.stock.toString())
         }
 //        addMargin(view)
         dialog?.window?.attributes?.windowAnimations = R.style.DialogAnimation
+    }
 
-        setAction()
-
+    private fun setQuantity() {
         viewModel.quantity.observe(requireActivity()) {
             binding?.tvQuantity?.text = it.toString()
             quantity = it
             if (it < product?.stock!!) {
                 binding?.btnIncreaseQuantity?.background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_rounded_black)
             }
-            if (it == product?.stock) {
+            if (it == product.stock) {
                 binding?.btnIncreaseQuantity?.background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_rounded_lightgrey)
                 binding?.btnDecreaseQuantity?.background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_rounded_black)
             }
@@ -100,13 +108,14 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?): Botto
                 binding?.btnDecreaseQuantity?.background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_rounded_lightgrey)
             }
         }
+    }
 
+    private fun setTotalPrice() {
         viewModel.setPrice(product?.harga!!.toInt())
 
         viewModel.price.observe(requireActivity()) {
-            binding?.btnBuy?.text = String.format(resources.getString(R.string.buy_now), dec.format(it).toString())
+            binding?.btnBuy?.text = String.format(resources.getString(R.string.buy_now), it.toRupiahFormat(requireContext()))
         }
-
     }
 
     private fun setAction() {
@@ -118,8 +127,8 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?): Botto
         }
         binding?.btnBuy?.setOnClickListener {
             lifecycleScope.launch {
-                Toast.makeText(requireActivity(), quantity.toString(), Toast.LENGTH_SHORT).show()
-                viewModel.updateStock(accessToken, idProduct, quantity).observe(viewLifecycleOwner) { response ->
+                val idUser = authViewModel.getUserPref().first()?.id.toString()
+                viewModel.updateStock(accessToken, idProduct, quantity, idUser).observe(viewLifecycleOwner) { response ->
                     when (response) {
                         is Result.Loading -> {
 

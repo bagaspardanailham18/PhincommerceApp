@@ -2,6 +2,7 @@ package com.bagaspardanailham.myecommerceapp.ui.trolly
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import com.bagaspardanailham.myecommerceapp.data.DataStock
 import com.bagaspardanailham.myecommerceapp.data.DataStockItem
 import com.bagaspardanailham.myecommerceapp.data.EcommerceRepository
 import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
@@ -25,6 +26,6 @@ class TrollyViewModel @Inject constructor(private val repository: EcommerceRepos
 
     suspend fun deleteProductByIdFromTrolly(context: Context, id: Int?) = repository.removeProductByIdFromTrolly(context, id)
 
-    suspend fun updateStock(accessToken: String, data: List<DataStockItem>) =
-        repository.updateStock(accessToken, data)
+    suspend fun updateStock(accessToken: String, data: List<DataStockItem>, idUser: String) =
+        repository.updateStock(accessToken, DataStock(idUser, data))
 }

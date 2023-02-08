@@ -16,6 +16,8 @@ import androidx.navigation.ui.setupWithNavController
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityMainBinding
 import com.bagaspardanailham.myecommerceapp.ui.main.profile.ProfileViewModel
+import com.bagaspardanailham.myecommerceapp.ui.notification.NotificationActivity
+import com.bagaspardanailham.myecommerceapp.ui.notification.NotificationViewModel
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyActivity
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyViewModel
 import com.google.android.material.badge.BadgeDrawable
@@ -31,9 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<ProfileViewModel>()
     private val trollyViewModel by viewModels<TrollyViewModel>()
-
-    private var pendingCart: Int? = 12
-    private lateinit var badgeCounter: TextView
+    private val notificationViewModel by viewModels<NotificationViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +53,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setAction() {
+        binding.menuNotification.setOnClickListener {
+            startActivity(Intent(this, NotificationActivity::class.java))
+        }
         binding.menuCart.setOnClickListener {
             startActivity(Intent(this, TrollyActivity::class.java))
         }
@@ -67,6 +70,17 @@ class MainActivity : AppCompatActivity() {
                         tvCartSize.text = result.size.toString()
                     } else {
                         badgeCounter.visibility = View.GONE
+                    }
+                }
+            }
+            notificationViewModel.getAllNotification().observe(this@MainActivity) { result ->
+                val unreadNotification = result.filter { !it.isRead }
+                with(binding) {
+                    if (unreadNotification.isNotEmpty()) {
+                        notifBadgeCounter.visibility = View.VISIBLE
+                        tvNotifSize.text = unreadNotification.size.toString()
+                    } else {
+                        notifBadgeCounter.visibility = View.GONE
                     }
                 }
             }

@@ -36,13 +36,13 @@ class ImageViewPagerAdapter(val context: Context, val imgList: List<ImageProduct
 
         tvItemImgTitle.text = imgList?.get(position)?.titleProduct
 
-        itemView.setOnClickListener { listener.onItemClicked(imgList?.get(position)?.imageProduct) }
+        itemView.setOnClickListener { listener.onImageClicked(imgList?.get(position)?.imageProduct) }
 
         return itemView
     }
 
     interface OnItemClickCallback {
-        fun onItemClicked(data: String?)
+        fun onImageClicked(data: String?)
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {

@@ -15,7 +15,8 @@ interface ApiService {
     suspend fun loginUser(
         @Header("apikey") apikey: String,
         @Field("email") email: String,
-        @Field("password") password: String
+        @Field("password") password: String,
+        @Field("token_fcm") tokenFcm: String
     ) : LoginResponse
 
     @Multipart

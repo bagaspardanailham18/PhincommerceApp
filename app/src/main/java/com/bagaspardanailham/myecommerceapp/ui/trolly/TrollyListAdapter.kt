@@ -28,10 +28,6 @@ class TrollyListAdapter(
     private val onCheckboxChecked: (TrolleyEntity) -> Unit
     ): ListAdapter<TrolleyEntity, TrollyListAdapter.TrollyListVH>(DIFF_CALLBACK) {
 
-    var isCheckedAll: Boolean = false
-
-    private var masterTotalPrice = 0
-
     private lateinit var onItemClickCallback: OnItemClickCallback
 
     fun setOnDeleteItemClickCallback(onItemClickCallback: OnItemClickCallback) {
@@ -47,19 +43,7 @@ class TrollyListAdapter(
         val item = getItem(position)
         holder.bind(item)
 
-//        holder.binding.cbSelectItem.setOnCheckedChangeListener(object : OnCheckedChangeListener {
-//            override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
-//                TODO("Not yet implemented")
-//            }
-//        })
-
         with(holder.binding) {
-//            if (isCheckedAll) {
-//                cbSelectItem.isChecked = true
-//            } else {
-//                cbSelectItem.isChecked = false
-//            }
-
             cbSelectItem.isChecked = item.isChecked
             tvItemQuantity.text = item.quantity.toString()
         }
@@ -67,7 +51,6 @@ class TrollyListAdapter(
 
     inner class TrollyListVH(val binding: ItemRowTrollyBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: TrolleyEntity) {
-//            var itemTotalPrice = data.harga.toString().toInt().times(binding.tvItemQuantity.toString().toInt())
             with(binding) {
 
                 Glide.with(itemView.context)
@@ -86,11 +69,6 @@ class TrollyListAdapter(
                     if (tvItemQuantity.text.toString().toInt() < data.stock!!) {
                         onAddQuantity.invoke(data)
                     }
-//                    if (quantity.value!! < data.stock!!) {
-//                        _quantity.value = _quantity.value?.plus(1)
-//                    }
-//                price = data.harga!!.toInt().times(quantity)
-//                totalPrice.plus(price)
                 }
 
                 btnDecreaseQuantity.setOnClickListener {
@@ -99,11 +77,6 @@ class TrollyListAdapter(
                     } else {
                         onMinQuantity.invoke(data)
                     }
-//                    if (quantity.value == 1) {
-//                        _quantity.value = 1
-//                    } else {
-//                        _quantity.value = _quantity.value?.minus(1)
-//                    }
                 }
 
                 cbSelectItem.setOnClickListener {
@@ -113,12 +86,6 @@ class TrollyListAdapter(
                 }
             }
         }
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun selectAll(isChecked: Boolean) {
-        isCheckedAll = isChecked
-        notifyDataSetChanged()
     }
 
     interface OnItemClickCallback {

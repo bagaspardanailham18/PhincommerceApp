@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 data class DataStock(
+    val id_user: String,
     val data_stock: List<DataStockItem>
 )
 

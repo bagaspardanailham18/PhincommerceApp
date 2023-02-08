@@ -34,7 +34,7 @@ class AuthViewModel @Inject constructor(private val repository: EcommerceReposit
         }
     }
 
-    suspend fun loginUser(email: String, password: String) = repository.loginUser(email, password)
+    suspend fun loginUser(email: String, password: String, tokenFcm: String) = repository.loginUser(email, password, tokenFcm)
 
     suspend fun registerUser(
         email: RequestBody, password: RequestBody, name: RequestBody, gender: RequestBody, phone: RequestBody, image: MultipartBody.Part

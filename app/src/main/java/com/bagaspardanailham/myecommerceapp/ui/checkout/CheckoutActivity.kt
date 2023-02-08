@@ -68,7 +68,7 @@ class CheckoutActivity : AppCompatActivity() {
                 binding.progressBar.visibility = View.VISIBLE
                 for (i in listProductId!!.indices) {
                     lifecycleScope.launch {
-                        trollyViewModel.deleteProductByIdFromTrolly(this@CheckoutActivity, listProductId[i].toInt())
+                        //trollyViewModel.deleteProductByIdFromTrolly(this@CheckoutActivity, listProductId[i].toInt())
                         checkoutViewModel.updateRate(accessToken, listProductId[i].toInt(), rate).observe(this@CheckoutActivity) { response ->
                             when (response) {
                                 is Result.Loading -> {

@@ -58,8 +58,6 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
 
     private lateinit var detailData: ProductDetailItem
 
-    private lateinit var imgViewPagerAdapter: ImageViewPagerAdapter
-
     private lateinit var imgPrevDialog: ImagePreviewDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,20 +110,6 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                     }
 
                 })
-//                val image = binding.tempImage?.drawable
-//
-//                val mBitmap = (image as BitmapDrawable).bitmap
-//                val path = MediaStore.Images.Media.insertImage(contentResolver, mBitmap, "image title", null)
-//
-//                val uri = Uri.parse(path)
-//
-//                val shareIntent = Intent(Intent.ACTION_SEND)
-//                shareIntent.type="image/*"
-//                shareIntent.putExtra(Intent.EXTRA_TEXT,
-//                    "Name : ${detailData.nameProduct}\nStock : ${detailData.stock}\nWeight : ${detailData.weight}\nSize : ${detailData.size}\nLink : https://bagascommerce.com/product-detail?id=$productId"
-//                )
-//                shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
-//                startActivity(Intent.createChooser(shareIntent,"Share To"))
             }
         }
         return super.onOptionsItemSelected(item)
@@ -180,7 +164,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
             tvProductName.text = data?.nameProduct
             tvProductPrice.text = data?.harga?.toInt()?.toRupiahFormat(this@ProductDetailActivity)
             tvProductRating.rating = data?.rate.toString().toFloat()
-            tvProductStock.text = data?.stock.toString()
+            tvProductStock.text = if (data?.stock == 1) resources.getString(R.string.out_of_stock) else data?.stock.toString()
             tvProductSize.text = data?.size
             tvProductWeight.text = data?.weight
             tvProductType.text = data?.type
@@ -392,7 +376,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
         const val EXTRA_ID = "extra_id"
     }
 
-    override fun onItemClicked(data: String?) {
+    override fun onImageClicked(data: String?) {
         imgPrevDialog = ImagePreviewDialog(this@ProductDetailActivity, data)
         imgPrevDialog.showImagePreview()
     }

@@ -34,6 +34,46 @@
                     app:srcCompat="@drawable/artboard2" />
 
                 <FrameLayout
+                    android:id="@+id/menu_notification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/menu_cart"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_baseline_notifications_24"
+                        app:tint="@color/black"/>
+
+                    <FrameLayout
+                        android:id="@+id/notif_badge_counter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|top">
+
+                        <ImageView
+                            android:layout_width="11sp"
+                            android:layout_height="11sp"
+                            android:src="@drawable/badge" />
+
+                        <TextView
+                            android:id="@+id/tv_notif_size"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/poppinsregular"
+                            android:textColor="@color/white"
+                            android:textSize="8sp"
+                            tools:text="12" />
+
+                    </FrameLayout>
+
+                </FrameLayout>
+
+                <FrameLayout
                     android:id="@+id/menu_cart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -13,4 +13,6 @@
     <color name="light_grey">#A4A4A4</color>
     <color name="lighter_grey">#D9D9D9</color>
     <color name="background">#FFC7CD</color>
+
+    <color name="bg_card_notif">#A7CFFF</color>
 </resources>

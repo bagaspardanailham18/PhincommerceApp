@@ -6,12 +6,10 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.bagaspardanailham.myecommerceapp.data.DataStock
-import com.bagaspardanailham.myecommerceapp.data.DataStockItem
 import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 
 @Dao
-interface EcommerceDao {
+interface TrolleyDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addProductToTrolley(trolly: TrolleyEntity)

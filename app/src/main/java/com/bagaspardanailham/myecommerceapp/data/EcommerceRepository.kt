@@ -9,6 +9,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.liveData
 import com.bagaspardanailham.myecommerceapp.R
+import com.bagaspardanailham.myecommerceapp.data.local.model.NotificationEntity
 import com.bagaspardanailham.myecommerceapp.data.local.room.EcommerceDatabase
 import com.bagaspardanailham.myecommerceapp.data.remote.ApiService
 import javax.inject.Inject
@@ -50,10 +51,10 @@ open class EcommerceRepository @Inject constructor(private val apiService: ApiSe
         }
     }
 
-    suspend fun loginUser(email: String, password: String) = liveData {
+    suspend fun loginUser(email: String, password: String, tokenFcm: String) = liveData {
         emit(Result.Loading)
         try {
-            val response = apiService.loginUser(API_KEY, email, password)
+            val response = apiService.loginUser(API_KEY, email, password, tokenFcm)
             Log.d("result", response.success?.message.toString())
             emit(Result.Success(response))
         } catch (throwable: Throwable) {
@@ -284,10 +285,10 @@ open class EcommerceRepository @Inject constructor(private val apiService: ApiSe
         }
     }
 
-    suspend fun updateStock(accessToken: String, data: List<DataStockItem>): LiveData<Result<UpdateStockResponse>> = liveData {
+    suspend fun updateStock(accessToken: String, data: DataStock): LiveData<Result<UpdateStockResponse>> = liveData {
         emit(Result.Loading)
         try {
-            val response = apiService.updateStock(API_KEY, accessToken, DataStock(data))
+            val response = apiService.updateStock(API_KEY, accessToken, data)
             emit(Result.Success(response))
         } catch (throwable : Throwable) {
             if (throwable is HttpException) {
@@ -462,5 +463,20 @@ open class EcommerceRepository @Inject constructor(private val apiService: ApiSe
                 )
             }
         }
+    }
+
+
+    // Notification
+
+    suspend fun insertNotification(data: NotificationEntity) {
+        ecommerceDatabase.notificationDao().insertNotification(data)
+    }
+
+    fun getAllNotification(): LiveData<List<NotificationEntity>> {
+        return ecommerceDatabase.notificationDao().getAllNotification()
+    }
+
+    suspend fun updateNotificationIsRead(isRead: Boolean, id: Int) {
+        ecommerceDatabase.notificationDao().updateNotificationIsRead(isRead, id)
     }
 }

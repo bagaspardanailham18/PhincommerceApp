@@ -26,6 +26,9 @@ import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -36,7 +39,6 @@ class TrollyActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTrollyBinding
 
     private val trollyViewModel by viewModels<TrollyViewModel>()
-    private val buyProductModalBottomSheetVM by viewModels<BuyProductModalBottomSheetVM>()
     private val authViewModel: AuthViewModel by viewModels()
 
     private lateinit var accessToken: String
@@ -55,29 +57,17 @@ class TrollyActivity : AppCompatActivity() {
         setTrollyData()
         setAction()
 
-        lifecycleScope.launch {
-            accessToken = authViewModel.getUserPref().first()?.authTokenKey.toString()
-            trollyViewModel.getAllProductFromTrolly().observe(this@TrollyActivity) { result ->
-                var totalPrice = 0
-                var filterResult = result.filter { it.isChecked }
-                for (i in filterResult.indices) {
-                    totalPrice = totalPrice.plus(filterResult[i.toString().toInt()].itemTotalPrice!!)
-                }
-                binding.tvTotalPrice.text = totalPrice.toRupiahFormat(this@TrollyActivity)
-
-                binding.cbSelectAll.isChecked = result.size == filterResult.size
-            }
-        }
+        displayTotalPrice()
     }
 
     private fun doActionClicked() {
         adapter = TrollyListAdapter(
             this,
-            {
+            onAddQuantity = {
                 val productId = it.id
                 val quantity = it.quantity
                 val price = it.price
-                lifecycleScope.launch {
+                CoroutineScope(Dispatchers.IO).launch {
                     trollyViewModel.updateProductQuantity(
                         productId,
                         price?.toInt()?.times(quantity.toString().toInt().plus(1)),
@@ -85,11 +75,11 @@ class TrollyActivity : AppCompatActivity() {
                     )
                 }
             },
-            {
+            onMinQuantity = {
                 val productId = it.id
                 val quantity = it.quantity
                 val price = it.price
-                lifecycleScope.launch {
+                CoroutineScope(Dispatchers.IO).launch {
                     trollyViewModel.updateProductQuantity(
                         productId,
                         price?.toInt()?.times(quantity.toString().toInt().minus(1)),
@@ -97,18 +87,17 @@ class TrollyActivity : AppCompatActivity() {
                     )
                 }
             },
-            {
+            onCheckboxChecked = {
                 val productId = it.id
                 val isChecked = !it.isChecked
-                lifecycleScope.launch {
+                CoroutineScope(Dispatchers.IO).launch {
+                    binding.btnBuy.isClickable = false
                     trollyViewModel.updateProductIsCheckedById(productId, isChecked)
                 }
-//                binding.tvTotalPrice.text = it.toString()
             }
         )
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun setTrollyData() {
         lifecycleScope.launch {
             trollyViewModel.getAllProductFromTrolly().observe(this@TrollyActivity) { result ->
@@ -121,7 +110,6 @@ class TrollyActivity : AppCompatActivity() {
                         adapter.submitList(result)
                         rvTrollyItem.adapter = adapter
                         rvTrollyItem.setHasFixedSize(true)
-                        adapter.notifyDataSetChanged()
 
                         adapter.setOnDeleteItemClickCallback(object: TrollyListAdapter.OnItemClickCallback {
                             override fun onItemClicked(data: TrolleyEntity) {
@@ -151,6 +139,22 @@ class TrollyActivity : AppCompatActivity() {
         }
     }
 
+    private fun displayTotalPrice() {
+        lifecycleScope.launch {
+            accessToken = authViewModel.getUserPref().first()?.authTokenKey.toString()
+            trollyViewModel.getAllProductFromTrolly().observe(this@TrollyActivity) { result ->
+                var totalPrice = 0
+                var filterResult = result.filter { it.isChecked }
+                for (i in filterResult.indices) {
+                    totalPrice = totalPrice.plus(filterResult[i.toString().toInt()].itemTotalPrice!!)
+                }
+                binding.tvTotalPrice.text = totalPrice.toRupiahFormat(this@TrollyActivity)
+
+                binding.cbSelectAll.isChecked = result.size == filterResult.size
+            }
+        }
+    }
+
     private fun setAction() {
         binding.cbSelectAll.setOnClickListener {
             lifecycleScope.launch {
@@ -161,34 +165,47 @@ class TrollyActivity : AppCompatActivity() {
                 }
             }
         }
-        binding.btnBuy.setOnClickListener {
-            lifecycleScope.launch {
-                trollyViewModel.getAllCheckedProductFromTrolly().observe(this@TrollyActivity) { result ->
-                    val dataStockItems = arrayListOf<DataStockItem>()
-                    val listOfProductId = arrayListOf<String>()
-                    for (i in result.indices) {
-                        dataStockItems.add(DataStockItem(result[i].id.toString(), result[i].quantity))
-                        listOfProductId.add(result[i].id.toString())
-                    }
-                    lifecycleScope.launch {
-                        trollyViewModel.updateStock(accessToken, dataStockItems).observe(this@TrollyActivity) { buyResult ->
-                            when (buyResult) {
-                                is Result.Loading -> {
+        lifecycleScope.launch {
+            trollyViewModel.getAllCheckedProductFromTrolly().observe(this@TrollyActivity) { result ->
+                val dataStockItems = arrayListOf<DataStockItem>()
+                val listOfProductId = arrayListOf<String>()
+                for (i in result.indices) {
+                    dataStockItems.add(DataStockItem(result[i].id.toString(), result[i].quantity))
+                    listOfProductId.add(result[i].id.toString())
+                }
+                binding.btnBuy.setOnClickListener {
+                    if (result.isNullOrEmpty()) {
+                        Toast.makeText(this@TrollyActivity, "You haven't select any product yet", Toast.LENGTH_SHORT).show()
+                        binding.btnBuy.isClickable = false
+                    } else {
+                        lifecycleScope.launch {
+                            val idUser = authViewModel.getUserPref().first()?.id.toString()
+                            trollyViewModel.updateStock(accessToken, dataStockItems, idUser).observe(this@TrollyActivity) { buyResult ->
+                                when (buyResult) {
+                                    is Result.Loading -> {
 
-                                }
-                                is Result.Success -> {
-                                    val intent = Intent(this@TrollyActivity, CheckoutActivity::class.java)
-                                    intent.putExtra(CheckoutActivity.EXTRA_LIST_PRODUCT_ID, listOfProductId)
-                                    intent.putExtra(CheckoutActivity.EXTRA_ACCESS_TOKEN, accessToken)
-                                    startActivity(intent)
-                                    Toast.makeText(this@TrollyActivity, buyResult.data.success?.message, Toast.LENGTH_SHORT).show()
-                                }
-                                is Result.Error -> {
-                                    val errorres = JSONObject(buyResult.errorBody?.string()).toString()
-                                    val gson = Gson()
-                                    val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
-                                    val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
-                                    Toast.makeText(this@TrollyActivity, errorResponse.error?.message.toString(), Toast.LENGTH_SHORT).show()
+                                    }
+                                    is Result.Success -> {
+                                        for (i in listOfProductId.indices) {
+                                            lifecycleScope.launch {
+                                                trollyViewModel.deleteProductByIdFromTrolly(this@TrollyActivity, listOfProductId[i].toInt())
+                                            }
+                                        }
+
+                                        val intent = Intent(this@TrollyActivity, CheckoutActivity::class.java)
+                                        intent.putExtra(CheckoutActivity.EXTRA_LIST_PRODUCT_ID, listOfProductId)
+                                        intent.putExtra(CheckoutActivity.EXTRA_ACCESS_TOKEN, accessToken)
+                                        startActivity(intent)
+                                        finish()
+                                        Toast.makeText(this@TrollyActivity, buyResult.data.success?.message, Toast.LENGTH_SHORT).show()
+                                    }
+                                    is Result.Error -> {
+                                        val errorres = JSONObject(buyResult.errorBody?.string()).toString()
+                                        val gson = Gson()
+                                        val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
+                                        val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
+                                        Toast.makeText(this@TrollyActivity, errorResponse.error?.message.toString(), Toast.LENGTH_SHORT).show()
+                                    }
                                 }
                             }
                         }
