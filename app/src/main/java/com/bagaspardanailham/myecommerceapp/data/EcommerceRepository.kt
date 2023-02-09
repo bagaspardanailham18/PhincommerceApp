@@ -472,11 +472,27 @@ open class EcommerceRepository @Inject constructor(private val apiService: ApiSe
         ecommerceDatabase.notificationDao().insertNotification(data)
     }
 
-    fun getAllNotification(): LiveData<List<NotificationEntity>> {
+    fun getAllNotification(): Flow<List<NotificationEntity>> {
         return ecommerceDatabase.notificationDao().getAllNotification()
     }
 
-    suspend fun updateNotificationIsRead(isRead: Boolean, id: Int) {
+    suspend fun updateNotificationIsRead(isRead: Boolean, id: Int?) {
         ecommerceDatabase.notificationDao().updateNotificationIsRead(isRead, id)
+    }
+
+    suspend fun setAllNotificationIsRead(isRead: Boolean) {
+        ecommerceDatabase.notificationDao().setAllNotificationIsRead(isRead)
+    }
+
+    suspend fun updateNotificationIsChecked(isChecked: Boolean, id: Int?) {
+        ecommerceDatabase.notificationDao().updateNotificationIsChecked(isChecked, id)
+    }
+
+    suspend fun setAllUnchecked(isChecked: Boolean = false) {
+        ecommerceDatabase.notificationDao().setAllUnchecked(isChecked)
+    }
+
+    suspend fun deleteNotification(isChecked: Boolean) {
+        ecommerceDatabase.notificationDao().deleteNotification(isChecked)
     }
 }

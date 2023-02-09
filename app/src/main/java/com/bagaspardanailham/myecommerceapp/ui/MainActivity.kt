@@ -22,6 +22,7 @@ import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyActivity
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyViewModel
 import com.google.android.material.badge.BadgeDrawable
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -73,7 +74,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-            notificationViewModel.getAllNotification().observe(this@MainActivity) { result ->
+            notificationViewModel.getAllNotification().collect() { result ->
                 val unreadNotification = result.filter { !it.isRead }
                 with(binding) {
                     if (unreadNotification.isNotEmpty()) {

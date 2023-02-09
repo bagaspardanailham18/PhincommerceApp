@@ -139,6 +139,7 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?): Botto
                             intent.putExtra(CheckoutActivity.EXTRA_ACCESS_TOKEN, accessToken)
                             requireActivity().startActivity(intent)
                             Toast.makeText(requireActivity(), response.data.success?.message, Toast.LENGTH_SHORT).show()
+                            requireActivity().finish()
                         }
                         is Result.Error -> {
                             val errorres = JSONObject(response.errorBody?.string()).toString()

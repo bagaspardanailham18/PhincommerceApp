@@ -63,4 +63,6 @@
     <string name="out_of_stock">Out of stock</string>
     <string name="notification_string">Notification</string>
     <string name="no_notification_string">No Notification</string>
+    <string name="menu_check_string">Menu Check</string>
+    <string name="multiple_select_title">Multiple Select</string>
 </resources>
