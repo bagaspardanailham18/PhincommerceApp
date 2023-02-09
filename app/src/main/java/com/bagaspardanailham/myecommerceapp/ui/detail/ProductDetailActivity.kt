@@ -259,7 +259,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
             }
         }
         binding.btnTrolly.setOnClickListener {
-            lifecycleScope.launch {
+            lifecycleScope.launchWhenStarted {
                 productDetailViewModel.getProductById(product?.id).observe(this@ProductDetailActivity) { result ->
                     if (result.isNotEmpty() || result.size > 0) {
                         Toast.makeText(this@ProductDetailActivity, resources.getString(R.string.product_is_already_exist_in_trolly), Toast.LENGTH_SHORT).show()

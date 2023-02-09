@@ -57,7 +57,7 @@ class NotificationActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_set_check_notif_item -> {
-                setMultipleSelect()
+                setMultipleSelectToolbar()
             }
             R.id.menu_read_checked_notif -> {
                 setReadNotification()
@@ -69,7 +69,7 @@ class NotificationActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setMultipleSelect() {
+    private fun setMultipleSelectToolbar() {
         isMultipleSelect = !isMultipleSelect
         setNotificationListData()
 
@@ -163,7 +163,7 @@ class NotificationActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (isMultipleSelect) {
-            setMultipleSelect()
+            setMultipleSelectToolbar()
         } else {
             onBackPressedDispatcher.onBackPressed()
         }
@@ -174,7 +174,7 @@ class NotificationActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         if (isMultipleSelect) {
-            setMultipleSelect()
+            setMultipleSelectToolbar()
         } else {
             onBackPressedDispatcher.onBackPressed()
         }
