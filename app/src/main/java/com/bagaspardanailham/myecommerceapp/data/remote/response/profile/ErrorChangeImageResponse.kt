@@ -1,12 +1,12 @@
-package com.bagaspardanailham.myecommerceapp.data.remote.response
+package com.bagaspardanailham.myecommerceapp.data.remote.response.profile
 
 import com.google.gson.annotations.SerializedName
 
-data class ErrorChangeImageResponse(
-
-	@field:SerializedName("error")
-	val error: Error? = null
-)
+//data class ErrorChangeImageResponse(
+//
+//	@field:SerializedName("error")
+//	val error: Error? = null
+//)
 
 data class Message(
 

@@ -9,7 +9,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bagaspardanailham.myecommerceapp.data.DataStockItem
-import com.bagaspardanailham.myecommerceapp.data.RoomResult
+import com.bagaspardanailham.myecommerceapp.data.local.RoomResult
 import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityTrollyBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel

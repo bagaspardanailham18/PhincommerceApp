@@ -1,6 +1,4 @@
-package com.bagaspardanailham.myecommerceapp.data
-
-import okhttp3.ResponseBody
+package com.bagaspardanailham.myecommerceapp.data.local
 
 sealed class RoomResult<out R> private constructor() {
     data class Success<out T>(val data: T): RoomResult<T>()

@@ -3,6 +3,7 @@ package com.bagaspardanailham.myecommerceapp.di
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.viewbinding.BuildConfig
 import com.bagaspardanailham.myecommerceapp.data.remote.*
 import dagger.Module
 import dagger.Provides
@@ -22,8 +23,11 @@ class ApiModule {
     @Singleton
     @Provides
     fun provideOkHttpClient(authInterceptor: AuthInterceptor, authAuthenticator: AuthAuthenticator, authErrorInterceptor: AuthErrorInterceptor): OkHttpClient {
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        val loggingInterceptor = if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+        } else {
+            HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.NONE)
+        }
 
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)

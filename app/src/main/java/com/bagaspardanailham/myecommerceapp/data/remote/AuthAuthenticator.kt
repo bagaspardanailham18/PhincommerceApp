@@ -6,7 +6,7 @@ import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import com.bagaspardanailham.myecommerceapp.data.remote.response.RefreshTokenResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.auth.RefreshTokenResponse
 import javax.inject.Inject
 
 class AuthAuthenticator @Inject constructor(

@@ -9,6 +9,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.liveData
 import com.bagaspardanailham.myecommerceapp.R
+import com.bagaspardanailham.myecommerceapp.data.local.RoomResult
 import com.bagaspardanailham.myecommerceapp.data.local.model.NotificationEntity
 import com.bagaspardanailham.myecommerceapp.data.local.room.EcommerceDatabase
 import com.bagaspardanailham.myecommerceapp.data.remote.ApiService
@@ -16,6 +17,13 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 import com.bagaspardanailham.myecommerceapp.data.remote.response.*
+import com.bagaspardanailham.myecommerceapp.data.remote.response.auth.RegisterResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.product.AddFavoriteResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.product.RemoveFavoriteResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.product.UpdateRateResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.product.UpdateStockResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.profile.ChangeImageResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.profile.ChangePasswordResponse
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

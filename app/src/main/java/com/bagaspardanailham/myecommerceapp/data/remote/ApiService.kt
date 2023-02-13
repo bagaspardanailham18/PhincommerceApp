@@ -2,10 +2,17 @@ package com.bagaspardanailham.myecommerceapp.data.remote
 
 import com.bagaspardanailham.myecommerceapp.data.DataStock
 import com.bagaspardanailham.myecommerceapp.data.remote.response.*
+import com.bagaspardanailham.myecommerceapp.data.remote.response.auth.LoginResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.auth.RefreshTokenResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.auth.RegisterResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.product.AddFavoriteResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.product.RemoveFavoriteResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.product.UpdateRateResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.product.UpdateStockResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.profile.ChangeImageResponse
+import com.bagaspardanailham.myecommerceapp.data.remote.response.profile.ChangePasswordResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.Response
-import retrofit2.Call
 import retrofit2.http.*
 
 interface ApiService {
