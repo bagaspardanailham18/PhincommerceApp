@@ -81,7 +81,7 @@ class NotificationListAdapter(
                     oldItem: NotificationEntity,
                     newItem: NotificationEntity
                 ): Boolean {
-                    return oldItem.id.toString() == newItem.id.toString()
+                    return oldItem.title == newItem.title
                 }
 
                 override fun areContentsTheSame(
@@ -90,6 +90,7 @@ class NotificationListAdapter(
                 ): Boolean {
                     return oldItem == newItem
                 }
+
             }
     }
 }
