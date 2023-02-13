@@ -1,4 +1,4 @@
-package com.bagaspardanailham.myecommerceapp.ui
+package com.bagaspardanailham.myecommerceapp.ui.splash
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
@@ -10,6 +10,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bagaspardanailham.myecommerceapp.databinding.ActivitySplashScreenBinding
+import com.bagaspardanailham.myecommerceapp.ui.MainActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint

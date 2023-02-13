@@ -2,13 +2,11 @@ package com.bagaspardanailham.myecommerceapp.ui.detail
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.StrictMode
-import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -17,9 +15,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewpager2.widget.ViewPager2
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.RoomResult
@@ -27,7 +23,7 @@ import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductDetailItem
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityProductDetailBinding
-import com.bagaspardanailham.myecommerceapp.ui.BuyProductModalBottomSheet
+import com.bagaspardanailham.myecommerceapp.ui.detail.bottomsheet.BuyProductModalBottomSheet
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
@@ -39,7 +35,6 @@ import okio.IOException
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.Exception
-import java.text.DecimalFormat
 
 @AndroidEntryPoint
 class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemClickCallback {

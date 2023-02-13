@@ -20,8 +20,8 @@ interface NotificationDao {
     @Query("UPDATE notification SET is_read = :isRead WHERE id = :id")
     suspend fun updateNotificationIsRead(isRead: Boolean, id: Int?)
 
-    @Query("UPDATE notification SET is_read = :isRead")
-    suspend fun setAllNotificationIsRead(isRead: Boolean)
+    @Query("UPDATE notification SET is_read = :isRead WHERE is_checked = 1")
+    suspend fun setMultipleNotificationIsRead(isRead: Boolean)
 
     @Query("UPDATE notification SET is_checked = :isChecked WHERE id = :id")
     suspend fun updateNotificationIsChecked(isChecked: Boolean, id: Int?)

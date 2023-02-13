@@ -203,7 +203,8 @@
                     android:text="@string/signup_string"
                     android:textAllCaps="false"
                     android:fontFamily="@font/poppinsregular"
-                    app:cornerRadius="7dp" />
+                    app:cornerRadius="7dp"
+                    android:backgroundTint="@color/light_red"/>
 
                 <LinearLayout
                     android:id="@+id/btn_to_login"

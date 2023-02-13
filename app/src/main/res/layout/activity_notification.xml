@@ -10,7 +10,7 @@
         android:id="@+id/appBarLayout2"
         android:layout_width="0dp"
         android:layout_height="?actionBarSize"
-        android:background="@color/background"
+        android:background="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -49,12 +49,10 @@
 
     <TextView
         android:id="@+id/tv_no_notif_msg"
+        style="@style/messageText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppinssemibold"
         android:text="@string/no_notification_string"
-        android:textColor="@color/black"
-        android:textSize="18sp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

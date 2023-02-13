@@ -480,8 +480,8 @@ open class EcommerceRepository @Inject constructor(private val apiService: ApiSe
         ecommerceDatabase.notificationDao().updateNotificationIsRead(isRead, id)
     }
 
-    suspend fun setAllNotificationIsRead(isRead: Boolean) {
-        ecommerceDatabase.notificationDao().setAllNotificationIsRead(isRead)
+    suspend fun setMultipleNotificationIsRead(isRead: Boolean) {
+        ecommerceDatabase.notificationDao().setMultipleNotificationIsRead(isRead)
     }
 
     suspend fun updateNotificationIsChecked(isChecked: Boolean, id: Int?) {

@@ -54,4 +54,14 @@
     <string name="product_is_already_exist_in_trolly">Produk Ini Sudah Ada Di Keranjang</string>
     <string name="select_all_string">Pilih Semua</string>
     <string name="trolley_string">Keranjang</string>
+    <string name="total_price">Total Harga</string>
+    <string name="retry">Coba Lagi</string>
+    <string name="other_products">Produk Lainnya</string>
+    <string name="search_history">Riwayat Pencarian</string>
+    <string name="other_product_is_empty">Produk lainnya kosong</string>
+    <string name="out_of_stock">Stok habis</string>
+    <string name="notification_string">Notifikasi</string>
+    <string name="no_notification_string">Tidak Ada Notifikasi</string>
+    <string name="menu_check_string">Menu Check</string>
+    <string name="multiple_select_title">Multiple Select</string>
 </resources>

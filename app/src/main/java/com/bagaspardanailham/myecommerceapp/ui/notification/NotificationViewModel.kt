@@ -17,7 +17,7 @@ class NotificationViewModel @Inject constructor(private val repository: Ecommerc
 
     suspend fun updateNotificationIsRead(isRead: Boolean, id: Int?) = repository.updateNotificationIsRead(isRead, id)
 
-    suspend fun setAllNotificationIsRead(isRead: Boolean) = repository.setAllNotificationIsRead(isRead)
+    suspend fun setMultipleNotificationIsRead(isRead: Boolean) = repository.setMultipleNotificationIsRead(isRead)
 
     suspend fun updateNotificationIsChecked(isChecked: Boolean, id: Int?) = repository.updateNotificationIsChecked(isChecked, id)
 

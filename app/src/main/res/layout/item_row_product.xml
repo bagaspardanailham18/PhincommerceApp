@@ -25,16 +25,14 @@
 
         <TextView
             android:id="@+id/tv_item_name"
+            style="@style/subtitleText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="12dp"
             android:ellipsize="end"
-            android:fontFamily="@font/poppinsregular"
             android:maxLines="2"
-            android:textColor="@color/black"
-            android:textSize="11sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tv_item_product_img"
             app:layout_constraintTop_toBottomOf="@+id/tv_item_date"
@@ -42,12 +40,10 @@
 
         <TextView
             android:id="@+id/tv_item_price"
+            style="@style/titleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:fontFamily="@font/poppinsbold"
-            android:textColor="@color/black"
-            android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@+id/tv_item_name"
             app:layout_constraintTop_toBottomOf="@+id/tv_item_name"
             tools:text="Jam Tangan" />
@@ -66,13 +62,11 @@
 
         <TextView
             android:id="@+id/tv_item_date"
+            style="@style/dateTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:layout_marginEnd="12dp"
-            android:fontFamily="@font/poppinsregular"
-            android:textColor="#80000000"
-            android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="12 Juni 2023" />

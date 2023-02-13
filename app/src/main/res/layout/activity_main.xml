@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="?android:actionBarSize"
         android:gravity="center"
-        android:background="@color/background"
+        android:background="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -124,7 +124,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
-        android:background="@color/background"
+        android:background="?attr/colorPrimary"
         app:itemIconTint="@drawable/bottom_nav_menu_selector"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"

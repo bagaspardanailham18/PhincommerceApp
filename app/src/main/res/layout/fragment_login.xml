@@ -80,6 +80,7 @@
             android:fontFamily="@font/poppinsregular"
             android:text="@string/login_string"
             android:textAllCaps="false"
+            android:backgroundTint="@color/light_red"
             app:cornerRadius="7dp" />
 
         <com.google.android.material.button.MaterialButton
@@ -87,6 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_btn_to_login"
+            app:backgroundTint="@color/light_red"
             android:layout_alignParentBottom="true"
             android:text="@string/signup_string"
             android:textSize="18sp"

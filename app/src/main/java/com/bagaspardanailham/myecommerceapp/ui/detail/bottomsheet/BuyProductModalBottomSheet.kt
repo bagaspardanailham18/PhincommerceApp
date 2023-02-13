@@ -1,22 +1,15 @@
-package com.bagaspardanailham.myecommerceapp.ui
+package com.bagaspardanailham.myecommerceapp.ui.detail.bottomsheet
 
-import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Intent
-import android.content.res.Resources
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.view.accessibility.AccessibilityEventCompat.setAction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bagaspardanailham.myecommerceapp.R
-import com.bagaspardanailham.myecommerceapp.data.DataStockItem
 import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductDetailItem
@@ -32,7 +25,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import java.text.DecimalFormat
 
 @AndroidEntryPoint
 class BuyProductModalBottomSheet(private val product: ProductDetailItem?): BottomSheetDialogFragment() {

@@ -1,23 +1,17 @@
 package com.bagaspardanailham.myecommerceapp.ui.trolly
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.CompoundButton
-import android.widget.CompoundButton.OnCheckedChangeListener
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bagaspardanailham.myecommerceapp.data.DataStockItem
 import com.bagaspardanailham.myecommerceapp.data.RoomResult
 import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityTrollyBinding
-import com.bagaspardanailham.myecommerceapp.ui.BuyProductModalBottomSheetVM
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
@@ -28,7 +22,6 @@ import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.json.JSONObject

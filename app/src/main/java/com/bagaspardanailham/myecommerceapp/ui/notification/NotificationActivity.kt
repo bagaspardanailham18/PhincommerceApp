@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.core.view.children
-import androidx.core.view.get
-import androidx.core.view.isVisible
+import androidx.core.view.*
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bagaspardanailham.myecommerceapp.R
@@ -42,6 +42,7 @@ class NotificationActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setCustomToolbar()
+        //setupMenu()
 
         setNotificationListData()
     }
@@ -50,6 +51,14 @@ class NotificationActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.notification_menu, menu)
         if (menu != null) {
             myMenu = menu
+        }
+
+        lifecycleScope.launch {
+            notificationViewModel.getAllNotification().collect() { data ->
+                if (data.isEmpty()) {
+                    myMenu.findItem(R.id.menu_set_check_notif_item).isVisible = false
+                }
+            }
         }
         return true
     }
@@ -68,6 +77,42 @@ class NotificationActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+//    private fun setupMenu() {
+//        (this as MenuHost).addMenuProvider(object : MenuProvider {
+//            override fun onPrepareMenu(menu: Menu) {
+//                // Handle for example visibility of menu items
+//                lifecycleScope.launch {
+//                    notificationViewModel.getAllNotification().collect { data ->
+//                        menu.findItem(R.id.menu_read_checked_notif)?.isVisible = data.isNotEmpty()
+//                        menu.findItem(R.id.menu_delete_checked_notif)?.isVisible = data.isNotEmpty()
+//                        menu.findItem(R.id.menu_set_check_notif_item)?.isVisible = data.isNotEmpty()
+//                    }
+//                }
+//            }
+//
+//            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+//                menuInflater.inflate(R.menu.notification_menu, menu)
+//                myMenu = menu
+//            }
+//
+//            override fun onMenuItemSelected(item: MenuItem): Boolean {
+//                // Validate and handle the selected menu item
+//                when (item.itemId) {
+//                    R.id.menu_set_check_notif_item -> {
+//                        setMultipleSelectToolbar()
+//                    }
+//                    R.id.menu_read_checked_notif -> {
+//                        setReadNotification()
+//                    }
+//                    R.id.menu_delete_checked_notif -> {
+//                        setDeleteNotification()
+//                    }
+//                }
+//                return true
+//            }
+//        }, this, Lifecycle.State.RESUMED)
+//    }
 
     private fun setMultipleSelectToolbar() {
         isMultipleSelect = !isMultipleSelect
@@ -90,7 +135,8 @@ class NotificationActivity : AppCompatActivity() {
 
     private fun setReadNotification() {
         lifecycleScope.launch {
-            notificationViewModel.setAllNotificationIsRead(true)
+            //notificationViewModel.setAllNotificationIsRead(true)
+            notificationViewModel.setMultipleNotificationIsRead(true)
         }
         onBackPressed()
     }
@@ -103,7 +149,7 @@ class NotificationActivity : AppCompatActivity() {
     }
 
     private fun setNotificationListData() {
-        lifecycleScope.launchWhenResumed {
+        lifecycleScope.launch {
             notificationViewModel.getAllNotification().collect() { data ->
                 with(binding) {
                     tvNoNotifMsg.isVisible = data.isNullOrEmpty()

@@ -1,4 +1,4 @@
-package com.bagaspardanailham.myecommerceapp.ui
+package com.bagaspardanailham.myecommerceapp.ui.detail.bottomsheet
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

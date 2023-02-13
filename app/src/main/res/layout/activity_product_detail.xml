@@ -21,9 +21,9 @@
 
             <me.didik.component.StickyNestedScrollView
                 android:id="@+id/scrollView"
+                style="@style/bgDetailProduct"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -83,15 +83,13 @@
 
                         <TextView
                             android:id="@+id/tv_product_name"
+                            style="@style/detailTitleText"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="28dp"
                             android:layout_marginTop="12dp"
                             android:layout_marginEnd="8dp"
-                            android:fontFamily="@font/poppinsregular"
                             android:maxLines="4"
-                            android:textColor="@color/black"
-                            android:textSize="18sp"
                             app:layout_constraintEnd_toStartOf="@+id/tv_product_price"
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="parent"
@@ -100,11 +98,10 @@
 
                         <TextView
                             android:id="@+id/tv_product_price"
+                            style="@style/titleText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="28dp"
-                            android:fontFamily="@font/poppinsbold"
-                            android:textColor="@color/black"
                             android:textSize="20sp"
                             app:layout_constraintBottom_toBottomOf="@+id/tv_product_name"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -123,13 +120,11 @@
 
                         <TextView
                             android:id="@+id/textView2"
+                            style="@style/detailSubTitleText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="27dp"
-                            android:fontFamily="@font/poppinsmedium"
                             android:text="Detail Product"
-                            android:textColor="@color/black"
-                            android:textSize="14sp"
                             app:layout_constraintStart_toStartOf="@+id/tv_product_rating"
                             app:layout_constraintTop_toBottomOf="@+id/tv_product_rating" />
 
@@ -373,16 +368,8 @@
 
                         <TextView
                             android:id="@+id/textView6"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/white"
-                            android:padding="14dp"
-                            android:elevation="1dp"
-                            android:fontFamily="@font/poppinsmedium"
-                            android:tag="sticky"
+                            style="@style/sectionBar"
                             android:text="@string/other_products"
-                            android:textColor="@color/black"
-                            android:textSize="14sp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
@@ -424,16 +411,8 @@
 
                         <TextView
                             android:id="@+id/title_search_history"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/white"
-                            android:padding="14dp"
-                            android:elevation="1dp"
-                            android:fontFamily="@font/poppinsmedium"
-                            android:tag="sticky"
+                            style="@style/sectionBar"
                             android:text="@string/search_history"
-                            android:textColor="@color/black"
-                            android:textSize="14sp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
@@ -508,7 +487,8 @@
                         android:fontFamily="@font/poppinsbold"
                         android:text="@string/buy_string"
                         android:textAllCaps="false"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp"
+                        android:backgroundTint="@color/light_red"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_trolly"
@@ -518,15 +498,15 @@
                         android:fontFamily="@font/poppinsbold"
                         android:text="@string/trolly_string"
                         android:textAllCaps="false"
-                        android:textColor="?colorPrimary"
+                        android:textColor="@color/light_red"
                         android:textSize="12sp"
                         app:backgroundTint="@color/white"
                         android:layout_marginEnd="8dp"
                         android:layout_toStartOf="@+id/btn_buy"
                         app:icon="@drawable/ic_baseline_add_24"
                         app:iconSize="15dp"
-                        app:iconTint="?colorPrimary"
-                        app:strokeColor="?colorPrimary"
+                        app:iconTint="@color/light_red"
+                        app:strokeColor="@color/light_red"
                         app:strokeWidth="3dp" />
 
                 </RelativeLayout>
@@ -541,7 +521,7 @@
         android:id="@+id/appBarLayout2"
         android:layout_width="0dp"
         android:layout_height="?actionBarSize"
-        android:background="@color/background"
+        android:background="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
