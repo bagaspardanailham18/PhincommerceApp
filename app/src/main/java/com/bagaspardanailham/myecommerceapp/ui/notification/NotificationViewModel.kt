@@ -1,8 +1,7 @@
 package com.bagaspardanailham.myecommerceapp.ui.notification
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.bagaspardanailham.myecommerceapp.data.EcommerceRepository
+import com.bagaspardanailham.myecommerceapp.data.repository.EcommerceRepository
 import com.bagaspardanailham.myecommerceapp.data.local.model.NotificationEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow

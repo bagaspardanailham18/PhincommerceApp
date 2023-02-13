@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.bagaspardanailham.myecommerceapp.data.DataStock
 import com.bagaspardanailham.myecommerceapp.data.DataStockItem
-import com.bagaspardanailham.myecommerceapp.data.EcommerceRepository
+import com.bagaspardanailham.myecommerceapp.data.repository.EcommerceRepository
 import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

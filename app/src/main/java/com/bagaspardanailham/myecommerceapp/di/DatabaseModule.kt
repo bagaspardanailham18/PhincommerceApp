@@ -1,10 +1,11 @@
 package com.bagaspardanailham.myecommerceapp.di
 
 import android.content.Context
-import com.bagaspardanailham.myecommerceapp.data.EcommerceRepository
+import com.bagaspardanailham.myecommerceapp.data.repository.EcommerceRepository
 import com.bagaspardanailham.myecommerceapp.data.local.room.EcommerceDatabase
 import com.bagaspardanailham.myecommerceapp.data.local.room.NotificationDao
 import com.bagaspardanailham.myecommerceapp.data.remote.ApiService
+import com.bagaspardanailham.myecommerceapp.data.repository.EcommerceRepositoryImpl
 import com.bagaspardanailham.myecommerceapp.ui.notification.NotificationViewModel
 import dagger.Module
 import dagger.Provides
@@ -29,7 +30,7 @@ class DatabaseModule {
     }
 
     @Provides
-    fun provideRepository(apiService: ApiService, ecommerceDatabase: EcommerceDatabase): EcommerceRepository = EcommerceRepository(apiService, ecommerceDatabase)
+    fun provideRepository(apiService: ApiService, ecommerceDatabase: EcommerceDatabase): EcommerceRepository = EcommerceRepositoryImpl(apiService, ecommerceDatabase)
 
     @Provides
     @Singleton

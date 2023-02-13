@@ -537,7 +537,10 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppinsbold"
                 tools:text="Product Name"
-                android:marqueeRepeatLimit="@integer/material_motion_duration_long_2"
+                android:ellipsize="marquee"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:fadingEdge="horizontal"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 

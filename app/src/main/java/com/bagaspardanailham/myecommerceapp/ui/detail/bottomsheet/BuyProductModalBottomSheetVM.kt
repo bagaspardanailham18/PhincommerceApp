@@ -5,8 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.bagaspardanailham.myecommerceapp.data.DataStock
 import com.bagaspardanailham.myecommerceapp.data.DataStockItem
-import com.bagaspardanailham.myecommerceapp.data.EcommerceRepository
-import com.bumptech.glide.Glide.init
+import com.bagaspardanailham.myecommerceapp.data.repository.EcommerceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

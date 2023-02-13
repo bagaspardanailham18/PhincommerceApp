@@ -1,4 +1,4 @@
-package com.bagaspardanailham.myecommerceapp.data.local
+package com.bagaspardanailham.myecommerceapp.data
 
 sealed class RoomResult<out R> private constructor() {
     data class Success<out T>(val data: T): RoomResult<T>()

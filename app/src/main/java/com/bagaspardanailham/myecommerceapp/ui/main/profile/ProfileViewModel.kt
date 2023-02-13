@@ -2,7 +2,7 @@ package com.bagaspardanailham.myecommerceapp.ui.main.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bagaspardanailham.myecommerceapp.data.EcommerceRepository
+import com.bagaspardanailham.myecommerceapp.data.repository.EcommerceRepository
 import com.bagaspardanailham.myecommerceapp.data.local.preferences.LocalSettingPreferencesModel
 import com.bagaspardanailham.myecommerceapp.data.local.preferences.PreferenceDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
