@@ -40,5 +40,15 @@
             app:argType="integer"
             android:defaultValue="0" />
     </activity>
+    <activity
+        android:id="@+id/trollyActivity"
+        android:name="com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyActivity"
+        android:label="activity_trolly"
+        tools:layout="@layout/activity_trolly" />
+    <activity
+        android:id="@+id/paymentOptionsActivity"
+        android:name="com.bagaspardanailham.myecommerceapp.ui.payment.PaymentOptionsActivity"
+        android:label="activity_payment_options"
+        tools:layout="@layout/activity_payment_options" />
 
 </navigation>

@@ -5,10 +5,10 @@ import com.google.gson.annotations.SerializedName
 data class PaymentOptionsResponse(
 
 	@field:SerializedName("PaymentOptionsResponse")
-	val paymentOptionsResponse: List<PaymentOptionsResponseItem?>? = null
+	val paymentOptionsResponse: List<PaymentTypeOptionsItem?>? = null
 )
 
-data class DataItem(
+data class PaymentOptionsDataItem(
 
 	@field:SerializedName("name")
 	val name: String? = null,
@@ -23,10 +23,10 @@ data class DataItem(
 	val status: Boolean? = null
 )
 
-data class PaymentOptionsResponseItem(
+data class PaymentTypeOptionsItem(
 
 	@field:SerializedName("data")
-	val data: List<DataItem?>? = null,
+	val data: List<PaymentOptionsDataItem?>? = null,
 
 	@field:SerializedName("id")
 	val id: String? = null,

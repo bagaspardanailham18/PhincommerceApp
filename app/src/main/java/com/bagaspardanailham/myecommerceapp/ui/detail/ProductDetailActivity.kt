@@ -25,6 +25,7 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityProductDetailBinding
 import com.bagaspardanailham.myecommerceapp.ui.detail.bottomsheet.BuyProductModalBottomSheet
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
+import com.bagaspardanailham.myecommerceapp.ui.payment.PaymentOptionsActivity
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
@@ -50,6 +51,8 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
     private var productId: Int? = 0
     private lateinit var productImgUrl: String
     private var userId: Int? = 0
+    private var choosenPaymentId: String? = null
+    private var choosenPaymentName: String? = null
 
     private lateinit var detailData: ProductDetailItem
 
@@ -141,7 +144,9 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                             bottomAppBarLayout.visibility = View.VISIBLE
                             populateData(result.data.success?.data)
                             detailData = result.data.success?.data!!
+                            checkChoosenPaymentMethod()
                             setAction(result.data.success?.data)
+                            detailData = result.data.success.data
                         }
                         is Result.Error -> {
                             binding.swipeToRefresh?.isRefreshing = false
@@ -176,6 +181,14 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                 .load(data.image)
                 .centerCrop()
                 .into(tempImage!!)
+        }
+    }
+
+    private fun checkChoosenPaymentMethod() {
+        choosenPaymentId = intent.extras?.getString(PaymentOptionsActivity.EXTRA_PAYMENT_METHOD_ID).toString()
+        choosenPaymentName = intent.extras?.getString(PaymentOptionsActivity.EXTRA_PAYMENT_METHOD_NAME).toString()
+        if (choosenPaymentId != "null") {
+            showBottomSheetBuyProduct(detailData, choosenPaymentId, choosenPaymentName)
         }
     }
 
@@ -267,8 +280,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
             }
         }
         binding.btnBuy.setOnClickListener {
-            val buyProductBottomSheet = BuyProductModalBottomSheet(product)
-            buyProductBottomSheet.show(supportFragmentManager, ProductDetailActivity::class.java.simpleName)
+            showBottomSheetBuyProduct(product, choosenPaymentId, choosenPaymentName)
         }
     }
 
@@ -355,6 +367,11 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
             e.printStackTrace()
         }
         return bmpUri
+    }
+
+    private fun showBottomSheetBuyProduct(product: ProductDetailItem?, choosenPaymentId: String?, choosenPaymentName: String?) {
+        val buyProductBottomSheet = BuyProductModalBottomSheet(product, choosenPaymentId, choosenPaymentName)
+        buyProductBottomSheet.show(supportFragmentManager, ProductDetailActivity::class.java.simpleName)
     }
 
     private fun setCustomToolbar() {

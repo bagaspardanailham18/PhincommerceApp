@@ -14,6 +14,8 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityCheckoutBinding
 import com.bagaspardanailham.myecommerceapp.ui.MainActivity
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyViewModel
+import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,6 +37,18 @@ class CheckoutActivity : AppCompatActivity() {
 
         val productId = intent.getStringExtra(EXTRA_PRODUCT_ID)
         val listProductId = intent.getStringArrayListExtra(EXTRA_LIST_PRODUCT_ID)
+        val totalPrice = intent.getIntExtra(EXTRA_TOTAL_PRICE, 0)
+        val paymentId = intent.getStringExtra(EXTRA_PAYMENT_ID)
+        val paymentName = intent.getStringExtra(EXTRA_PAYMENT_NAME)
+        val paymentMenthodImg = setPaymentImg(paymentId)
+
+        binding.tvPaymentName.text = paymentName.toString()
+        Glide.with(this)
+            .load(paymentMenthodImg)
+            .fitCenter()
+            .into(binding.tvPaymentImg)
+
+        binding.tvTotalPrice.text = totalPrice.toRupiahFormat(this)
 
         val accessToken = intent.getStringExtra(EXTRA_ACCESS_TOKEN).toString()
 
@@ -92,9 +106,26 @@ class CheckoutActivity : AppCompatActivity() {
         }
     }
 
+    private fun setPaymentImg(paymentId: String?): Int {
+        return when (paymentId) {
+            "va_bca" -> R.drawable.bca
+            "va_mandiri" -> R.drawable.mandiri
+            "va_bri" -> R.drawable.bri
+            "va_bni" -> R.drawable.bni
+            "va_btn" -> R.drawable.btn
+            "va_danamon" -> R.drawable.danamon
+            "ewallet_gopay" -> R.drawable.gopay
+            "ewallet_ovo" -> R.drawable.ovo
+            else -> R.drawable.dana
+        }
+    }
+
     companion object {
         const val EXTRA_PRODUCT_ID = "extra_product_id"
         const val EXTRA_LIST_PRODUCT_ID = "extra_list_product_id"
+        const val EXTRA_TOTAL_PRICE = "extra_total_price"
+        const val EXTRA_PAYMENT_ID = "extra_payment_id"
+        const val EXTRA_PAYMENT_NAME = "extra_payment_name"
         const val EXTRA_ACCESS_TOKEN = "extra_access_token"
     }
 }

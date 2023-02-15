@@ -75,10 +75,11 @@
             app:layout_constraintTop_toBottomOf="@+id/view" />
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginEnd="16dp"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/view2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view">
@@ -87,26 +88,26 @@
                 android:id="@+id/btn_decrease_quantity"
                 android:layout_width="21.67dp"
                 android:layout_height="21.67dp"
-                android:src="@drawable/ic_baseline_remove_24"
                 android:background="@drawable/bg_rounded_black"
-                app:tint="@color/white"/>
+                android:src="@drawable/ic_baseline_remove_24"
+                app:tint="@color/white" />
 
             <TextView
                 android:id="@+id/tv_quantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1"
+                android:layout_marginHorizontal="16dp"
                 android:fontFamily="@font/poppinsbold"
-                android:textSize="14sp"
-                android:layout_marginHorizontal="16dp"/>
+                android:text="1"
+                android:textSize="14sp" />
 
             <ImageButton
                 android:id="@+id/btn_increase_quantity"
                 android:layout_width="21.67dp"
                 android:layout_height="21.67dp"
-                android:src="@drawable/ic_baseline_add_24"
                 android:background="@drawable/bg_rounded_black"
-                app:tint="@color/white"/>
+                android:src="@drawable/ic_baseline_add_24"
+                app:tint="@color/white" />
 
         </LinearLayout>
 
@@ -121,12 +122,42 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
+        <LinearLayout
+            android:id="@+id/tv_choosen_payment_method"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/view2">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/tv_payment_img"
+                android:layout_width="45dp"
+                android:layout_height="33dp"
+                tools:src="@drawable/bca" />
+
+            <TextView
+                android:id="@+id/tv_payment_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:fontFamily="@font/poppinsregular"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                tools:text="BCA Virtual Account" />
+
+        </LinearLayout>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_buy"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="14dp"
             android:layout_marginBottom="12dp"
             android:backgroundTint="@color/light_red"
@@ -136,7 +167,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view2" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_choosen_payment_method" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

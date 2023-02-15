@@ -98,7 +98,8 @@
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBarLayout"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
+        android:minHeight="60dp"
         android:background="@color/white"
         app:elevation="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -108,33 +109,64 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
+            android:minHeight="60dp"
             android:gravity="center_vertical">
+
+            <LinearLayout
+                android:id="@+id/tv_choosen_payment_method"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/tv_payment_img"
+                    android:layout_width="45dp"
+                    android:layout_height="33dp"
+                    tools:src="@drawable/bca" />
+
+                <TextView
+                    android:id="@+id/tv_payment_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:fontFamily="@font/poppinsregular"
+                    tools:text="BCA Virtual Account"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/text_total_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
                 android:fontFamily="@font/poppinsregular"
                 android:text="@string/total_price"
                 android:textColor="@color/light_grey"
                 android:textSize="12sp"
+                android:layout_marginTop="11dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_choosen_payment_method" />
 
             <TextView
                 android:id="@+id/tv_total_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text_total_price"
+                android:layout_marginBottom="8dp"
                 android:fontFamily="@font/poppinsregular"
+                android:text="Rp. 0"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/text_total_price"
-                app:layout_constraintTop_toBottomOf="@+id/text_total_price"
-                android:text="Rp. 0" />
+                app:layout_constraintTop_toBottomOf="@+id/text_total_price" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_buy"
@@ -146,9 +178,9 @@
                 android:textAllCaps="false"
                 android:textSize="12sp"
                 app:backgroundTint="@color/light_red"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_total_price"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@+id/text_total_price" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

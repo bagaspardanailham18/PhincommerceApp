@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bagaspardanailham.myecommerceapp.R
@@ -16,6 +17,7 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductDetailIt
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentBuyProductBottomSheetBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.ui.checkout.CheckoutActivity
+import com.bagaspardanailham.myecommerceapp.ui.payment.PaymentOptionsActivity
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -27,7 +29,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 @AndroidEntryPoint
-class BuyProductModalBottomSheet(private val product: ProductDetailItem?): BottomSheetDialogFragment() {
+class BuyProductModalBottomSheet(private val product: ProductDetailItem?, private val choosenPaymentId: String?, private val choosenPaymentName: String?): BottomSheetDialogFragment() {
 
     private var _binding: FragmentBuyProductBottomSheetBinding? = null
     private val binding get() =  _binding
@@ -38,6 +40,7 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?): Botto
     private lateinit var accessToken: String
     private lateinit var idProduct: String
     private var quantity: Int? = 0
+    private var totalPrice: Int? = 0
 
     override fun getTheme(): Int {
         return R.style.NoBackgroundDialogTheme
@@ -69,6 +72,9 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?): Botto
     }
 
     private fun setProductInfo() {
+        val paymentId = choosenPaymentId
+        val paymentName = choosenPaymentName
+
         with(binding) {
             Glide.with(requireContext())
                 .load(product?.image)
@@ -76,7 +82,59 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?): Botto
 
             tvBottomPrice.text = product?.harga?.toInt()?.toRupiahFormat(requireContext())
             tvBottomStok.text = if (product?.stock == 1) getString(R.string.out_of_stock) else String.format(resources.getString(R.string.stock_with_value_string), product?.stock.toString())
+
+            tvChoosenPaymentMethod.isVisible = choosenPaymentId != "null"
+            tvPaymentName.text = paymentName
         }
+
+        when (paymentId) {
+            "va_bca" ->
+                Glide.with(requireContext())
+                    .load(R.drawable.bca)
+                    .fitCenter()
+                    .into(binding!!.tvPaymentImg)
+            "va_mandiri" ->
+                Glide.with(requireContext())
+                    .load(R.drawable.mandiri)
+                    .fitCenter()
+                    .into(binding!!.tvPaymentImg)
+            "va_bri" ->
+                Glide.with(requireContext())
+                    .load(R.drawable.bri)
+                    .fitCenter()
+                    .into(binding!!.tvPaymentImg)
+            "va_bni" ->
+                Glide.with(requireContext())
+                    .load(R.drawable.bni)
+                    .fitCenter()
+                    .into(binding!!.tvPaymentImg)
+            "va_btn" ->
+                Glide.with(requireContext())
+                    .load(R.drawable.btn)
+                    .fitCenter()
+                    .into(binding!!.tvPaymentImg)
+            "va_danamon" ->
+                Glide.with(requireContext())
+                    .load(R.drawable.danamon)
+                    .fitCenter()
+                    .into(binding!!.tvPaymentImg)
+            "ewallet_gopay" ->
+                Glide.with(requireContext())
+                    .load(R.drawable.gopay)
+                    .fitCenter()
+                    .into(binding!!.tvPaymentImg)
+            "ewallet_ovo" ->
+                Glide.with(requireContext())
+                    .load(R.drawable.ovo)
+                    .fitCenter()
+                    .into(binding!!.tvPaymentImg)
+            "ewallet_dana" ->
+                Glide.with(requireContext())
+                    .load(R.drawable.dana)
+                    .fitCenter()
+                    .into(binding!!.tvPaymentImg)
+        }
+
 //        addMargin(view)
         dialog?.window?.attributes?.windowAnimations = R.style.DialogAnimation
     }
@@ -106,6 +164,7 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?): Botto
         viewModel.setPrice(product?.harga!!.toInt())
 
         viewModel.price.observe(requireActivity()) {
+            totalPrice = it
             binding?.btnBuy?.text = String.format(resources.getString(R.string.buy_now), it.toRupiahFormat(requireContext()))
         }
     }
@@ -118,31 +177,48 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?): Botto
             viewModel.increaseQuantity(product?.stock)
         }
         binding?.btnBuy?.setOnClickListener {
-            lifecycleScope.launch {
-                val idUser = authViewModel.getUserPref().first()?.id.toString()
-                viewModel.updateStock(accessToken, idProduct, quantity, idUser).observe(viewLifecycleOwner) { response ->
-                    when (response) {
-                        is Result.Loading -> {
+            if (choosenPaymentId != "null") {
+                lifecycleScope.launch {
+                    val idUser = authViewModel.getUserPref().first()?.id.toString()
+                    viewModel.updateStock(accessToken, idProduct, quantity, idUser).observe(viewLifecycleOwner) { response ->
+                        when (response) {
+                            is Result.Loading -> {
 
-                        }
-                        is Result.Success -> {
-                            val intent = Intent(requireActivity(), CheckoutActivity::class.java)
-                            intent.putExtra(CheckoutActivity.EXTRA_PRODUCT_ID, idProduct)
-                            intent.putExtra(CheckoutActivity.EXTRA_ACCESS_TOKEN, accessToken)
-                            requireActivity().startActivity(intent)
-                            Toast.makeText(requireActivity(), response.data.success?.message, Toast.LENGTH_SHORT).show()
-                            requireActivity().finish()
-                        }
-                        is Result.Error -> {
-                            val errorres = JSONObject(response.errorBody?.string()).toString()
-                            val gson = Gson()
-                            val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
-                            val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
-                            Toast.makeText(requireActivity(), errorResponse.error?.message.toString(), Toast.LENGTH_SHORT).show()
+                            }
+                            is Result.Success -> {
+                                val intent = Intent(requireActivity(), CheckoutActivity::class.java)
+                                intent.putExtra(CheckoutActivity.EXTRA_PRODUCT_ID, idProduct)
+                                intent.putExtra(CheckoutActivity.EXTRA_ACCESS_TOKEN, accessToken)
+                                intent.putExtra(CheckoutActivity.EXTRA_TOTAL_PRICE, totalPrice)
+                                intent.putExtra(CheckoutActivity.EXTRA_PAYMENT_ID, choosenPaymentId)
+                                intent.putExtra(CheckoutActivity.EXTRA_PAYMENT_NAME, choosenPaymentName)
+                                requireActivity().startActivity(intent)
+                                Toast.makeText(requireActivity(), response.data.success?.message, Toast.LENGTH_SHORT).show()
+                                requireActivity().finish()
+                            }
+                            is Result.Error -> {
+                                val errorres = JSONObject(response.errorBody?.string()).toString()
+                                val gson = Gson()
+                                val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
+                                val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
+                                Toast.makeText(requireActivity(), errorResponse.error?.message.toString(), Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }
+            } else {
+                val intent = Intent(requireActivity(), PaymentOptionsActivity::class.java)
+                intent.putExtra(PaymentOptionsActivity.EXTRA_PRODUCT_ID, idProduct.toInt())
+                startActivity(intent)
+                dismiss()
             }
+        }
+
+        binding?.tvChoosenPaymentMethod?.setOnClickListener {
+            val intent = Intent(requireActivity(), PaymentOptionsActivity::class.java)
+            intent.putExtra(PaymentOptionsActivity.EXTRA_PRODUCT_ID, idProduct.toInt())
+            startActivity(intent)
+            dismiss()
         }
     }
 

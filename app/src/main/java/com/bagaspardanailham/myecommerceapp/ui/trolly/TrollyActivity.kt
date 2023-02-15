@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.DataStockItem
 import com.bagaspardanailham.myecommerceapp.data.RoomResult
 import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
@@ -16,7 +18,9 @@ import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.ui.checkout.CheckoutActivity
+import com.bagaspardanailham.myecommerceapp.ui.payment.PaymentOptionsActivity
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +41,11 @@ class TrollyActivity : AppCompatActivity() {
     private lateinit var accessToken: String
 
     private lateinit var adapter: TrollyListAdapter
+
+    private var choosenPaymentId: String? = null
+    private var choosenPaymentName: String? = null
+
+    private var mainTotalPrice: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,6 +130,8 @@ class TrollyActivity : AppCompatActivity() {
                                 }
                             }
                         })
+
+                        checkChoosenPaymentMethod()
                     } else {
                         cbSelectAll.visibility = View.GONE
                         rvTrollyItem.visibility = View.GONE
@@ -141,6 +152,8 @@ class TrollyActivity : AppCompatActivity() {
                 for (i in filterResult.indices) {
                     totalPrice = totalPrice.plus(filterResult[i.toString().toInt()].itemTotalPrice!!)
                 }
+
+                mainTotalPrice = totalPrice
                 binding.tvTotalPrice.text = totalPrice.toRupiahFormat(this@TrollyActivity)
 
                 binding.cbSelectAll.isChecked = result.size == filterResult.size
@@ -172,38 +185,109 @@ class TrollyActivity : AppCompatActivity() {
                         binding.btnBuy.isClickable = false
                     } else {
                         lifecycleScope.launch {
-                            val idUser = authViewModel.getUserPref().first()?.id.toString()
-                            trollyViewModel.updateStock(accessToken, dataStockItems, idUser).observe(this@TrollyActivity) { buyResult ->
-                                when (buyResult) {
-                                    is Result.Loading -> {
+                            if (choosenPaymentId != "null") {
+                                val idUser = authViewModel.getUserPref().first()?.id.toString()
+                                trollyViewModel.updateStock(accessToken, dataStockItems, idUser).observe(this@TrollyActivity) { buyResult ->
+                                    when (buyResult) {
+                                        is Result.Loading -> {
 
-                                    }
-                                    is Result.Success -> {
-                                        for (i in listOfProductId.indices) {
-                                            lifecycleScope.launch {
-                                                trollyViewModel.deleteProductByIdFromTrolly(this@TrollyActivity, listOfProductId[i].toInt())
-                                            }
                                         }
+                                        is Result.Success -> {
+                                            for (i in listOfProductId.indices) {
+                                                lifecycleScope.launch {
+                                                    trollyViewModel.deleteProductByIdFromTrolly(this@TrollyActivity, listOfProductId[i].toInt())
+                                                }
+                                            }
 
-                                        val intent = Intent(this@TrollyActivity, CheckoutActivity::class.java)
-                                        intent.putExtra(CheckoutActivity.EXTRA_LIST_PRODUCT_ID, listOfProductId)
-                                        intent.putExtra(CheckoutActivity.EXTRA_ACCESS_TOKEN, accessToken)
-                                        startActivity(intent)
-                                        finish()
-                                        Toast.makeText(this@TrollyActivity, buyResult.data.success?.message, Toast.LENGTH_SHORT).show()
-                                    }
-                                    is Result.Error -> {
-                                        val errorres = JSONObject(buyResult.errorBody?.string()).toString()
-                                        val gson = Gson()
-                                        val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
-                                        val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
-                                        Toast.makeText(this@TrollyActivity, errorResponse.error?.message.toString(), Toast.LENGTH_SHORT).show()
+                                            val intent = Intent(this@TrollyActivity, CheckoutActivity::class.java)
+                                            intent.putExtra(CheckoutActivity.EXTRA_LIST_PRODUCT_ID, listOfProductId)
+                                            intent.putExtra(CheckoutActivity.EXTRA_ACCESS_TOKEN, accessToken)
+                                            intent.putExtra(CheckoutActivity.EXTRA_TOTAL_PRICE, mainTotalPrice)
+                                            intent.putExtra(CheckoutActivity.EXTRA_PAYMENT_ID, choosenPaymentId)
+                                            intent.putExtra(CheckoutActivity.EXTRA_PAYMENT_NAME, choosenPaymentName)
+                                            startActivity(intent)
+                                            finish()
+                                            Toast.makeText(this@TrollyActivity, buyResult.data.success?.message, Toast.LENGTH_SHORT).show()
+                                        }
+                                        is Result.Error -> {
+                                            val errorres = JSONObject(buyResult.errorBody?.string()).toString()
+                                            val gson = Gson()
+                                            val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
+                                            val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
+                                            Toast.makeText(this@TrollyActivity, errorResponse.error?.message.toString(), Toast.LENGTH_SHORT).show()
+                                        }
                                     }
                                 }
+                            } else {
+                                val intent = Intent(this@TrollyActivity, PaymentOptionsActivity::class.java)
+                                intent.putExtra(PaymentOptionsActivity.EXTRA_PRODUCT_ID, 0)
+                                startActivity(intent)
                             }
                         }
                     }
                 }
+            }
+        }
+        binding.tvChoosenPaymentMethod.setOnClickListener {
+            val intent = Intent(this@TrollyActivity, PaymentOptionsActivity::class.java)
+            intent.putExtra(PaymentOptionsActivity.EXTRA_PRODUCT_ID, 0)
+            startActivity(intent)
+            finishAfterTransition()
+        }
+    }
+
+    private fun checkChoosenPaymentMethod() {
+        choosenPaymentId = intent.extras?.getString(PaymentOptionsActivity.EXTRA_PAYMENT_METHOD_ID).toString()
+        choosenPaymentName = intent.extras?.getString(PaymentOptionsActivity.EXTRA_PAYMENT_METHOD_NAME).toString()
+        binding.tvChoosenPaymentMethod.isVisible = choosenPaymentId != "null"
+        binding.tvPaymentName.text = choosenPaymentName
+        if (choosenPaymentId != "null") {
+            when (choosenPaymentId) {
+                "va_bca" ->
+                    Glide.with(this)
+                        .load(R.drawable.bca)
+                        .fitCenter()
+                        .into(binding.tvPaymentImg)
+                "va_mandiri" ->
+                    Glide.with(this)
+                        .load(R.drawable.mandiri)
+                        .fitCenter()
+                        .into(binding.tvPaymentImg)
+                "va_bri" ->
+                    Glide.with(this)
+                        .load(R.drawable.bri)
+                        .fitCenter()
+                        .into(binding.tvPaymentImg)
+                "va_bni" ->
+                    Glide.with(this)
+                        .load(R.drawable.bni)
+                        .fitCenter()
+                        .into(binding.tvPaymentImg)
+                "va_btn" ->
+                    Glide.with(this)
+                        .load(R.drawable.btn)
+                        .fitCenter()
+                        .into(binding.tvPaymentImg)
+                "va_danamon" ->
+                    Glide.with(this)
+                        .load(R.drawable.danamon)
+                        .fitCenter()
+                        .into(binding.tvPaymentImg)
+                "ewallet_gopay" ->
+                    Glide.with(this)
+                        .load(R.drawable.gopay)
+                        .fitCenter()
+                        .into(binding.tvPaymentImg)
+                "ewallet_ovo" ->
+                    Glide.with(this)
+                        .load(R.drawable.ovo)
+                        .fitCenter()
+                        .into(binding.tvPaymentImg)
+                "ewallet_dana" ->
+                    Glide.with(this)
+                        .load(R.drawable.dana)
+                        .fitCenter()
+                        .into(binding.tvPaymentImg)
             }
         }
     }
