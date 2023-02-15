@@ -51,18 +51,15 @@ class TrollyActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityTrollyBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setCustomToolbar()
 
-        doActionClicked()
-
+        setTrollyListAdapter()
         setTrollyData()
         setAction()
-
         displayTotalPrice()
     }
 
-    private fun doActionClicked() {
+    private fun setTrollyListAdapter() {
         adapter = TrollyListAdapter(
             this,
             onAddQuantity = {

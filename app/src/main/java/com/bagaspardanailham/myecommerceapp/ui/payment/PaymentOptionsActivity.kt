@@ -27,8 +27,6 @@ class PaymentOptionsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPaymentOptionsBinding
 
-    private val paymentViewModel by viewModels<PaymentViewModel>()
-
     private lateinit var adapter: PaymentTypeOptionsListAdapter
 
     private var payment_remote_config: String? = null
@@ -39,11 +37,15 @@ class PaymentOptionsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPaymentOptionsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setCustomToolbar()
 
         productId = intent.getIntExtra(EXTRA_PRODUCT_ID, 0)
 
+        setPaymentTypeListAdapter()
+        getPaymentTypeList()
+    }
+
+    private fun setPaymentTypeListAdapter() {
         adapter = PaymentTypeOptionsListAdapter(
             onItemClicked = {
                 if (productId == 0) {
@@ -66,8 +68,6 @@ class PaymentOptionsActivity : AppCompatActivity() {
                 }
             }
         )
-
-        getPaymentTypeList()
     }
 
     fun getPaymentTypeList() {

@@ -35,12 +35,6 @@ class PaymentTypeOptionsListAdapter(
         }
 
         with(holder.binding) {
-            if (isExpand) {
-                rvPaymentOptions.visibility = View.VISIBLE
-            } else {
-                rvPaymentOptions.visibility = View.GONE
-            }
-
             tvItemPaymentType.setOnClickListener {
                 isExpand = !isExpand
                 if (isExpand) {
