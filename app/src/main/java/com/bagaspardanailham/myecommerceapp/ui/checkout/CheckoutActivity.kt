@@ -14,6 +14,7 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityCheckoutBinding
 import com.bagaspardanailham.myecommerceapp.ui.MainActivity
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyViewModel
+import com.bagaspardanailham.myecommerceapp.utils.setPaymentImg
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
@@ -28,7 +29,6 @@ class CheckoutActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCheckoutBinding
 
     private val checkoutViewModel by viewModels<CheckoutViewModel>()
-    private val trollyViewModel by viewModels<TrollyViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,19 +106,19 @@ class CheckoutActivity : AppCompatActivity() {
         }
     }
 
-    private fun setPaymentImg(paymentId: String?): Int {
-        return when (paymentId) {
-            "va_bca" -> R.drawable.bca
-            "va_mandiri" -> R.drawable.mandiri
-            "va_bri" -> R.drawable.bri
-            "va_bni" -> R.drawable.bni
-            "va_btn" -> R.drawable.btn
-            "va_danamon" -> R.drawable.danamon
-            "ewallet_gopay" -> R.drawable.gopay
-            "ewallet_ovo" -> R.drawable.ovo
-            else -> R.drawable.dana
-        }
-    }
+//    private fun setPaymentImg(paymentId: String?): Int {
+//        return when (paymentId) {
+//            "va_bca" -> R.drawable.bca
+//            "va_mandiri" -> R.drawable.mandiri
+//            "va_bri" -> R.drawable.bri
+//            "va_bni" -> R.drawable.bni
+//            "va_btn" -> R.drawable.btn
+//            "va_danamon" -> R.drawable.danamon
+//            "ewallet_gopay" -> R.drawable.gopay
+//            "ewallet_ovo" -> R.drawable.ovo
+//            else -> R.drawable.dana
+//        }
+//    }
 
     companion object {
         const val EXTRA_PRODUCT_ID = "extra_product_id"

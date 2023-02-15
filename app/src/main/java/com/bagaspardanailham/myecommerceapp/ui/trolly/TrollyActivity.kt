@@ -19,6 +19,7 @@ import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.ui.checkout.CheckoutActivity
 import com.bagaspardanailham.myecommerceapp.ui.payment.PaymentOptionsActivity
+import com.bagaspardanailham.myecommerceapp.utils.setPaymentImg
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
@@ -240,53 +241,11 @@ class TrollyActivity : AppCompatActivity() {
         binding.tvChoosenPaymentMethod.isVisible = choosenPaymentId != "null"
         binding.tvPaymentName.text = choosenPaymentName
         if (choosenPaymentId != "null") {
-            when (choosenPaymentId) {
-                "va_bca" ->
-                    Glide.with(this)
-                        .load(R.drawable.bca)
-                        .fitCenter()
-                        .into(binding.tvPaymentImg)
-                "va_mandiri" ->
-                    Glide.with(this)
-                        .load(R.drawable.mandiri)
-                        .fitCenter()
-                        .into(binding.tvPaymentImg)
-                "va_bri" ->
-                    Glide.with(this)
-                        .load(R.drawable.bri)
-                        .fitCenter()
-                        .into(binding.tvPaymentImg)
-                "va_bni" ->
-                    Glide.with(this)
-                        .load(R.drawable.bni)
-                        .fitCenter()
-                        .into(binding.tvPaymentImg)
-                "va_btn" ->
-                    Glide.with(this)
-                        .load(R.drawable.btn)
-                        .fitCenter()
-                        .into(binding.tvPaymentImg)
-                "va_danamon" ->
-                    Glide.with(this)
-                        .load(R.drawable.danamon)
-                        .fitCenter()
-                        .into(binding.tvPaymentImg)
-                "ewallet_gopay" ->
-                    Glide.with(this)
-                        .load(R.drawable.gopay)
-                        .fitCenter()
-                        .into(binding.tvPaymentImg)
-                "ewallet_ovo" ->
-                    Glide.with(this)
-                        .load(R.drawable.ovo)
-                        .fitCenter()
-                        .into(binding.tvPaymentImg)
-                "ewallet_dana" ->
-                    Glide.with(this)
-                        .load(R.drawable.dana)
-                        .fitCenter()
-                        .into(binding.tvPaymentImg)
-            }
+            val paymentImg = setPaymentImg(choosenPaymentId)
+            Glide.with(this)
+                .load(paymentImg)
+                .fitCenter()
+                .into(binding.tvPaymentImg)
         }
     }
 

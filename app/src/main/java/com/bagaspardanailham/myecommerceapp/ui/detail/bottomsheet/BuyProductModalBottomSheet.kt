@@ -18,6 +18,7 @@ import com.bagaspardanailham.myecommerceapp.databinding.FragmentBuyProductBottom
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.ui.checkout.CheckoutActivity
 import com.bagaspardanailham.myecommerceapp.ui.payment.PaymentOptionsActivity
+import com.bagaspardanailham.myecommerceapp.utils.setPaymentImg
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -74,6 +75,7 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?, privat
     private fun setProductInfo() {
         val paymentId = choosenPaymentId
         val paymentName = choosenPaymentName
+        val paymentImg = setPaymentImg(paymentId)
 
         with(binding) {
             Glide.with(requireContext())
@@ -85,54 +87,10 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?, privat
 
             tvChoosenPaymentMethod.isVisible = choosenPaymentId != "null"
             tvPaymentName.text = paymentName
-        }
-
-        when (paymentId) {
-            "va_bca" ->
-                Glide.with(requireContext())
-                    .load(R.drawable.bca)
-                    .fitCenter()
-                    .into(binding!!.tvPaymentImg)
-            "va_mandiri" ->
-                Glide.with(requireContext())
-                    .load(R.drawable.mandiri)
-                    .fitCenter()
-                    .into(binding!!.tvPaymentImg)
-            "va_bri" ->
-                Glide.with(requireContext())
-                    .load(R.drawable.bri)
-                    .fitCenter()
-                    .into(binding!!.tvPaymentImg)
-            "va_bni" ->
-                Glide.with(requireContext())
-                    .load(R.drawable.bni)
-                    .fitCenter()
-                    .into(binding!!.tvPaymentImg)
-            "va_btn" ->
-                Glide.with(requireContext())
-                    .load(R.drawable.btn)
-                    .fitCenter()
-                    .into(binding!!.tvPaymentImg)
-            "va_danamon" ->
-                Glide.with(requireContext())
-                    .load(R.drawable.danamon)
-                    .fitCenter()
-                    .into(binding!!.tvPaymentImg)
-            "ewallet_gopay" ->
-                Glide.with(requireContext())
-                    .load(R.drawable.gopay)
-                    .fitCenter()
-                    .into(binding!!.tvPaymentImg)
-            "ewallet_ovo" ->
-                Glide.with(requireContext())
-                    .load(R.drawable.ovo)
-                    .fitCenter()
-                    .into(binding!!.tvPaymentImg)
-            "ewallet_dana" ->
-                Glide.with(requireContext())
-                    .load(R.drawable.dana)
-                    .fitCenter()
-                    .into(binding!!.tvPaymentImg)
+            Glide.with(requireContext())
+                .load(paymentImg)
+                .fitCenter()
+                .into(binding!!.tvPaymentImg)
         }
 
 //        addMargin(view)
