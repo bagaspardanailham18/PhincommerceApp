@@ -218,6 +218,7 @@ class TrollyActivity : AppCompatActivity() {
                             } else {
                                 val intent = Intent(this@TrollyActivity, PaymentOptionsActivity::class.java)
                                 intent.putExtra(PaymentOptionsActivity.EXTRA_PRODUCT_ID, 0)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                 startActivity(intent)
                             }
                         }
@@ -228,8 +229,8 @@ class TrollyActivity : AppCompatActivity() {
         binding.tvChoosenPaymentMethod.setOnClickListener {
             val intent = Intent(this@TrollyActivity, PaymentOptionsActivity::class.java)
             intent.putExtra(PaymentOptionsActivity.EXTRA_PRODUCT_ID, 0)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
-            finishAfterTransition()
         }
     }
 

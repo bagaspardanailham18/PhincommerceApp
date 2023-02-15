@@ -54,6 +54,7 @@ class PaymentOptionsActivity : AppCompatActivity() {
                         paymentExtras.putString(EXTRA_PAYMENT_METHOD_ID, it.id)
                         paymentExtras.putString(EXTRA_PAYMENT_METHOD_NAME, it.name)
                         putExtras(paymentExtras)
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     })
                     finish()
                 } else {
@@ -63,6 +64,7 @@ class PaymentOptionsActivity : AppCompatActivity() {
                         paymentExtras.putString(EXTRA_PAYMENT_METHOD_ID, it.id)
                         paymentExtras.putString(EXTRA_PAYMENT_METHOD_NAME, it.name)
                         putExtras(paymentExtras)
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     })
                     finish()
                 }
