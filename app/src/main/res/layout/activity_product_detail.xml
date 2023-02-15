@@ -354,6 +354,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/divider_other_product"
                         android:layout_width="match_parent"
                         android:layout_height="10dp"
                         android:layout_marginTop="30dp"
@@ -398,6 +399,7 @@
                     </LinearLayout>
 
                     <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/divider_search_history"
                         android:layout_width="match_parent"
                         android:layout_height="10dp"
                         android:background="@color/lighter_grey" />

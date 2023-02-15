@@ -208,7 +208,9 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                                 adapter.submitList(result.data.success.data)
                                 setOnItemClicked()
                             } else {
-                                binding.tvOtherProductEmpty?.visibility = View.VISIBLE
+                                dividerOtherProduct?.visibility = View.GONE
+                                layoutRvOtherPruduct?.visibility = View.GONE
+                                //binding.tvOtherProductEmpty?.visibility = View.VISIBLE
                             }
                         }
                     }
@@ -236,7 +238,9 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                                 adapter.submitList(result.data.success.data)
                                 setOnItemClicked()
                             } else {
-                                binding.tvSearchHistoryProductEmpty?.visibility = View.VISIBLE
+                                dividerSearchHistory?.visibility = View.GONE
+                                binding.layoutRvSearchHistory?.visibility = View.GONE
+                                //binding.tvSearchHistoryProductEmpty?.visibility = View.VISIBLE
                             }
                         }
                     }
