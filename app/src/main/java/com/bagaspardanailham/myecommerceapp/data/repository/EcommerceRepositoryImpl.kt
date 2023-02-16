@@ -49,13 +49,13 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
             if (throwable is HttpException) {
                 when (throwable.code()) {
                     404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     500 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                 }
             }
@@ -72,18 +72,18 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
             if (throwable is HttpException) {
                 when (throwable.code()) {
                     404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     500 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                 }
             } else {
                 emit(
-                    Result.Error(false, null, null)
+                    Result.Error(false, null, null, null)
                 )
             }
         }
@@ -98,21 +98,21 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
             if (throwable is HttpException) {
                 when (throwable.code()) {
                     401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     500 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                 }
             } else {
                 emit(
-                    Result.Error(false, null, null)
+                    Result.Error(false, null, null, null)
                 )
             }
         }
@@ -129,21 +129,21 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
             if (throwable is HttpException) {
                 when (throwable.code()) {
                     401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     500 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                 }
             } else {
                 emit(
-                    Result.Error(false, null, null)
+                    Result.Error(false, null, null, null)
                 )
             }
         }
@@ -160,21 +160,21 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
             if (throwable is HttpException) {
                 when (throwable.code()) {
                     401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     500 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                 }
             } else {
                 emit(
-                    Result.Error(false, null, null)
+                    Result.Error(false, null, null, null)
                 )
             }
         }
@@ -189,21 +189,21 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
             if (throwable is HttpException) {
                 when (throwable.code()) {
                     401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     500 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                 }
             } else {
                 emit(
-                    Result.Error(false, null, null)
+                    Result.Error(false, null, null, null)
                 )
             }
         }
@@ -218,21 +218,21 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
             if (throwable is HttpException) {
                 when (throwable.code()) {
                     401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     500 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                 }
             } else {
                 emit(
-                    Result.Error(false, null, null)
+                    Result.Error(false, null, null, null)
                 )
             }
         }
@@ -247,21 +247,21 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
             if (throwable is HttpException) {
                 when (throwable.code()) {
                     401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     500 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                 }
             } else {
                 emit(
-                    Result.Error(false, null, null)
+                    Result.Error(false, null, null, null)
                 )
             }
         }
@@ -276,21 +276,21 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
             if (throwable is HttpException) {
                 when (throwable.code()) {
                     401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     500 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                 }
             } else {
                 emit(
-                    Result.Error(false, null, null)
+                    Result.Error(false, null, null, null)
                 )
             }
         }
@@ -305,21 +305,21 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
             if (throwable is HttpException) {
                 when (throwable.code()) {
                     401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     500 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                 }
             } else {
                 emit(
-                    Result.Error(false, null, null)
+                    Result.Error(false, null, null, null)
                 )
             }
         }
@@ -334,21 +334,21 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
             if (throwable is HttpException) {
                 when (throwable.code()) {
                     401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     500 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                 }
             } else {
                 emit(
-                    Result.Error(false, null, null)
+                    Result.Error(false, null, null, null)
                 )
             }
         }
@@ -427,21 +427,21 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
             if (throwable is HttpException) {
                 when (throwable.code()) {
                     401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     500 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                 }
             } else {
                 emit(
-                    Result.Error(false, null, null)
+                    Result.Error(false, null, null, null)
                 )
             }
         }
@@ -456,21 +456,21 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
             if (throwable is HttpException) {
                 when (throwable.code()) {
                     401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     500 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody())
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                 }
             } else {
                 emit(
-                    Result.Error(false, null, null)
+                    Result.Error(false, null, null, null)
                 )
             }
         }

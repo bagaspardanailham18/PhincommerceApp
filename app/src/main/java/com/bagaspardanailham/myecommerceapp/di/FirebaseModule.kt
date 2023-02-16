@@ -17,8 +17,14 @@ class FirebaseModule {
 
     @Provides
     @Singleton
-    fun provideRemoteConfigRepository(): FirebaseRemoteConfigRepository {
-        return FirebaseRemoteConfigRepository()
+    fun provideRemoteConfigRepository(frc: FirebaseRemoteConfig): FirebaseRemoteConfigRepository {
+        return FirebaseRemoteConfigRepository(frc)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseRemoteConfig(): FirebaseRemoteConfig {
+        return FirebaseRemoteConfig.getInstance()
     }
 
 }

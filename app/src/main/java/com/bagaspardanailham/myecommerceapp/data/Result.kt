@@ -9,6 +9,6 @@ sealed class TokenResult<out R> private constructor() {
 
 sealed class Result<out R> private constructor() {
     data class Success<out T>(val data: T): Result<T>()
-    data class Error(val isNetworkError: Boolean, val errorCode: Int?, val errorBody: ResponseBody?): Result<Nothing>()
+    data class Error(val isNetworkError: Boolean, val errorCode: Int?, val errorBody: ResponseBody?, val message: String?): Result<Nothing>()
     object Loading : Result<Nothing>()
 }
