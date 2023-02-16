@@ -21,6 +21,9 @@ import com.bagaspardanailham.myecommerceapp.ui.notification.NotificationViewMode
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyActivity
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyViewModel
 import com.google.android.material.badge.BadgeDrawable
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -36,12 +39,15 @@ class MainActivity : AppCompatActivity() {
     private val trollyViewModel by viewModels<TrollyViewModel>()
     private val notificationViewModel by viewModels<NotificationViewModel>()
 
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupWindow()
+
+        firebaseAnalytics = Firebase.analytics
 
         val navView: BottomNavigationView = binding.navView
 
@@ -55,6 +61,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setAction() {
         binding.menuNotification.setOnClickListener {
+            val params = Bundle()
+            params.putString("screen_name", "BagasActivity")
+            params.putString("button_name", "NotificationMenu")
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, params)
             startActivity(Intent(this, NotificationActivity::class.java))
         }
         binding.menuCart.setOnClickListener {

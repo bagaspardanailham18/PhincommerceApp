@@ -6,8 +6,8 @@ plugins {
     id 'androidx.navigation.safeargs'
     id 'kotlin-parcelize'
 
-    // Add the Google services Gradle plugin
     id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -103,6 +103,10 @@ dependencies {
 
     // Firebase Remote Config
     implementation 'com.google.firebase:firebase-config-ktx'
+
+    // Add the dependencies for the Crashlytics and Analytics libraries
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

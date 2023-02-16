@@ -30,8 +30,11 @@ import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okio.IOException
 import java.io.File
 import java.io.FileOutputStream
@@ -53,6 +56,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
     private var userId: Int? = 0
     private var choosenPaymentId: String? = null
     private var choosenPaymentName: String? = null
+    private var isFavorite: Boolean = true
 
     private lateinit var detailData: ProductDetailItem
 
@@ -127,6 +131,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                     productId = id.toInt()
                 }
             }
+
             productDetailViewModel.getProductDetail(accessToken, productId, userId).observe(this@ProductDetailActivity) { result ->
                 with(binding) {
                     when (result) {
@@ -142,10 +147,12 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                             shimmerProductDetail.isVisible = false
                             scrollView.isVisible = true
                             bottomAppBarLayout.visibility = View.VISIBLE
-                            populateData(result.data.success?.data)
-                            detailData = result.data.success?.data!!
+
+                            isFavorite = result.data.success?.data!!.isFavorite
+                            populateData(result.data.success.data)
+                            detailData = result.data.success.data
                             checkChoosenPaymentMethod()
-                            setAction(result.data.success?.data)
+                            setAction(result.data.success.data)
                             detailData = result.data.success.data
                         }
                         is Result.Error -> {
@@ -266,9 +273,11 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
 
     private fun setAction(product: ProductDetailItem?) {
         binding.btnToggleFavorite.setOnClickListener {
-            if (product!!.isFavorite) {
+            if (isFavorite) {
+                isFavorite = false
                 removeProductFromFavorite()
             } else {
+                isFavorite = true
                 addProductToFavorite()
             }
         }
