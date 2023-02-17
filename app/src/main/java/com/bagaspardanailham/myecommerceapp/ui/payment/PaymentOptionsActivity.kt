@@ -15,6 +15,7 @@ import com.bagaspardanailham.myecommerceapp.databinding.ActivityPaymentOptionsBi
 import com.bagaspardanailham.myecommerceapp.ui.detail.ProductDetailActivity
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyActivity
 import com.bagaspardanailham.myecommerceapp.data.Result
+import com.bagaspardanailham.myecommerceapp.utils.setVisibility
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,8 +30,6 @@ class PaymentOptionsActivity : AppCompatActivity() {
     private lateinit var adapter: PaymentTypeOptionsListAdapter
 
     private val paymentViewModel: PaymentViewModel by viewModels()
-
-    private var payment_remote_config: String? = null
 
     private var productId: Int? = 0
 
@@ -75,60 +74,30 @@ class PaymentOptionsActivity : AppCompatActivity() {
 
     fun getPaymentTypeList() {
         paymentViewModel.state.observe(this) { state ->
-            when (state) {
-                is Result.Loading -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                    binding.rvPaymentType.visibility = View.GONE
-                }
-                is Result.Success -> {
-                    val dataList = Gson().fromJson<List<PaymentTypeOptionsItem>>(state.data, object : TypeToken<List<PaymentTypeOptionsItem>>() {}.type)
-                    adapter.submitList(dataList)
-                    with(binding) {
-                        progressBar.visibility = View.GONE
-                        binding.rvPaymentType.visibility = View.VISIBLE
+            with(binding) {
+                when (state) {
+                    is Result.Loading -> {
+                        progressBar.setVisibility(true)
+                        rvPaymentType.setVisibility(false)
+                    }
+                    is Result.Success -> {
+                        val dataList = Gson().fromJson<List<PaymentTypeOptionsItem>>(state.data, object : TypeToken<List<PaymentTypeOptionsItem>>() {}.type)
+                        adapter.submitList(dataList)
+                        progressBar.setVisibility(false)
+                        rvPaymentType.setVisibility(true)
                         rvPaymentType.adapter = adapter
                         rvPaymentType.layoutManager = LinearLayoutManager(this@PaymentOptionsActivity)
                         rvPaymentType.setHasFixedSize(true)
                     }
+                    is Result.Error -> {
+                        progressBar.setVisibility(false)
+                        rvPaymentType.setVisibility(false)
+                        Toast.makeText(this@PaymentOptionsActivity, state.message, Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {}
                 }
-                is Result.Error -> {
-                    binding.progressBar.visibility = View.GONE
-                    binding.rvPaymentType.visibility = View.GONE
-                    Toast.makeText(
-                        this, state.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                else -> {}
             }
         }
-//        val remoteConfig = Firebase.remoteConfig
-//
-//        val configSettings = remoteConfigSettings {
-//            minimumFetchIntervalInSeconds = 1
-//        }
-//
-//        val gson = Gson()
-//        remoteConfig.setConfigSettingsAsync(configSettings)
-//        remoteConfig.fetchAndActivate().addOnCompleteListener { task ->
-//            if (task.isSuccessful) {
-//                payment_remote_config = remoteConfig.getString("payment_json")
-//                val jsonPaymentTypeModel = gson.fromJson<ArrayList<PaymentTypeOptionsItem>>(payment_remote_config, object : TypeToken<ArrayList<PaymentTypeOptionsItem>>(){}.type)
-//                adapter.submitList(jsonPaymentTypeModel)
-//                with(binding) {
-//                    rvPaymentType.adapter = adapter
-//                    rvPaymentType.layoutManager = LinearLayoutManager(this@PaymentOptionsActivity)
-//                    rvPaymentType.setHasFixedSize(true)
-//                }
-//            } else {
-//                // Handle error
-//                Toast.makeText(
-//                    this, "Fetch failed",
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//
-//            }
-//        }
     }
 
     private fun setCustomToolbar() {

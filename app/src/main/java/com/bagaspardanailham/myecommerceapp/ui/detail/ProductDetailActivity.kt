@@ -26,6 +26,7 @@ import com.bagaspardanailham.myecommerceapp.databinding.ActivityProductDetailBin
 import com.bagaspardanailham.myecommerceapp.ui.detail.bottomsheet.BuyProductModalBottomSheet
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.ui.payment.PaymentOptionsActivity
+import com.bagaspardanailham.myecommerceapp.utils.setVisibility
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
@@ -136,15 +137,12 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                 with(binding) {
                     when (result) {
                         is Result.Loading -> {
-                            shimmerProductDetail.startShimmer()
-                            shimmerProductDetail.isVisible = true
+                            shimmerVisibility(true)
                             scrollView.isVisible = false
                             bottomAppBarLayout.visibility = View.GONE
                         }
                         is Result.Success -> {
-                            binding.swipeToRefresh?.isRefreshing = false
-                            shimmerProductDetail.stopShimmer()
-                            shimmerProductDetail.isVisible = false
+                            shimmerVisibility(false)
                             scrollView.isVisible = true
                             bottomAppBarLayout.visibility = View.VISIBLE
 
@@ -156,9 +154,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                             detailData = result.data.success.data
                         }
                         is Result.Error -> {
-                            binding.swipeToRefresh?.isRefreshing = false
-                            shimmerProductDetail.stopShimmer()
-                            shimmerProductDetail.isVisible = false
+                            shimmerVisibility(false)
                             bottomAppBarLayout.visibility = View.GONE
                             Toast.makeText(this@ProductDetailActivity, result.errorBody.toString(), Toast.LENGTH_SHORT).show()
                         }
@@ -215,9 +211,8 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                                 adapter.submitList(result.data.success.data)
                                 setOnItemClicked()
                             } else {
-                                dividerOtherProduct?.visibility = View.GONE
-                                layoutRvOtherPruduct?.visibility = View.GONE
-                                //binding.tvOtherProductEmpty?.visibility = View.VISIBLE
+                                dividerOtherProduct?.setVisibility(false)
+                                layoutRvOtherPruduct?.setVisibility(false)
                             }
                         }
                     }
@@ -245,9 +240,8 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                                 adapter.submitList(result.data.success.data)
                                 setOnItemClicked()
                             } else {
-                                dividerSearchHistory?.visibility = View.GONE
-                                binding.layoutRvSearchHistory?.visibility = View.GONE
-                                //binding.tvSearchHistoryProductEmpty?.visibility = View.VISIBLE
+                                dividerSearchHistory?.setVisibility(false)
+                                binding.layoutRvSearchHistory?.setVisibility(false)
                             }
                         }
                     }
@@ -385,6 +379,19 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
     private fun showBottomSheetBuyProduct(product: ProductDetailItem?, choosenPaymentId: String?, choosenPaymentName: String?) {
         val buyProductBottomSheet = BuyProductModalBottomSheet(product, choosenPaymentId, choosenPaymentName)
         buyProductBottomSheet.show(supportFragmentManager, ProductDetailActivity::class.java.simpleName)
+    }
+
+    private fun shimmerVisibility(isVisible: Boolean) {
+        with(binding) {
+            if (isVisible) {
+                shimmerProductDetail.startShimmer()
+                shimmerProductDetail.isVisible = true
+            } else {
+                swipeToRefresh?.isRefreshing = false
+                shimmerProductDetail.stopShimmer()
+                shimmerProductDetail.isVisible = false
+            }
+        }
     }
 
     private fun setCustomToolbar() {

@@ -20,6 +20,7 @@ import com.bagaspardanailham.myecommerceapp.ui.notification.NotificationActivity
 import com.bagaspardanailham.myecommerceapp.ui.notification.NotificationViewModel
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyActivity
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyViewModel
+import com.bagaspardanailham.myecommerceapp.utils.setVisibility
 import com.google.android.material.badge.BadgeDrawable
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
@@ -77,10 +78,10 @@ class MainActivity : AppCompatActivity() {
             trollyViewModel.getAllProductFromTrolly().observe(this@MainActivity) { result ->
                 with(binding) {
                     if (result.isNotEmpty()) {
-                        badgeCounter.visibility = View.VISIBLE
+                        badgeCounter.setVisibility(true)
                         tvCartSize.text = result.size.toString()
                     } else {
-                        badgeCounter.visibility = View.GONE
+                        badgeCounter.setVisibility(false)
                     }
                 }
             }
@@ -88,10 +89,10 @@ class MainActivity : AppCompatActivity() {
                 val unreadNotification = result.filter { !it.isRead }
                 with(binding) {
                     if (unreadNotification.isNotEmpty()) {
-                        notifBadgeCounter.visibility = View.VISIBLE
+                        notifBadgeCounter.setVisibility(true)
                         tvNotifSize.text = unreadNotification.size.toString()
                     } else {
-                        notifBadgeCounter.visibility = View.GONE
+                        notifBadgeCounter.setVisibility(false)
                     }
                 }
             }
@@ -125,41 +126,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-//    @SuppressLint("UnsafeOptInUsageError")
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.main_menu, menu)
-//
-//        val menuItem = menu?.findItem(R.id.menu_cart)
-//
-//        if (pendingCart == 0) {
-//            menuItem?.actionView = null
-//        } else {
-//            menuItem?.setActionView(R.layout.cart_badge)
-//            val view: View = menuItem!!.actionView
-//            badgeCounter = view.findViewById(R.id.badge_counter)
-//            badgeCounter.text = pendingCart.toString()
-//        }
-//
-//        return super.onCreateOptionsMenu(menu)
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            R.id.menu_cart -> {
-//                startActivity(Intent(this, TrollyActivity::class.java))
-//
-//                val badgeDrawable = binding.navView.getBadge(R.id.menu_chart)
-//                if (badgeDrawable != null) {
-//                    badgeDrawable.isVisible = false
-//                    badgeDrawable.clearNumber()
-//                }
-//
-//                binding.navView.removeBadge(R.id.menu_chart)
-//            }
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
 
     private fun setupWindow() {
         setSupportActionBar(binding.customToolbar)

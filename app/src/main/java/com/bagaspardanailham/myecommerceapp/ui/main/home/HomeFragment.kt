@@ -56,7 +56,6 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding
 
     private val homeViewModel by viewModels<HomeViewModel>()
-    private val authViewModel by viewModels<AuthViewModel>()
 
     private lateinit var adapter: ProductListAdapter
 

@@ -12,6 +12,9 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.remote.response.GetFavoriteProductListResponse
@@ -21,6 +24,7 @@ import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.ui.detail.ProductDetailActivity
 import com.bagaspardanailham.myecommerceapp.ui.main.home.HomeViewModel
 import com.bagaspardanailham.myecommerceapp.ui.main.home.ProductListAdapter
+import com.bagaspardanailham.myecommerceapp.utils.setVisibility
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -91,80 +95,71 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun setProductData(query: String?, sort: Int) {
-        searchJob = coroutineScope.launch {
+        searchJob = viewLifecycleOwner.lifecycleScope.launch {
             val token = authViewModel.getUserPref().first()?.authTokenKey.toString()
             val userId = authViewModel.getUserPref().first()?.id.toString().toInt()
             if (query.toString().isNotEmpty()) {
                 delay(1000)
                 queryString = query.toString()
                 favoriteViewModel.getFavoriteProductList(token, query, userId).observe(viewLifecycleOwner) { result ->
-                    when (result) {
-                        is Result.Loading -> {
-                            binding.shimmerProduct.startShimmer()
-                            binding.shimmerProduct.visibility = View.VISIBLE
-                            binding.rvProduct.visibility = View.INVISIBLE
-                            binding.tvDataNotfound.visibility = View.INVISIBLE
-                            animationBtnFilter(true)
-                        }
-                        is Result.Success -> {
-                            binding.shimmerProduct.stopShimmer()
-                            binding.shimmerProduct.visibility = View.INVISIBLE
-                            binding.swipeToRefresh.isRefreshing = false
-                            if (result.data.success?.data?.size!! > 0) {
-                                binding.tvDataNotfound.visibility = View.INVISIBLE
-                                binding.rvProduct.visibility = View.VISIBLE
-                                setProductRv(result.data, sort)
-                                isDataEmpty(false)
-                                animationBtnFilter(false)
-                            } else {
-                                binding.tvDataNotfound.visibility = View.VISIBLE
-                                binding.rvProduct.visibility = View.INVISIBLE
-                                isDataEmpty(true)
+                    with(binding) {
+                        when (result) {
+                            is Result.Loading -> {
+                                shimmerVisibility(true)
                                 animationBtnFilter(true)
                             }
-                        }
-                        is Result.Error -> {
-                            binding.shimmerProduct.stopShimmer()
-                            binding.shimmerProduct.visibility = View.INVISIBLE
-                            binding.rvProduct.visibility = View.INVISIBLE
-                            animationBtnFilter(true)
-                            Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
+                            is Result.Success -> {
+                                shimmerVisibility(false)
+                                if (result.data.success?.data?.size!! > 0) {
+                                    tvDataNotfound.setVisibility(false)
+                                    rvProduct.setVisibility(true)
+                                    setProductRv(result.data, sort)
+                                    isDataEmpty(false)
+                                    animationBtnFilter(false)
+                                } else {
+                                    tvDataNotfound.setVisibility(true)
+                                    rvProduct.setVisibility(false)
+                                    isDataEmpty(true)
+                                    animationBtnFilter(true)
+                                }
+                            }
+                            is Result.Error -> {
+                                shimmerVisibility(false)
+                                rvProduct.setVisibility(false)
+                                animationBtnFilter(true)
+                                Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }
             } else {
                 queryString = query.toString()
                 favoriteViewModel.getFavoriteProductList(token, null, userId).observe(viewLifecycleOwner) { result ->
-                    when (result) {
-                        is Result.Loading -> {
-                            binding.shimmerProduct.startShimmer()
-                            binding.shimmerProduct.visibility = View.VISIBLE
-                            binding.rvProduct.visibility = View.INVISIBLE
-                            binding.tvDataNotfound.visibility = View.INVISIBLE
-                            animationBtnFilter(true)
-                        }
-                        is Result.Success -> {
-                            binding.shimmerProduct.stopShimmer()
-                            binding.shimmerProduct.visibility = View.INVISIBLE
-                            binding.swipeToRefresh.isRefreshing = false
-                            if (result.data.success?.data?.size!! > 0) {
-                                binding.tvDataNotfound.visibility = View.INVISIBLE
-                                binding.rvProduct.visibility = View.VISIBLE
-                                setProductRv(result.data, sort)
-                                animationBtnFilter(false)
-                            } else {
-                                binding.tvDataNotfound.visibility = View.VISIBLE
-                                binding.rvProduct.visibility = View.INVISIBLE
+                    with(binding) {
+                        when (result) {
+                            is Result.Loading -> {
+                                shimmerVisibility(true)
                                 animationBtnFilter(true)
                             }
-                        }
-                        is Result.Error -> {
-                            binding.shimmerProduct.stopShimmer()
-                            binding.shimmerProduct.visibility = View.INVISIBLE
-                            binding.rvProduct.visibility = View.INVISIBLE
-                            binding.swipeToRefresh.isRefreshing = false
-                            animationBtnFilter(true)
-                            Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
+                            is Result.Success -> {
+                                shimmerVisibility(false)
+                                if (result.data.success?.data?.size!! > 0) {
+                                    tvDataNotfound.setVisibility(false)
+                                    rvProduct.setVisibility(true)
+                                    setProductRv(result.data, sort)
+                                    animationBtnFilter(false)
+                                } else {
+                                    tvDataNotfound.setVisibility(true)
+                                    rvProduct.setVisibility(false)
+                                    animationBtnFilter(true)
+                                }
+                            }
+                            is Result.Error -> {
+                                shimmerVisibility(false)
+                                rvProduct.setVisibility(false)
+                                animationBtnFilter(true)
+                                Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }
@@ -243,6 +238,21 @@ class FavoriteFragment : Fragment() {
             binding.floatingBtnFilter.visibility = View.VISIBLE
         } else  {
             binding.floatingBtnFilter.hide()
+        }
+    }
+
+    private fun shimmerVisibility(isVisible: Boolean) {
+        with(binding) {
+            if (isVisible) {
+                shimmerProduct.startShimmer()
+                shimmerProduct.setVisibility(true)
+                rvProduct.setVisibility(false)
+                tvDataNotfound.setVisibility(false)
+            } else {
+                shimmerProduct.stopShimmer()
+                shimmerProduct.setVisibility(false)
+                swipeToRefresh.isRefreshing = false
+            }
         }
     }
 

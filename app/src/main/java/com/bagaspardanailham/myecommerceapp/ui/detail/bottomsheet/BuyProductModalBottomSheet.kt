@@ -178,7 +178,6 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?, privat
             intent.putExtra(PaymentOptionsActivity.EXTRA_PRODUCT_ID, idProduct.toInt())
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
-            //activity?.finishAndRemoveTask()
             dismiss()
         }
     }

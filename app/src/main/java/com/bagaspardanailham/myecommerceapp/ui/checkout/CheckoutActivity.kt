@@ -15,6 +15,7 @@ import com.bagaspardanailham.myecommerceapp.databinding.ActivityCheckoutBinding
 import com.bagaspardanailham.myecommerceapp.ui.MainActivity
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyViewModel
 import com.bagaspardanailham.myecommerceapp.utils.setPaymentImg
+import com.bagaspardanailham.myecommerceapp.utils.setVisibility
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
@@ -59,16 +60,16 @@ class CheckoutActivity : AppCompatActivity() {
                     checkoutViewModel.updateRate(accessToken, productId.toString().toInt(), rate).observe(this@CheckoutActivity) { response ->
                         when (response) {
                             is Result.Loading -> {
-                                binding.progressBar.visibility = View.VISIBLE
+                                binding.progressBar.setVisibility(true)
                             }
                             is Result.Success -> {
-                                binding.progressBar.visibility = View.GONE
+                                binding.progressBar.setVisibility(false)
                                 startActivity(Intent(this@CheckoutActivity, MainActivity::class.java))
                                 Toast.makeText(this@CheckoutActivity, response.data.success?.message, Toast.LENGTH_SHORT).show()
                                 finishAffinity()
                             }
                             is Result.Error -> {
-                                binding.progressBar.visibility = View.GONE
+                                binding.progressBar.setVisibility(false)
                                 val errorres = JSONObject(response.errorBody?.string()).toString()
                                 val gson = Gson()
                                 val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
@@ -79,46 +80,31 @@ class CheckoutActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                binding.progressBar.visibility = View.VISIBLE
+                binding.progressBar.setVisibility(true)
                 for (i in listProductId!!.indices) {
                     lifecycleScope.launch {
-                        //trollyViewModel.deleteProductByIdFromTrolly(this@CheckoutActivity, listProductId[i].toInt())
                         checkoutViewModel.updateRate(accessToken, listProductId[i].toInt(), rate).observe(this@CheckoutActivity) { response ->
                             when (response) {
                                 is Result.Loading -> {
 
                                 }
                                 is Result.Success -> {
-                                    binding.progressBar.visibility = View.GONE
+                                    binding.progressBar.setVisibility(false)
                                     finishAffinity()
                                 }
                                 is Result.Error -> {
-                                    binding.progressBar.visibility = View.GONE
+                                    binding.progressBar.setVisibility(false)
                                 }
                             }
                         }
                     }
                 }
-                binding.progressBar.visibility = View.GONE
+                binding.progressBar.setVisibility(false)
                 startActivity(Intent(this@CheckoutActivity, MainActivity::class.java))
                 finishAffinity()
             }
         }
     }
-
-//    private fun setPaymentImg(paymentId: String?): Int {
-//        return when (paymentId) {
-//            "va_bca" -> R.drawable.bca
-//            "va_mandiri" -> R.drawable.mandiri
-//            "va_bri" -> R.drawable.bri
-//            "va_bni" -> R.drawable.bni
-//            "va_btn" -> R.drawable.btn
-//            "va_danamon" -> R.drawable.danamon
-//            "ewallet_gopay" -> R.drawable.gopay
-//            "ewallet_ovo" -> R.drawable.ovo
-//            else -> R.drawable.dana
-//        }
-//    }
 
     companion object {
         const val EXTRA_PRODUCT_ID = "extra_product_id"

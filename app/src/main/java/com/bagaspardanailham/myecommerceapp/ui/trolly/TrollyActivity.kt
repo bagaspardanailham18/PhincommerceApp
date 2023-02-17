@@ -20,6 +20,7 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.ui.checkout.CheckoutActivity
 import com.bagaspardanailham.myecommerceapp.ui.payment.PaymentOptionsActivity
 import com.bagaspardanailham.myecommerceapp.utils.setPaymentImg
+import com.bagaspardanailham.myecommerceapp.utils.setVisibility
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
@@ -103,9 +104,7 @@ class TrollyActivity : AppCompatActivity() {
             trollyViewModel.getAllProductFromTrolly().observe(this@TrollyActivity) { result ->
                 with(binding) {
                     if (result.isNotEmpty()) {
-                        cbSelectAll.visibility = View.VISIBLE
-                        rvTrollyItem.visibility = View.VISIBLE
-                        bottomAppBarLayout.visibility = View.VISIBLE
+                        isDataEmpty(false)
                         rvTrollyItem.layoutManager = LinearLayoutManager(this@TrollyActivity)
                         adapter.submitList(result)
                         rvTrollyItem.adapter = adapter
@@ -131,10 +130,7 @@ class TrollyActivity : AppCompatActivity() {
 
                         checkChoosenPaymentMethod()
                     } else {
-                        cbSelectAll.visibility = View.GONE
-                        rvTrollyItem.visibility = View.GONE
-                        tvDataNotfound.visibility = View.VISIBLE
-                        bottomAppBarLayout.visibility = View.GONE
+                        isDataEmpty(true)
                     }
                 }
             }
@@ -246,6 +242,21 @@ class TrollyActivity : AppCompatActivity() {
                 .load(paymentImg)
                 .fitCenter()
                 .into(binding.tvPaymentImg)
+        }
+    }
+
+    private fun isDataEmpty(isEmpty: Boolean) {
+        with(binding) {
+            if (isEmpty) {
+                cbSelectAll.setVisibility(false)
+                rvTrollyItem.setVisibility(false)
+                tvDataNotfound.setVisibility(true)
+                bottomAppBarLayout.setVisibility(false)
+            } else {
+                cbSelectAll.setVisibility(true)
+                rvTrollyItem.setVisibility(true)
+                bottomAppBarLayout.setVisibility(true)
+            }
         }
     }
 
