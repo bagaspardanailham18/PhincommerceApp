@@ -39,6 +39,7 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListPagingItem
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthActivity
 import com.bagaspardanailham.myecommerceapp.ui.detail.ProductDetailActivity
+import com.bagaspardanailham.myecommerceapp.utils.setVisibility
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.google.gson.Gson
@@ -53,7 +54,7 @@ import org.json.JSONObject
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding
+    private val binding get() = _binding!!
 
     private val homeViewModel by viewModels<HomeViewModel>()
 
@@ -61,7 +62,6 @@ class HomeFragment : Fragment() {
 
     private var queryString: String = ""
 
-    private var febJob: Job? = null
     private var searchJob: Job? = null
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -72,7 +72,13 @@ class HomeFragment : Fragment() {
     ): View {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding?.root!!
+        val root: View = binding.root
+
+        adapter = ProductListAdapter(requireActivity())
+        setProductData(queryString)
+        setupRvWhenRefresh()
+
+        setupAction()
 
         return root
     }
@@ -81,26 +87,26 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = ProductListAdapter(requireActivity())
-        setProductData(queryString)
-        setupRvWhenRefresh()
 
-        setupAction()
     }
 
     private fun setupAction() {
-        binding?.searchBar?.setOnQueryTextListener(object : OnQueryTextListener {
+        binding.searchBar.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(q: String?): Boolean {
-                TODO("Not yet implemented")
+                return false
             }
 
             override fun onQueryTextChange(q: String?): Boolean {
-                if (q?.length == 0 || q.toString() == "") {
-                    setProductData("")
-                } else {
-                    setProductData(q)
+                searchJob?.cancel()
+                searchJob = coroutineScope.launch {
+                    delay(2000)
+                    if (q?.length == 0 || q.toString() == "") {
+                        setProductData("")
+                    } else {
+                        setProductData(q)
+                    }
                 }
-                return true
+                return false
             }
         })
 
@@ -108,40 +114,39 @@ class HomeFragment : Fragment() {
 
     private fun setProductData(query: String?) {
         adapter.addLoadStateListener { loadState ->
-            binding?.shimmerProduct?.isVisible = loadState.refresh == LoadState.Loading
-            binding?.rvProduct?.isVisible = loadState.refresh != LoadState.Loading
+//            binding.shimmerProduct.isVisible = loadState.refresh == LoadState.Loading
+//            binding.rvProduct.isVisible = loadState.refresh != LoadState.Loading
 
             if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
                 isDataEmpty(true)
+                showShimmer(false)
             } else {
                 isDataEmpty(false)
             }
+            showShimmer(loadState.refresh is LoadState.Loading)
         }
 
-        searchJob = coroutineScope.launch {
-            if (query.toString().isNotEmpty() || query != "") {
-                delay(2000)
-                queryString = query.toString()
+        if (query.toString().isNotEmpty() || query != "") {
+            queryString = query.toString()
 
-                homeViewModel.getProductListPaging(query.toString()).observe(viewLifecycleOwner) { result ->
-                    if (result != null) {
-                        binding?.swipeToRefresh?.isRefreshing = false
-                        isDataEmpty(false)
-                        setProductRv(result)
-                    } else {
-                        isDataEmpty(true)
-                    }
+            homeViewModel.getProductListPaging(query.toString()).observe(viewLifecycleOwner) { result ->
+                if (result != null) {
+                    binding.swipeToRefresh.isRefreshing = false
+                    isDataEmpty(false)
+                    setProductRv(result)
+                } else {
+                    isDataEmpty(true)
                 }
-            } else {
-                queryString = query.toString()
-                homeViewModel.getProductListPaging("").observe(viewLifecycleOwner) { result ->
-                    if (result != null) {
-                        binding?.swipeToRefresh?.isRefreshing = false
-                        isDataEmpty(false)
-                        setProductRv(result)
-                    } else {
-                        isDataEmpty(true)
-                    }
+            }
+        } else {
+            queryString = query.toString()
+            homeViewModel.getProductListPaging("").observe(viewLifecycleOwner) { result ->
+                if (result != null) {
+                    binding.swipeToRefresh.isRefreshing = false
+                    isDataEmpty(false)
+                    setProductRv(result)
+                } else {
+                    isDataEmpty(true)
                 }
             }
         }
@@ -149,7 +154,7 @@ class HomeFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setProductRv(result: PagingData<ProductListPagingItem>) {
-        binding?.apply {
+        binding.apply {
             rvProduct.adapter = adapter.withLoadStateFooter(
                 footer = LoadingStateAdapter {
                     adapter.retry()
@@ -172,19 +177,21 @@ class HomeFragment : Fragment() {
 
     private fun showShimmer(state: Boolean) {
         if (state) {
-            binding?.shimmerProduct?.startShimmer()
-            binding?.shimmerProduct?.visibility = View.VISIBLE
+            binding.shimmerProduct.startShimmer()
+            binding.shimmerProduct.setVisibility(true)
+            binding.rvProduct.setVisibility(false)
         } else {
-            binding?.shimmerProduct?.stopShimmer()
-            binding?.shimmerProduct?.visibility = View.GONE
+            binding.shimmerProduct.stopShimmer()
+            binding.shimmerProduct.setVisibility(false)
+            binding.rvProduct.setVisibility(true)
         }
     }
 
     private fun isDataEmpty(state: Boolean) {
         if (state) {
-            binding?.tvDataNotfound?.visibility = View.VISIBLE
+            binding.tvDataNotfound.visibility = View.VISIBLE
         } else {
-            binding?.tvDataNotfound?.visibility = View.GONE
+            binding.tvDataNotfound.visibility = View.GONE
         }
     }
 //
@@ -237,9 +244,9 @@ class HomeFragment : Fragment() {
 
     private fun showFabFilterState(state: Boolean) {
         if (state) {
-            binding?.floatingBtnFilter?.visibility = View.VISIBLE
+            binding.floatingBtnFilter.visibility = View.VISIBLE
         } else  {
-            binding?.floatingBtnFilter?.hide()
+            binding.floatingBtnFilter.hide()
         }
     }
 
@@ -315,19 +322,34 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRvWhenRefresh() {
-        binding?.swipeToRefresh?.setOnRefreshListener {
+        binding.swipeToRefresh.setOnRefreshListener {
             adapter.refresh()
             setProductData("")
-            binding?.rvProduct?.visibility = View.GONE
-            binding?.searchBar?.setQuery("", false)
-            binding?.searchBar?.clearFocus()
+            binding.rvProduct.visibility = View.GONE
+            binding.searchBar.setQuery("", false)
+            binding.searchBar.clearFocus()
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        searchJob?.cancel()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        searchJob?.cancel()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        searchJob?.cancel()
+        setProductData(queryString)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        febJob?.cancel()
         searchJob?.cancel()
     }
 

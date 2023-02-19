@@ -3,6 +3,7 @@ package com.bagaspardanailham.myecommerceapp.ui.main.favorite
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -306,9 +307,38 @@ class FavoriteFragment : Fragment() {
         }
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        febJob?.cancel()
+        searchJob?.cancel()
+        Log.d("favorite", "onDetach")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        febJob?.cancel()
+        searchJob?.cancel()
+        Log.d("favorite", "onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        febJob?.cancel()
+        searchJob?.cancel()
+        Log.d("favorite", "onStop")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        febJob?.cancel()
+        searchJob?.cancel()
+        Log.d("favorite", "onStart")
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        Log.d("favorite", "OnDestroy")
         febJob?.cancel()
         searchJob?.cancel()
     }
