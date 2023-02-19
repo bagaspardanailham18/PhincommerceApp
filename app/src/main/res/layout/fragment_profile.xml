@@ -91,7 +91,7 @@
                 android:background="@color/background"
                 android:gravity="center_vertical"
                 android:paddingStart="12dp"
-                android:paddingVertical="16dp"
+                android:paddingVertical="6dp"
                 tools:ignore="RtlSymmetry">
 
                 <androidx.appcompat.widget.AppCompatImageView

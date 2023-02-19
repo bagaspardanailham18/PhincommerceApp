@@ -143,6 +143,11 @@ class ChangePasswordActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
+    }
+
     companion object {
         private val USER_ID = "user_id"
     }
