@@ -32,9 +32,7 @@ class CameraActivity : AppCompatActivity() {
         binding = ActivityCameraBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.captureImage.setOnClickListener {
-            takePhoto()
-        }
+        setupCamera()
 
     }
 
@@ -42,6 +40,17 @@ class CameraActivity : AppCompatActivity() {
         super.onResume()
         hideSystemUI()
         startCamera()
+    }
+
+    private fun setupCamera() {
+        binding.btnCameraSwitch.setOnClickListener {
+            cameraSelector =
+                if (cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) CameraSelector.DEFAULT_FRONT_CAMERA
+                else CameraSelector.DEFAULT_BACK_CAMERA
+        }
+        binding.captureImage.setOnClickListener {
+            takePhoto()
+        }
     }
 
     private fun startCamera() {

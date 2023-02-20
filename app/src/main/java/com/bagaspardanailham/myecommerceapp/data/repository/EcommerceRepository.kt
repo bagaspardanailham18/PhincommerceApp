@@ -85,6 +85,8 @@ interface EcommerceRepository {
 
     fun getProductSearchHistory(idUser: Int?): LiveData<Result<GetProductSearchHistoryResponse>>
 
+    fun countDataById(id: Int?, name: String?): Int
+
 
     // Notification
     suspend fun insertNotification(data: NotificationEntity)

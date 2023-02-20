@@ -59,7 +59,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
     private var choosenPaymentName: String? = null
     private var isFavorite: Boolean = true
 
-    private lateinit var detailData: ProductDetailItem
+    private var detailData: ProductDetailItem? = null
 
     private lateinit var imgPrevDialog: ImagePreviewDialog
 
@@ -78,6 +78,8 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
         binding.swipeToRefresh?.setOnRefreshListener {
             setContentData()
         }
+
+        Log.d("profile", detailData.toString())
 
         // for Image send ignore URI error
         val builder: StrictMode.VmPolicy.Builder = StrictMode.VmPolicy.Builder()
@@ -100,7 +102,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                         intent.type = "image/*"
                         intent.putExtra(
                             Intent.EXTRA_TEXT,
-                            "Name : ${detailData.nameProduct}\nStock : ${detailData.stock}\nWeight : ${detailData.weight}\nSize : ${detailData.size}\nLink : https://bagascommerce.com/product-detail?id=$productId"
+                            "Name : ${detailData?.nameProduct}\nStock : ${detailData?.stock}\nWeight : ${detailData?.weight}\nSize : ${detailData?.size}\nLink : https://bagascommerce.com/product-detail?id=$productId"
                         )
                         intent.putExtra(Intent.EXTRA_STREAM, getBitmapFromView(bitmap))
                         startActivity(Intent.createChooser(intent, "Share To"))
@@ -151,7 +153,6 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                             detailData = result.data.success.data
                             checkChoosenPaymentMethod()
                             setAction(result.data.success.data)
-                            detailData = result.data.success.data
                         }
                         is Result.Error -> {
                             shimmerVisibility(false)
@@ -276,9 +277,10 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
             }
         }
         binding.btnTrolly.setOnClickListener {
-            lifecycleScope.launchWhenStarted {
-                productDetailViewModel.getProductById(product?.id).observe(this@ProductDetailActivity) { result ->
-                    if (result.isNotEmpty() || result.size > 0) {
+            CoroutineScope(Dispatchers.IO).launch {
+                val countedProduct = productDetailViewModel.countDataById(product?.id, product?.nameProduct)
+                withContext(Dispatchers.Main) {
+                    if (countedProduct > 0) {
                         Toast.makeText(this@ProductDetailActivity, resources.getString(R.string.product_is_already_exist_in_trolly), Toast.LENGTH_SHORT).show()
                     } else {
                         addProductToTrolly(product)

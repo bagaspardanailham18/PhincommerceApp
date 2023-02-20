@@ -85,42 +85,48 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView7"
+    <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="22dp"
-        android:fontFamily="@font/poppinsregular"
-        android:text="Total Price"
-        android:textSize="12sp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="@+id/tv_choosen_payment_method"
         app:layout_constraintStart_toStartOf="@+id/tv_choosen_payment_method"
-        app:layout_constraintTop_toBottomOf="@+id/tv_choosen_payment_method" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_choosen_payment_method">
 
-    <TextView
-        android:id="@+id/tv_total_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:fontFamily="@font/poppinsbold"
-        android:text="Total Price"
-        android:textSize="18sp"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/textView7"
-        app:layout_constraintStart_toEndOf="@+id/textView7"
-        app:layout_constraintTop_toTopOf="@+id/textView7" />
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppinsregular"
+            android:text="Total Price"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_total_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/poppinsbold"
+            android:text="Total Price"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="95dp"
+        android:layout_marginTop="100dp"
         android:fontFamily="@font/poppinsbold"
         android:text="@string/give_your_rating"
         android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/tv_choosen_payment_method"
         app:layout_constraintStart_toStartOf="@+id/tv_choosen_payment_method"
-        app:layout_constraintTop_toBottomOf="@+id/tv_total_price" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
     <RatingBar
         android:id="@+id/edt_rating"

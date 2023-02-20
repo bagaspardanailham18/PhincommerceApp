@@ -194,6 +194,9 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
                     404 -> emit(
                         Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
+                    429 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
+                    )
                     500 -> emit(
                         Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
@@ -474,6 +477,10 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
                 )
             }
         }
+    }
+
+    override fun countDataById(id: Int?, name: String?): Int {
+        return ecommerceDatabase.ecommerceDao().countDataById(id, name)
     }
 
 

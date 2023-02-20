@@ -32,6 +32,9 @@ interface TrolleyDao {
     @Query("SELECT * FROM trolley WHERE id = :id")
     fun getProductById(id: Int?): LiveData<List<TrolleyEntity>>
 
+    @Query("SELECT count(*) from trolley where name_product = :name and id = :id")
+    fun countDataById(id: Int?, name: String?): Int
+
     @Delete
     suspend fun deleteProductFromTrolly(trolly: TrolleyEntity)
 

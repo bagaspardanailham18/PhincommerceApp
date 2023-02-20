@@ -54,7 +54,7 @@ import org.json.JSONObject
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding
 
     private val homeViewModel by viewModels<HomeViewModel>()
 
@@ -72,7 +72,7 @@ class HomeFragment : Fragment() {
     ): View {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        val root: View = binding?.root!!
 
         adapter = ProductListAdapter(requireActivity())
         setProductData(queryString)
@@ -91,7 +91,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupAction() {
-        binding.searchBar.setOnQueryTextListener(object : OnQueryTextListener {
+        binding?.searchBar?.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(q: String?): Boolean {
                 return false
             }
@@ -131,7 +131,7 @@ class HomeFragment : Fragment() {
 
             homeViewModel.getProductListPaging(query.toString()).observe(viewLifecycleOwner) { result ->
                 if (result != null) {
-                    binding.swipeToRefresh.isRefreshing = false
+                    binding?.swipeToRefresh?.isRefreshing = false
                     isDataEmpty(false)
                     setProductRv(result)
                 } else {
@@ -142,7 +142,7 @@ class HomeFragment : Fragment() {
             queryString = query.toString()
             homeViewModel.getProductListPaging("").observe(viewLifecycleOwner) { result ->
                 if (result != null) {
-                    binding.swipeToRefresh.isRefreshing = false
+                    binding?.swipeToRefresh?.isRefreshing = false
                     isDataEmpty(false)
                     setProductRv(result)
                 } else {
@@ -154,7 +154,7 @@ class HomeFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setProductRv(result: PagingData<ProductListPagingItem>) {
-        binding.apply {
+        binding?.apply {
             rvProduct.adapter = adapter.withLoadStateFooter(
                 footer = LoadingStateAdapter {
                     adapter.retry()
@@ -177,21 +177,21 @@ class HomeFragment : Fragment() {
 
     private fun showShimmer(state: Boolean) {
         if (state) {
-            binding.shimmerProduct.startShimmer()
-            binding.shimmerProduct.setVisibility(true)
-            binding.rvProduct.setVisibility(false)
+            binding?.shimmerProduct?.startShimmer()
+            binding?.shimmerProduct?.setVisibility(true)
+            binding?.rvProduct?.setVisibility(false)
         } else {
-            binding.shimmerProduct.stopShimmer()
-            binding.shimmerProduct.setVisibility(false)
-            binding.rvProduct.setVisibility(true)
+            binding?.shimmerProduct?.stopShimmer()
+            binding?.shimmerProduct?.setVisibility(false)
+            binding?.rvProduct?.setVisibility(true)
         }
     }
 
     private fun isDataEmpty(state: Boolean) {
         if (state) {
-            binding.tvDataNotfound.visibility = View.VISIBLE
+            binding?.tvDataNotfound?.visibility = View.VISIBLE
         } else {
-            binding.tvDataNotfound.visibility = View.GONE
+            binding?.tvDataNotfound?.visibility = View.GONE
         }
     }
 //
@@ -244,9 +244,9 @@ class HomeFragment : Fragment() {
 
     private fun showFabFilterState(state: Boolean) {
         if (state) {
-            binding.floatingBtnFilter.visibility = View.VISIBLE
+            binding?.floatingBtnFilter?.visibility = View.VISIBLE
         } else  {
-            binding.floatingBtnFilter.hide()
+            binding?.floatingBtnFilter?.hide()
         }
     }
 
@@ -322,12 +322,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRvWhenRefresh() {
-        binding.swipeToRefresh.setOnRefreshListener {
+        binding?.swipeToRefresh?.setOnRefreshListener {
             adapter.refresh()
             setProductData("")
-            binding.rvProduct.visibility = View.GONE
-            binding.searchBar.setQuery("", false)
-            binding.searchBar.clearFocus()
+            binding?.rvProduct?.visibility = View.GONE
+            binding?.searchBar?.setQuery("", false)
+            binding?.searchBar?.clearFocus()
         }
     }
 

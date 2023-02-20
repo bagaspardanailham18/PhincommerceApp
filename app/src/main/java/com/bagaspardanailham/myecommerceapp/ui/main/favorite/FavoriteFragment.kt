@@ -18,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.bagaspardanailham.myecommerceapp.R
+import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.GetFavoriteProductListResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentFavoriteBinding
@@ -27,9 +28,12 @@ import com.bagaspardanailham.myecommerceapp.ui.main.home.HomeViewModel
 import com.bagaspardanailham.myecommerceapp.ui.main.home.ProductListAdapter
 import com.bagaspardanailham.myecommerceapp.utils.setVisibility
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
+import org.json.JSONObject
 import kotlin.text.Typography.dagger
 
 
@@ -40,7 +44,7 @@ class FavoriteFragment : Fragment() {
 
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private val binding get() = _binding!!
+    private val binding get() = _binding
 
     private val favoriteViewModel by viewModels<FavoriteViewModel>()
     private val authViewModel by viewModels<AuthViewModel>()
@@ -59,7 +63,13 @@ class FavoriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFavoriteBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        val root: View = binding?.root!!
+
+        adapter = FavoriteProductListAdapter(requireActivity())
+        setProductData(queryString, 0)
+        setupRvWhenRefresh()
+
+        setupAction()
 
         return root
     }
@@ -67,15 +77,11 @@ class FavoriteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = FavoriteProductListAdapter(requireActivity())
-        setProductData(queryString, 0)
-        setupRvWhenRefresh()
 
-        setupAction()
     }
 
     private fun setupAction() {
-        binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding?.searchBar?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(q: String?): Boolean {
                 TODO("Not yet implemented")
             }
@@ -90,7 +96,7 @@ class FavoriteFragment : Fragment() {
             }
         })
 
-        binding.floatingBtnFilter.setOnClickListener {
+        binding?.floatingBtnFilter?.setOnClickListener {
             showFilterDialog()
         }
     }
@@ -103,7 +109,7 @@ class FavoriteFragment : Fragment() {
                 delay(1000)
                 queryString = query.toString()
                 favoriteViewModel.getFavoriteProductList(token, query, userId).observe(viewLifecycleOwner) { result ->
-                    with(binding) {
+                    binding?.apply {
                         when (result) {
                             is Result.Loading -> {
                                 shimmerVisibility(true)
@@ -136,7 +142,7 @@ class FavoriteFragment : Fragment() {
             } else {
                 queryString = query.toString()
                 favoriteViewModel.getFavoriteProductList(token, null, userId).observe(viewLifecycleOwner) { result ->
-                    with(binding) {
+                    binding?.apply {
                         when (result) {
                             is Result.Loading -> {
                                 shimmerVisibility(true)
@@ -173,7 +179,7 @@ class FavoriteFragment : Fragment() {
         when (sort) {
             0 -> {
                 adapter.submitList(result.success?.data)
-                binding.apply {
+                binding?.apply {
                     rvProduct.adapter = adapter
                     rvProduct.setHasFixedSize(true)
                 }
@@ -183,7 +189,7 @@ class FavoriteFragment : Fragment() {
                 adapter.submitList(result.success?.data?.sortedBy {
                     it?.nameProduct
                 })
-                binding.apply {
+                binding?.apply {
                     rvProduct.adapter = adapter
                     rvProduct.setHasFixedSize(true)
                 }
@@ -193,7 +199,7 @@ class FavoriteFragment : Fragment() {
                 adapter.submitList(result.success?.data?.sortedByDescending {
                     it?.nameProduct
                 })
-                binding.apply {
+                binding?.apply {
                     rvProduct.adapter = adapter
                     rvProduct.setHasFixedSize(true)
                 }
@@ -236,14 +242,14 @@ class FavoriteFragment : Fragment() {
 
     private fun showFabFilterState(state: Boolean) {
         if (state) {
-            binding.floatingBtnFilter.visibility = View.VISIBLE
+            binding?.floatingBtnFilter?.visibility = View.VISIBLE
         } else  {
-            binding.floatingBtnFilter.hide()
+            binding?.floatingBtnFilter?.hide()
         }
     }
 
     private fun shimmerVisibility(isVisible: Boolean) {
-        with(binding) {
+        binding?.apply {
             if (isVisible) {
                 shimmerProduct.startShimmer()
                 shimmerProduct.setVisibility(true)
@@ -259,38 +265,38 @@ class FavoriteFragment : Fragment() {
 
     private fun isDataEmpty(state: Boolean) {
         if (state) {
-            binding.floatingBtnFilter.hide()
-            binding.floatingBtnFilter.visibility = View.INVISIBLE
+            binding?.floatingBtnFilter?.hide()
+            binding?.floatingBtnFilter?.visibility = View.INVISIBLE
         } else {
-            binding.floatingBtnFilter.show()
-            binding.floatingBtnFilter.visibility = View.VISIBLE
+            binding?.floatingBtnFilter?.show()
+            binding?.floatingBtnFilter?.visibility = View.VISIBLE
         }
     }
 
     private fun animationBtnFilter(isDataEmpty: Boolean) {
         if (isDataEmpty) {
             isDataEmpty(true)
-            binding.floatingBtnFilter.visibility = View.INVISIBLE
+            binding?.floatingBtnFilter?.visibility = View.INVISIBLE
         } else {
             isDataEmpty(false)
-            binding.floatingBtnFilter.visibility = View.INVISIBLE
+            binding?.floatingBtnFilter?.visibility = View.INVISIBLE
 
-            binding.rvProduct.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            binding?.rvProduct?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    binding.floatingBtnFilter.visibility = View.INVISIBLE
+                    binding?.floatingBtnFilter?.visibility = View.INVISIBLE
                     if (dy >= 0) {
                         febJob?.cancel()
                         febJob = coroutineScope.launch {
                             delay(1000)
-                            binding.floatingBtnFilter.visibility = View.VISIBLE
+                            binding?.floatingBtnFilter?.visibility = View.VISIBLE
                         }
                     } else if (dy <= 0) {
                         febJob?.cancel()
                         febJob = coroutineScope.launch {
                             delay(1000)
-                            binding.floatingBtnFilter.visibility = View.VISIBLE
+                            binding?.floatingBtnFilter?.visibility = View.VISIBLE
                         }
                     }
 
@@ -300,10 +306,10 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun setupRvWhenRefresh() {
-        binding.swipeToRefresh.setOnRefreshListener {
+        binding?.swipeToRefresh?.setOnRefreshListener {
             setProductData("", 0)
-            binding.searchBar.setQuery("", false)
-            binding.searchBar.clearFocus()
+            binding?.searchBar?.setQuery("", false)
+            binding?.searchBar?.clearFocus()
         }
     }
 
@@ -332,6 +338,7 @@ class FavoriteFragment : Fragment() {
         super.onStart()
         febJob?.cancel()
         searchJob?.cancel()
+        setProductData("", 0)
         Log.d("favorite", "onStart")
     }
 

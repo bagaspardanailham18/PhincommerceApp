@@ -20,6 +20,8 @@ class ProductDetailViewModel @Inject constructor(private val repository: Ecommer
 
     fun getProductById(idProduct: Int?) = repository.getProductById(idProduct)
 
+    fun countDataById(id: Int?, name: String?): Int = repository.countDataById(id, name)
+
     suspend fun getOtherProducts(idUser: Int?) = repository.getOtherProductList(idUser)
 
     suspend fun getProductSearchHistory(idUser: Int?) = repository.getProductSearchHistory(idUser)

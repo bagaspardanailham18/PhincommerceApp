@@ -33,6 +33,7 @@ import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog
 import com.bagaspardanailham.myecommerceapp.ui.splash.SplashScreenActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
+import com.bagaspardanailham.myecommerceapp.utils.bitmapToFile
 import com.bagaspardanailham.myecommerceapp.utils.createCustomTempFile
 import com.bagaspardanailham.myecommerceapp.utils.reduceFileImage
 import com.bagaspardanailham.myecommerceapp.utils.rotateBitmap
@@ -261,7 +262,7 @@ class ProfileFragment : Fragment() {
         ActivityResultContracts.StartActivityForResult()
     ) {
         if (it.resultCode == CAMERA_X_RESULT) {
-            val myFile = it.data?.getSerializableExtra("picture") as File
+            val myFile = reduceFileImage(it.data?.getSerializableExtra("picture") as File)
 
             val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
 
@@ -279,7 +280,7 @@ class ProfileFragment : Fragment() {
 
     private fun uploadImg() {
         if (getFile != null) {
-            val file = reduceFileImage(getFile as File)
+            val file = getFile as File
             val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
                 "image",
