@@ -44,6 +44,7 @@ class NotificationActivity : AppCompatActivity() {
         setCustomToolbar()
         //setupMenu()
 
+        setNotificationRv()
         setNotificationListData()
     }
 
@@ -114,8 +115,25 @@ class NotificationActivity : AppCompatActivity() {
 //        }, this, Lifecycle.State.RESUMED)
 //    }
 
+    private fun setNotificationRv() {
+        adapter = NotificationListAdapter(
+            isMultipleSelect = isMultipleSelect,
+            onItemClicked = { data ->
+                onNotificationItemClicked(data)
+            },
+            onCheckboxChecked = { data ->
+                onCheckboxChecked(data)
+            }
+        )
+        val linearLayoutManager = LinearLayoutManager(this@NotificationActivity)
+        binding.rvNotification.adapter = adapter
+        binding.rvNotification.layoutManager = linearLayoutManager
+        binding.rvNotification.setHasFixedSize(true)
+    }
+
     private fun setMultipleSelectToolbar() {
         isMultipleSelect = !isMultipleSelect
+        setNotificationRv()
         setNotificationListData()
 
         if (isMultipleSelect) {
@@ -156,21 +174,7 @@ class NotificationActivity : AppCompatActivity() {
                     rvNotification.isVisible = !data.isNullOrEmpty()
 
                     if (!data.isNullOrEmpty()) {
-                        adapter = NotificationListAdapter(
-                            isMultipleSelect = isMultipleSelect,
-                            context = this@NotificationActivity,
-                            onItemClicked = { data ->
-                                onNotificationItemClicked(data)
-                            },
-                            onCheckboxChecked = { data ->
-                                onCheckboxChecked(data)
-                            }
-                        )
-                        val linearLayoutManager = LinearLayoutManager(this@NotificationActivity)
                         adapter.submitList(data)
-                        rvNotification.adapter = adapter
-                        rvNotification.layoutManager = linearLayoutManager
-                        rvNotification.setHasFixedSize(true)
                     }
                 }
             }

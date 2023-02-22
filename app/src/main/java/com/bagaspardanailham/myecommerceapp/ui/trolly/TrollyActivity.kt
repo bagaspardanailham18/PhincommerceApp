@@ -63,7 +63,6 @@ class TrollyActivity : AppCompatActivity() {
 
     private fun setTrollyListAdapter() {
         adapter = TrollyListAdapter(
-            this,
             onAddQuantity = {
                 val productId = it.id
                 val quantity = it.quantity
@@ -97,6 +96,11 @@ class TrollyActivity : AppCompatActivity() {
                 }
             }
         )
+
+        binding.rvTrollyItem.layoutManager = LinearLayoutManager(this@TrollyActivity)
+
+        binding.rvTrollyItem.adapter = adapter
+        binding.rvTrollyItem.setHasFixedSize(true)
     }
 
     private fun setTrollyData() {
@@ -105,10 +109,8 @@ class TrollyActivity : AppCompatActivity() {
                 with(binding) {
                     if (result.isNotEmpty()) {
                         isDataEmpty(false)
-                        rvTrollyItem.layoutManager = LinearLayoutManager(this@TrollyActivity)
+
                         adapter.submitList(result)
-                        rvTrollyItem.adapter = adapter
-                        rvTrollyItem.setHasFixedSize(true)
 
                         adapter.setOnDeleteItemClickCallback(object: TrollyListAdapter.OnItemClickCallback {
                             override fun onItemClicked(data: TrolleyEntity) {
@@ -187,12 +189,6 @@ class TrollyActivity : AppCompatActivity() {
 
                                         }
                                         is Result.Success -> {
-                                            for (i in listOfProductId.indices) {
-                                                lifecycleScope.launch {
-                                                    trollyViewModel.deleteProductByIdFromTrolly(this@TrollyActivity, listOfProductId[i].toInt())
-                                                }
-                                            }
-
                                             val intent = Intent(this@TrollyActivity, CheckoutActivity::class.java)
                                             intent.putExtra(CheckoutActivity.EXTRA_LIST_PRODUCT_ID, listOfProductId)
                                             intent.putExtra(CheckoutActivity.EXTRA_ACCESS_TOKEN, accessToken)
@@ -202,6 +198,11 @@ class TrollyActivity : AppCompatActivity() {
                                             startActivity(intent)
                                             finish()
                                             Toast.makeText(this@TrollyActivity, buyResult.data.success?.message, Toast.LENGTH_SHORT).show()
+                                            for (i in listOfProductId.indices) {
+                                                lifecycleScope.launch {
+                                                    trollyViewModel.deleteProductByIdFromTrolly(this@TrollyActivity, listOfProductId[i].toInt())
+                                                }
+                                            }
                                         }
                                         is Result.Error -> {
                                             val errorres = JSONObject(buyResult.errorBody?.string()).toString()

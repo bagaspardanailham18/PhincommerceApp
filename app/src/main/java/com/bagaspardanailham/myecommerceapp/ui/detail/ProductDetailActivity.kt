@@ -9,11 +9,15 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bagaspardanailham.myecommerceapp.R
@@ -69,6 +73,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
         setContentView(binding.root)
 
         setCustomToolbar()
+        //setupMenu()
         setContentData()
         setOtherProductData()
         setProductSearchHistoryData()
@@ -87,6 +92,49 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
 
         binding.tvToolbarTitle.isSelected = true
     }
+
+//    private fun setupMenu() {
+//        (this as MenuHost).addMenuProvider(object : MenuProvider {
+//            override fun onPrepareMenu(menu: Menu) {
+//                // Handle for example visibility of menu items
+//                menu.findItem(R.id.menu_share)?.isVisible = detailData != null
+//            }
+//
+//            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+//                menuInflater.inflate(R.menu.product_detail_menu, menu)
+//            }
+//
+//            override fun onMenuItemSelected(item: MenuItem): Boolean {
+//                // Validate and handle the selected menu item
+//                when (item.itemId) {
+//                    R.id.menu_share -> {
+//                        Picasso.get().load(productImgUrl).into(object : com.squareup.picasso.Target {
+//                            override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+//                                val intent = Intent(Intent.ACTION_SEND)
+//                                intent.type = "image/*"
+//                                intent.putExtra(
+//                                    Intent.EXTRA_TEXT,
+//                                    "Name : ${detailData?.nameProduct}\nStock : ${detailData?.stock}\nWeight : ${detailData?.weight}\nSize : ${detailData?.size}\nLink : https://bagascommerce.com/product-detail?id=$productId"
+//                                )
+//                                intent.putExtra(Intent.EXTRA_STREAM, getBitmapFromView(bitmap))
+//                                startActivity(Intent.createChooser(intent, "Share To"))
+//                            }
+//
+//                            override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+//                                Log.v("IMG Downloader", "Bitmap Failed...");
+//                            }
+//
+//                            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+//                                Log.v("IMG Downloader", "Bitmap Preparing Load...");
+//                            }
+//
+//                        })
+//                    }
+//                }
+//                return true
+//            }
+//        }, this, Lifecycle.State.RESUMED)
+//    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.product_detail_menu, menu)

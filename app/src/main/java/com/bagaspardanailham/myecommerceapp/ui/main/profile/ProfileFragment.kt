@@ -272,8 +272,9 @@ class ProfileFragment : Fragment() {
             )
 
             getFile = myFile
-            binding.tvUserImgPrev.setImageBitmap(result)
-
+            Glide.with(requireActivity())
+                .load(result)
+                .into(binding.tvUserImgPrev)
             uploadImg()
         }
     }
@@ -366,7 +367,10 @@ class ProfileFragment : Fragment() {
             val selectedImg: Uri = result.data?.data as Uri
             val myFile = uriToFile(selectedImg, requireActivity())
             getFile = myFile
-            binding.tvUserImgPrev.setImageURI(selectedImg)
+            //binding.tvUserImgPrev.setImageURI(selectedImg)
+            Glide.with(requireActivity())
+                .load(selectedImg)
+                .into(binding.tvUserImgPrev)
 
             uploadImg()
         }

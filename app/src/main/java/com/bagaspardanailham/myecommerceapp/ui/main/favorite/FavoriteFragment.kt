@@ -65,18 +65,17 @@ class FavoriteFragment : Fragment() {
         _binding = FragmentFavoriteBinding.inflate(inflater, container, false)
         val root: View = binding?.root!!
 
-        adapter = FavoriteProductListAdapter(requireActivity())
-        setProductData(queryString, 0)
-        setupRvWhenRefresh()
-
-        setupAction()
-
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        adapter = FavoriteProductListAdapter(requireActivity())
+        setProductData(queryString, 0)
+        setupRvWhenRefresh()
+
+        setupAction()
 
     }
 
@@ -87,10 +86,14 @@ class FavoriteFragment : Fragment() {
             }
 
             override fun onQueryTextChange(q: String?): Boolean {
-                if (q?.length == 0 || q.toString() == "") {
-                    setProductData("", 0)
-                } else {
-                    setProductData(q, 0)
+                searchJob?.cancel()
+                searchJob = coroutineScope.launch {
+                    delay(2000)
+                    if (q?.length == 0 || q.toString() == "") {
+                        setProductData("", 0)
+                    } else {
+                        setProductData(q, 0)
+                    }
                 }
                 return true
             }
@@ -102,11 +105,10 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun setProductData(query: String?, sort: Int) {
-        searchJob = viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             val token = authViewModel.getUserPref().first()?.authTokenKey.toString()
             val userId = authViewModel.getUserPref().first()?.id.toString().toInt()
             if (query.toString().isNotEmpty()) {
-                delay(1000)
                 queryString = query.toString()
                 favoriteViewModel.getFavoriteProductList(token, query, userId).observe(viewLifecycleOwner) { result ->
                     binding?.apply {
@@ -134,7 +136,12 @@ class FavoriteFragment : Fragment() {
                                 shimmerVisibility(false)
                                 rvProduct.setVisibility(false)
                                 animationBtnFilter(true)
-                                Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
+
+                                if (!result.message.isNullOrEmpty()) {
+                                    Toast.makeText(requireActivity(), result.message.toString(), Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(requireActivity(), result.errorBody.toString(), Toast.LENGTH_SHORT).show()
+                                }
                             }
                         }
                     }

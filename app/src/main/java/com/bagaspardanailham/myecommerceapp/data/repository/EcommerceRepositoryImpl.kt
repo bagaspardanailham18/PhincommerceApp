@@ -28,6 +28,7 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.profile.ChangeP
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okio.IOException
 import retrofit2.HttpException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -172,6 +173,10 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
                         Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                 }
+            } else if (throwable is IOException) {
+                emit(
+                    Result.Error(false, null, null, "No Internet Connection")
+                )
             } else {
                 emit(
                     Result.Error(false, null, null, null)
@@ -204,6 +209,10 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
                         Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                 }
+            } else if (throwable is IOException) {
+                emit(
+                    Result.Error(false, null, null, "No Internet Connection")
+                )
             } else {
                 emit(
                     Result.Error(false, null, null, null)

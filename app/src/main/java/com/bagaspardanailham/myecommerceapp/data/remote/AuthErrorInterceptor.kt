@@ -2,6 +2,8 @@ package com.bagaspardanailham.myecommerceapp.data.remote
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import android.widget.Toast
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthActivity
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -21,6 +23,11 @@ class AuthErrorInterceptor @Inject constructor(private val tokenManager: TokenMa
                 val intent = Intent(context, AuthActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
+                return response
+            }
+
+            429 -> {
+                Log.d("error", "Too many request!!")
                 return response
             }
         }

@@ -40,7 +40,7 @@ fun createFile(application: Application): File {
 fun rotateBitmap(bitmap: Bitmap, isBackCamera: Boolean = false): Bitmap {
     val matrix = Matrix()
     return if (isBackCamera) {
-        matrix.postRotate(90f)
+        matrix.postRotate(180f)
         Bitmap.createBitmap(
             bitmap,
             0,

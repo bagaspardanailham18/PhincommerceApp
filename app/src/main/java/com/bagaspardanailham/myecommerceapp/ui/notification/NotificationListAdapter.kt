@@ -20,7 +20,6 @@ import java.util.*
 
 class NotificationListAdapter(
     private val isMultipleSelect: Boolean,
-    private val context: Context,
     private val onItemClicked: (NotificationEntity) -> Unit,
     private val onCheckboxChecked: (NotificationEntity) -> Unit
 ): ListAdapter<NotificationEntity, NotificationListAdapter.NotificationListVH>(DIFF_CALLBACK) {
@@ -49,18 +48,18 @@ class NotificationListAdapter(
                 tvItemMessage.text = data.message.toString()
                 tvItemDate.text = formattingDate(data.date)
 
-                itemCardNotification.setCardBackgroundColor(if (data.isRead) Color.WHITE else ContextCompat.getColor(context, R.color.bg_card_notif))
+                itemCardNotification.setCardBackgroundColor(if (data.isRead) Color.WHITE else ContextCompat.getColor(itemView.context, R.color.bg_card_notif))
 
                 itemCardNotification.setOnClickListener {
                     if (isMultipleSelect) {
 
                     } else {
-                        onItemClicked.invoke(data)
+                        onItemClicked(data)
                     }
                 }
 
                 cbSelectItem.setOnClickListener {
-                    onCheckboxChecked.invoke(data)
+                    onCheckboxChecked(data)
                 }
             }
         }

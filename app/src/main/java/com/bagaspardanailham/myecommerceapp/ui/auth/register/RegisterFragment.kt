@@ -38,6 +38,7 @@ import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.utils.createCustomTempFile
 import com.bagaspardanailham.myecommerceapp.utils.reduceFileImage
 import com.bagaspardanailham.myecommerceapp.utils.rotateBitmap
+import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -175,7 +176,7 @@ class RegisterFragment : Fragment() {
         ActivityResultContracts.StartActivityForResult()
     ) {
         if (it.resultCode == CAMERA_X_RESULT) {
-            val myFile = it.data?.getSerializableExtra("picture") as File
+            val myFile = reduceFileImage(it.data?.getSerializableExtra("picture") as File)
             val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
 
             val result = rotateBitmap(
@@ -184,7 +185,10 @@ class RegisterFragment : Fragment() {
             )
 
             getFile = myFile
-            binding?.tvUserImgPrev?.setImageBitmap(result)
+            //binding?.tvUserImgPrev?.setImageBitmap(result)
+            Glide.with(requireActivity())
+                .load(result)
+                .into(binding?.tvUserImgPrev!!)
         }
     }
 
@@ -219,7 +223,10 @@ class RegisterFragment : Fragment() {
             val selectedImg: Uri = result.data?.data as Uri
             val myFile = uriToFile(selectedImg, requireActivity())
             getFile = myFile
-            binding?.tvUserImgPrev?.setImageURI(selectedImg)
+            Glide.with(requireActivity())
+                .load(selectedImg)
+                .into(binding?.tvUserImgPrev!!)
+            //binding?.tvUserImgPrev?.setImageURI(selectedImg)
         }
 
     }

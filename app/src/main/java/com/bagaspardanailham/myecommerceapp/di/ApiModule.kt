@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.viewbinding.BuildConfig
 import com.bagaspardanailham.myecommerceapp.data.remote.*
+import com.bagaspardanailham.myecommerceapp.network.NetworkErrorInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,7 +23,7 @@ class ApiModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(authInterceptor: AuthInterceptor, authAuthenticator: AuthAuthenticator, authErrorInterceptor: AuthErrorInterceptor): OkHttpClient {
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor, authAuthenticator: AuthAuthenticator, authErrorInterceptor: AuthErrorInterceptor, networkErrorInterceptor: NetworkErrorInterceptor): OkHttpClient {
         val loggingInterceptor = if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
         } else {
@@ -33,6 +34,7 @@ class ApiModule {
             .addInterceptor(loggingInterceptor)
             .addInterceptor(authInterceptor)
             .addInterceptor(authErrorInterceptor)
+            .addInterceptor(networkErrorInterceptor)
             .authenticator(authAuthenticator)
             .build()
     }
@@ -43,11 +45,15 @@ class ApiModule {
 
     @Singleton
     @Provides
-    fun provideAuthAuthenticator(tokenManager: TokenManager) = AuthAuthenticator(tokenManager)
+    fun provideAuthAuthenticator(tokenManager: TokenManager): AuthAuthenticator = AuthAuthenticator(tokenManager)
 
     @Singleton
     @Provides
-    fun provideAuthErrorInterceptor(tokenManager: TokenManager, @ApplicationContext context: Context) = AuthErrorInterceptor(tokenManager, context)
+    fun provideAuthErrorInterceptor(tokenManager: TokenManager, @ApplicationContext context: Context): AuthErrorInterceptor = AuthErrorInterceptor(tokenManager, context)
+
+    @Singleton
+    @Provides
+    fun provideNetworkErrorInterceptor(@ApplicationContext context: Context): NetworkErrorInterceptor = NetworkErrorInterceptor(context)
 
     @Singleton
     @Provides

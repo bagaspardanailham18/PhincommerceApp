@@ -22,7 +22,6 @@ import com.bumptech.glide.Glide
 import java.text.DecimalFormat
 
 class TrollyListAdapter(
-    private val context: Context,
     private val onAddQuantity: (TrolleyEntity) -> Unit,
     private val onMinQuantity: (TrolleyEntity) -> Unit,
     private val onCheckboxChecked: (TrolleyEntity) -> Unit
@@ -42,22 +41,20 @@ class TrollyListAdapter(
     override fun onBindViewHolder(holder: TrollyListVH, position: Int) {
         val item = getItem(position)
         holder.bind(item)
-
-        with(holder.binding) {
-            cbSelectItem.isChecked = item.isChecked
-            tvItemQuantity.text = item.quantity.toString()
-        }
     }
 
     inner class TrollyListVH(val binding: ItemRowTrollyBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: TrolleyEntity) {
             with(binding) {
 
+                cbSelectItem.isChecked = data.isChecked
+                tvItemQuantity.text = data.quantity.toString()
+
                 Glide.with(itemView.context)
                     .load(data.image)
                     .into(tvItemImg)
 
-                tvItemPrice.text = data.price?.toInt()?.toRupiahFormat(context)
+                tvItemPrice.text = data.price?.toInt()?.toRupiahFormat(itemView.context)
 
                 tvItemName.text = data.nameProduct.toString()
 
@@ -67,7 +64,7 @@ class TrollyListAdapter(
 
                 btnIncreaseQuantity.setOnClickListener {
                     if (tvItemQuantity.text.toString().toInt() < data.stock!!) {
-                        onAddQuantity.invoke(data)
+                        onAddQuantity(data)
                     }
                 }
 
@@ -75,12 +72,12 @@ class TrollyListAdapter(
                     if (tvItemQuantity.text.toString().toInt() == 1) {
 
                     } else {
-                        onMinQuantity.invoke(data)
+                        onMinQuantity(data)
                     }
                 }
 
                 cbSelectItem.setOnClickListener {
-                    onCheckboxChecked.invoke(
+                    onCheckboxChecked(
                         data
                     )
                 }
@@ -99,7 +96,7 @@ class TrollyListAdapter(
                     oldItem: TrolleyEntity,
                     newItem: TrolleyEntity
                 ): Boolean {
-                    return oldItem.nameProduct == newItem.nameProduct
+                    return oldItem.id == newItem.id
                 }
 
                 override fun areContentsTheSame(
