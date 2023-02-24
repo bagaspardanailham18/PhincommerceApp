@@ -27,16 +27,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
+import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentProfileBinding
 import com.bagaspardanailham.myecommerceapp.ui.CameraActivity
 import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog
 import com.bagaspardanailham.myecommerceapp.ui.splash.SplashScreenActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
-import com.bagaspardanailham.myecommerceapp.utils.bitmapToFile
-import com.bagaspardanailham.myecommerceapp.utils.createCustomTempFile
-import com.bagaspardanailham.myecommerceapp.utils.reduceFileImage
-import com.bagaspardanailham.myecommerceapp.utils.rotateBitmap
+import com.bagaspardanailham.myecommerceapp.utils.*
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
@@ -55,10 +53,14 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.Locale
+import javax.inject.Inject
 
 @Suppress("DEPRECATION")
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
+
+    @Inject
+    lateinit var firebaseAnalyticsRepository: FirebaseAnalyticsRepository
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
@@ -191,6 +193,9 @@ class ProfileFragment : Fragment() {
                     }
                 }
                 .show()
+
+            // Analytics
+            firebaseAnalyticsRepository.onClickCameraIcon(Constant.PROFILE)
         }
 
         binding.apply {
@@ -222,14 +227,20 @@ class ProfileFragment : Fragment() {
                             1 -> {
                                 setLanguage("en")
                                 startActivity(Intent(requireActivity(), SplashScreenActivity::class.java))
+                                // Analytics
+                                firebaseAnalyticsRepository.onChangeLanguage("EN")
                             }
                             2 -> {
                                 setLanguage("in")
                                 startActivity(Intent(requireActivity(), SplashScreenActivity::class.java))
+                                // Analytics
+                                firebaseAnalyticsRepository.onChangeLanguage("ID")
                             }
                             else -> {
                                 setLanguage("en")
                                 startActivity(Intent(requireActivity(), SplashScreenActivity::class.java))
+                                // Analytics
+                                firebaseAnalyticsRepository.onChangeLanguage("EN")
                             }
                         }
                     } else {
@@ -246,10 +257,14 @@ class ProfileFragment : Fragment() {
 
         binding.btnToChangePassword.setOnClickListener {
             requireActivity().startActivity(Intent(requireActivity(), ChangePasswordActivity::class.java))
+            // Analytics
+            firebaseAnalyticsRepository.onClickChangePassword()
         }
 
         binding.btnLogout.setOnClickListener {
             showLogoutValidationDialog()
+            // Analytics
+            firebaseAnalyticsRepository.onClickLogout()
         }
     }
 
@@ -262,20 +277,25 @@ class ProfileFragment : Fragment() {
         ActivityResultContracts.StartActivityForResult()
     ) {
         if (it.resultCode == CAMERA_X_RESULT) {
-            val myFile = reduceFileImage(it.data?.getSerializableExtra("picture") as File)
-
             val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
 
-            val result = rotateBitmap(
-                BitmapFactory.decodeFile(myFile.path),
-                isBackCamera
-            )
+            val myFile = reduceFileImage(it.data?.getSerializableExtra("picture") as File, isBackCamera)
+
+//            val result = rotateBitmap(
+//                BitmapFactory.decodeFile(myFile.path),
+//                isBackCamera
+//            )
 
             getFile = myFile
             Glide.with(requireActivity())
-                .load(result)
+                .load(myFile)
                 .into(binding.tvUserImgPrev)
             uploadImg()
+
+            // Analytics
+            firebaseAnalyticsRepository.onChangeImage(
+                Constant.PROFILE, "Camera"
+            )
         }
     }
 
@@ -365,7 +385,7 @@ class ProfileFragment : Fragment() {
 
         if (result.resultCode == Activity.RESULT_OK) {
             val selectedImg: Uri = result.data?.data as Uri
-            val myFile = uriToFile(selectedImg, requireActivity())
+            val myFile = reduceGalleryFileImage(uriToFile(selectedImg, requireActivity()))
             getFile = myFile
             //binding.tvUserImgPrev.setImageURI(selectedImg)
             Glide.with(requireActivity())
@@ -373,6 +393,11 @@ class ProfileFragment : Fragment() {
                 .into(binding.tvUserImgPrev)
 
             uploadImg()
+
+            // Analytics
+            firebaseAnalyticsRepository.onChangeImage(
+                Constant.PROFILE, "Gallery"
+            )
         }
 
     }
@@ -412,6 +437,14 @@ class ProfileFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Analytics
+        firebaseAnalyticsRepository.onLoadScreen(
+            Constant.PROFILE, this.javaClass.simpleName
+        )
     }
 
     companion object {

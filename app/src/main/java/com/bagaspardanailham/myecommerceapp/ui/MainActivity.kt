@@ -4,17 +4,22 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.activity.viewModels
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.accessibility.AccessibilityEventCompat.setAction
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bagaspardanailham.myecommerceapp.R
+import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityMainBinding
+import com.bagaspardanailham.myecommerceapp.ui.main.favorite.FavoriteFragment
+import com.bagaspardanailham.myecommerceapp.ui.main.home.HomeFragment
 import com.bagaspardanailham.myecommerceapp.ui.main.profile.ProfileViewModel
 import com.bagaspardanailham.myecommerceapp.ui.notification.NotificationActivity
 import com.bagaspardanailham.myecommerceapp.ui.notification.NotificationViewModel
@@ -29,10 +34,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var firebaseAnalyticsRepository: FirebaseAnalyticsRepository
 
     private lateinit var binding: ActivityMainBinding
 
@@ -62,10 +71,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setAction() {
         binding.menuNotification.setOnClickListener {
-            val params = Bundle()
-            params.putString("screen_name", "BagasActivity")
-            params.putString("button_name", "NotificationMenu")
-            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, params)
+            firebaseAnalyticsRepository.onClickNotificationIcon()
             startActivity(Intent(this, NotificationActivity::class.java))
         }
         binding.menuCart.setOnClickListener {

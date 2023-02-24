@@ -14,10 +14,12 @@ import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductDetailItem
+import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentBuyProductBottomSheetBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.ui.checkout.CheckoutActivity
 import com.bagaspardanailham.myecommerceapp.ui.payment.PaymentOptionsActivity
+import com.bagaspardanailham.myecommerceapp.utils.Constant
 import com.bagaspardanailham.myecommerceapp.utils.setPaymentImg
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
@@ -28,9 +30,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class BuyProductModalBottomSheet(private val product: ProductDetailItem?, private val choosenPaymentId: String?, private val choosenPaymentName: String?): BottomSheetDialogFragment() {
+
+    @Inject
+    lateinit var firebaseAnalyticsRepository: FirebaseAnalyticsRepository
 
     private var _binding: FragmentBuyProductBottomSheetBinding? = null
     private val binding get() =  _binding
@@ -45,6 +51,13 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?, privat
 
     override fun getTheme(): Int {
         return R.style.NoBackgroundDialogTheme
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Analytics
+        firebaseAnalyticsRepository.onShowPopup(product?.id)
     }
 
     override fun onCreateView(
@@ -130,9 +143,25 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?, privat
     private fun setAction() {
         binding?.btnDecreaseQuantity?.setOnClickListener {
             viewModel.decreaseQuantity()
+
+            firebaseAnalyticsRepository.onClickButtonQuantity(
+                Constant.DETAIL_PRODUCT,
+                "-",
+                quantity.toString().toInt(),
+                idProduct.toInt(),
+                product?.nameProduct.toString()
+            )
         }
         binding?.btnIncreaseQuantity?.setOnClickListener {
             viewModel.increaseQuantity(product?.stock)
+
+            firebaseAnalyticsRepository.onClickButtonQuantity(
+                Constant.DETAIL_PRODUCT,
+                "+",
+                quantity.toString().toInt(),
+                idProduct.toInt(),
+                product?.nameProduct.toString()
+            )
         }
         binding?.btnBuy?.setOnClickListener {
             if (choosenPaymentId != "null") {
@@ -164,7 +193,20 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?, privat
                         }
                     }
                 }
+                // Analytics
+                firebaseAnalyticsRepository.onClickButtonBuyNow(
+                    totalPrice!!.toDouble(),
+                    idProduct.toInt(),
+                    product?.nameProduct.toString(),
+                    product?.harga!!.toInt(),
+                    quantity,
+                    choosenPaymentName.toString()
+                )
             } else {
+                viewModel.price.observe(viewLifecycleOwner) { totalPrice ->
+                    // Analytics
+                    firebaseAnalyticsRepository.onClickButtonBuyNowForPaymentMethod(totalPrice.toString())
+                }
                 val intent = Intent(requireActivity(), PaymentOptionsActivity::class.java)
                 intent.putExtra(PaymentOptionsActivity.EXTRA_PRODUCT_ID, idProduct.toInt())
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -174,6 +216,10 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?, privat
         }
 
         binding?.tvChoosenPaymentMethod?.setOnClickListener {
+            firebaseAnalyticsRepository.onClickIconBank(
+                // Analytics
+                Constant.DETAIL_PRODUCT, choosenPaymentName.toString()
+            )
             val intent = Intent(requireActivity(), PaymentOptionsActivity::class.java)
             intent.putExtra(PaymentOptionsActivity.EXTRA_PRODUCT_ID, idProduct.toInt())
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)

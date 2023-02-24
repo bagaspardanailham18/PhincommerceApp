@@ -40,7 +40,7 @@ fun createFile(application: Application): File {
 fun rotateBitmap(bitmap: Bitmap, isBackCamera: Boolean = false): Bitmap {
     val matrix = Matrix()
     return if (isBackCamera) {
-        matrix.postRotate(180f)
+        matrix.postRotate(90f)
         Bitmap.createBitmap(
             bitmap,
             0,
@@ -65,8 +65,24 @@ fun rotateBitmap(bitmap: Bitmap, isBackCamera: Boolean = false): Bitmap {
     }
 }
 
-fun reduceFileImage(file: File): File {
-    val bitmap = BitmapFactory.decodeFile(file.path)
+fun reduceFileImage(file: File, isBackCamera: Boolean): File {
+    var bitmap = BitmapFactory.decodeFile(file.path)
+    bitmap = rotateBitmap(bitmap, isBackCamera)
+    var compressQuality = 100
+    var streamLength: Int
+    do {
+        val bmpStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpStream)
+        val bmpPicByteArray = bmpStream.toByteArray()
+        streamLength = bmpPicByteArray.size
+        compressQuality -= 5
+    } while (streamLength > 1000000)
+    bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
+    return file
+}
+
+fun reduceGalleryFileImage(file: File): File {
+    var bitmap = BitmapFactory.decodeFile(file.path)
     var compressQuality = 100
     var streamLength: Int
     do {

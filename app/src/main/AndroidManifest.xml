@@ -33,6 +33,8 @@
         android:theme="@style/Theme.MyEcommerceApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
+        <!-- disable firebase analytics for current screen-->
+        <meta-data android:name="google_analytics_automatic_screen_reporting_enabled" android:value="false" />
         <activity
             android:name=".ui.payment.PaymentOptionsActivity"
             android:exported="false">

@@ -15,15 +15,21 @@ import com.bagaspardanailham.myecommerceapp.databinding.ActivityPaymentOptionsBi
 import com.bagaspardanailham.myecommerceapp.ui.detail.ProductDetailActivity
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyActivity
 import com.bagaspardanailham.myecommerceapp.data.Result
+import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
+import com.bagaspardanailham.myecommerceapp.utils.Constant
 import com.bagaspardanailham.myecommerceapp.utils.setVisibility
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PaymentOptionsActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var firebaseAnalyticsRepository: FirebaseAnalyticsRepository
 
     private lateinit var binding: ActivityPaymentOptionsBinding
 
@@ -68,6 +74,11 @@ class PaymentOptionsActivity : AppCompatActivity() {
                     })
                     finish()
                 }
+
+                // Analytics
+                firebaseAnalyticsRepository.onClickBank(
+                    it.id.toString(), it.name.toString()
+                )
             }
         )
     }
@@ -108,8 +119,15 @@ class PaymentOptionsActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        firebaseAnalyticsRepository.onClickBackIcon(Constant.CHOOSE_PAYMENT_METHOD)
         onBackPressedDispatcher.onBackPressed()
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Analytics
+        firebaseAnalyticsRepository.onLoadScreen(Constant.CHOOSE_PAYMENT_METHOD, this.javaClass.simpleName)
     }
 
     companion object {

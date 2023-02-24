@@ -11,9 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
+import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityCheckoutBinding
 import com.bagaspardanailham.myecommerceapp.ui.MainActivity
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyViewModel
+import com.bagaspardanailham.myecommerceapp.utils.Constant
 import com.bagaspardanailham.myecommerceapp.utils.setPaymentImg
 import com.bagaspardanailham.myecommerceapp.utils.setVisibility
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
@@ -23,9 +25,13 @@ import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CheckoutActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var firebaseAnalyticsRepository: FirebaseAnalyticsRepository
 
     private lateinit var binding: ActivityCheckoutBinding
 
@@ -103,7 +109,18 @@ class CheckoutActivity : AppCompatActivity() {
                 startActivity(Intent(this@CheckoutActivity, MainActivity::class.java))
                 finishAffinity()
             }
+
+            // Analytics
+            firebaseAnalyticsRepository.onClickButtonSubmit(rate.toDouble().toInt())
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Analytics
+        firebaseAnalyticsRepository.onLoadScreen(
+            Constant.SUCCESS, this.javaClass.simpleName
+        )
     }
 
     companion object {

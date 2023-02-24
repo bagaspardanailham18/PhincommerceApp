@@ -102,4 +102,6 @@ interface EcommerceRepository {
     suspend fun setAllUnchecked(isChecked: Boolean = false)
 
     suspend fun deleteNotification(isChecked: Boolean)
+
+
 }

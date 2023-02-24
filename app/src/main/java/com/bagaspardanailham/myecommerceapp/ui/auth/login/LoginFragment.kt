@@ -21,6 +21,11 @@ import com.bagaspardanailham.myecommerceapp.databinding.FragmentLoginBinding
 import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog
 import com.bagaspardanailham.myecommerceapp.ui.MainActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
+import com.bagaspardanailham.myecommerceapp.utils.Constant
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.FirebaseAnalytics.Event.SCREEN_VIEW
+import com.google.firebase.analytics.FirebaseAnalytics.Param.SCREEN_CLASS
+import com.google.firebase.analytics.FirebaseAnalytics.Param.SCREEN_NAME
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -36,6 +41,13 @@ class LoginFragment : Fragment() {
     private val viewModel by viewModels<AuthViewModel>()
 
     private lateinit var loading: LoadingDialog
+
+    override fun onResume() {
+        super.onResume()
+
+        // firebase analytics
+        viewModel.onLoadLogin(this.javaClass.simpleName)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +65,9 @@ class LoginFragment : Fragment() {
 
         binding?.btnToSignup?.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+
+            // Analytics
+            viewModel.onRegisterButtonClicked()
         }
 
         binding?.btnLogin?.setOnClickListener {
@@ -79,6 +94,9 @@ class LoginFragment : Fragment() {
                     binding?.layoutEdtEmail?.error = "Wrong email format"
                     return
                 } else {
+                    // Btn Login Analytics
+                    viewModel.onLoginButtonClicked(email)
+
                     FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
                         val token = task.result
                         lifecycleScope.launch {

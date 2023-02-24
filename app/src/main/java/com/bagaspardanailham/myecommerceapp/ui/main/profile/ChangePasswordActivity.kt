@@ -15,16 +15,22 @@ import com.bagaspardanailham.myecommerceapp.databinding.ActivityChangePasswordBi
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
+import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog
 import com.bagaspardanailham.myecommerceapp.ui.MainActivity
+import com.bagaspardanailham.myecommerceapp.utils.Constant
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChangePasswordActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var firebaseAnalyticsRepository: FirebaseAnalyticsRepository
 
     private lateinit var binding: ActivityChangePasswordBinding
 
@@ -94,6 +100,9 @@ class ChangePasswordActivity : AppCompatActivity() {
                         }
                     }
                 }
+
+                // Analytics
+                firebaseAnalyticsRepository.onClickButtonSave()
             }
         }
     }
@@ -144,8 +153,20 @@ class ChangePasswordActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        firebaseAnalyticsRepository.onClickBackIcon(
+            Constant.CHANGE_PASSWORD
+        )
         onBackPressedDispatcher.onBackPressed()
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Analytics
+        firebaseAnalyticsRepository.onLoadScreen(
+            Constant.CHANGE_PASSWORD, this.javaClass.simpleName
+        )
     }
 
     companion object {

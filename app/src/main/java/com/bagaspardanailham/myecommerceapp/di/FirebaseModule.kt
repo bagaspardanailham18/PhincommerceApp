@@ -1,6 +1,9 @@
 package com.bagaspardanailham.myecommerceapp.di
 
+import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseRemoteConfigRepository
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfig
@@ -25,6 +28,18 @@ class FirebaseModule {
     @Singleton
     fun provideFirebaseRemoteConfig(): FirebaseRemoteConfig {
         return FirebaseRemoteConfig.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseAnalytics(): FirebaseAnalytics {
+        return Firebase.analytics
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseAnalyticsRepository(firebaseAnalytics: FirebaseAnalytics): FirebaseAnalyticsRepository {
+        return FirebaseAnalyticsRepository(firebaseAnalytics)
     }
 
 }

@@ -35,8 +35,10 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.ui.CameraActivity
 import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
+import com.bagaspardanailham.myecommerceapp.utils.Constant.SIGNUP
 import com.bagaspardanailham.myecommerceapp.utils.createCustomTempFile
 import com.bagaspardanailham.myecommerceapp.utils.reduceFileImage
+import com.bagaspardanailham.myecommerceapp.utils.reduceGalleryFileImage
 import com.bagaspardanailham.myecommerceapp.utils.rotateBitmap
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -66,6 +68,8 @@ class RegisterFragment : Fragment() {
 
     private lateinit var loading: LoadingDialog
 
+    private var imageSource: String? = null
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -86,6 +90,13 @@ class RegisterFragment : Fragment() {
 
     private fun allPermissionGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Analytics
+        registerViewModel.onLoadSignup(this.javaClass.simpleName)
     }
 
     override fun onCreateView(
@@ -110,10 +121,16 @@ class RegisterFragment : Fragment() {
 
         binding?.imgPickerBtn?.setOnClickListener {
             showImgPickerDialog()
+
+            //analytics
+            registerViewModel.onClickCameraIcon(SIGNUP)
         }
 
         binding?.btnToLogin?.setOnClickListener {
             findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+
+            //analytics
+            registerViewModel.onClickButtonLogin()
         }
 
         binding?.btnSignup?.setOnClickListener {
@@ -170,25 +187,32 @@ class RegisterFragment : Fragment() {
     private fun getImgFromCamera() {
         val intent = Intent(requireActivity(), CameraActivity::class.java)
         launcherIntentCameraX.launch(intent)
+
+        //analytics
+        registerViewModel.onChangeImage(SIGNUP, "camera")
     }
 
     private val launcherIntentCameraX = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
         if (it.resultCode == CAMERA_X_RESULT) {
-            val myFile = reduceFileImage(it.data?.getSerializableExtra("picture") as File)
             val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
 
-            val result = rotateBitmap(
-                BitmapFactory.decodeFile(myFile.path),
-                isBackCamera
-            )
+            val myFile = reduceFileImage(it.data?.getSerializableExtra("picture") as File, isBackCamera)
+
+//            val result = rotateBitmap(
+//                BitmapFactory.decodeFile(myFile.path),
+//                isBackCamera
+//            )
 
             getFile = myFile
             //binding?.tvUserImgPrev?.setImageBitmap(result)
             Glide.with(requireActivity())
-                .load(result)
+                .load(myFile)
                 .into(binding?.tvUserImgPrev!!)
+
+            //analiytics
+            imageSource = "camera"
         }
     }
 
@@ -198,6 +222,9 @@ class RegisterFragment : Fragment() {
         intent.type = "image/*"
         val chooser = Intent.createChooser(intent, "Choose a Picture")
         launcherIntentGallery.launch(chooser)
+
+        // Analytics
+        registerViewModel.onChangeImage(SIGNUP, "gallery")
     }
 
     fun uriToFile(selectedImg: Uri, context: Context): File {
@@ -221,12 +248,15 @@ class RegisterFragment : Fragment() {
 
         if (result.resultCode == RESULT_OK) {
             val selectedImg: Uri = result.data?.data as Uri
-            val myFile = uriToFile(selectedImg, requireActivity())
+            val myFile = reduceGalleryFileImage(uriToFile(selectedImg, requireActivity()))
             getFile = myFile
             Glide.with(requireActivity())
                 .load(selectedImg)
                 .into(binding?.tvUserImgPrev!!)
             //binding?.tvUserImgPrev?.setImageURI(selectedImg)
+
+            //analiytics
+            imageSource = "gallery"
         }
 
     }
@@ -274,9 +304,13 @@ class RegisterFragment : Fragment() {
                 }
                 else {
                     val genderId = if (binding?.rgMale!!.isChecked) "0" else "1"
+                    val gender = if (genderId == "0") "male" else "female"
+
+                    //analytics
+                    registerViewModel.onSignUpButtonClicked(imageSource, email, name, phone, gender)
 
                     if (getFile != null) {
-                        val file = reduceFileImage(getFile as File)
+                        val file = getFile as File
                         val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
                         val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
                             "image",

@@ -4,66 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="105dp"
     app:cardElevation="10dp"
+    app:cardBackgroundColor="#dddddd"
     android:layout_marginBottom="22dp"
     android:layout_marginHorizontal="16dp"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/tv_item_product_img"
-            android:layout_width="105dp"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:background="#dddddd" />
-
-        <TextView
-            android:id="@+id/tv_item_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="12dp"
-            android:background="#dddddd"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tv_item_product_img"
-            app:layout_constraintTop_toBottomOf="@+id/tv_item_date" />
-
-        <TextView
-            android:id="@+id/tv_item_price"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="#dddddd"
-            app:layout_constraintStart_toStartOf="@+id/tv_item_name"
-            app:layout_constraintTop_toBottomOf="@+id/tv_item_name" />
-
-        <androidx.appcompat.widget.AppCompatRatingBar
-            android:id="@+id/tv_item_rating"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="9dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tv_item_price"
-            app:layout_constraintTop_toBottomOf="@+id/tv_item_price" />
-
-        <TextView
-            android:id="@+id/tv_item_date"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="12dp"
-            android:background="#dddddd"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</com.google.android.material.card.MaterialCardView>
+    xmlns:tools="http://schemas.android.com/tools"/>

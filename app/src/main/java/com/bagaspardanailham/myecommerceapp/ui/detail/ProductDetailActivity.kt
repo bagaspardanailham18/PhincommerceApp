@@ -26,10 +26,12 @@ import com.bagaspardanailham.myecommerceapp.data.RoomResult
 import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductDetailItem
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
+import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityProductDetailBinding
 import com.bagaspardanailham.myecommerceapp.ui.detail.bottomsheet.BuyProductModalBottomSheet
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.ui.payment.PaymentOptionsActivity
+import com.bagaspardanailham.myecommerceapp.utils.Constant
 import com.bagaspardanailham.myecommerceapp.utils.setVisibility
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
@@ -44,9 +46,13 @@ import okio.IOException
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.Exception
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemClickCallback {
+
+    @Inject
+    lateinit var firebaseAnalyticsRepository: FirebaseAnalyticsRepository
 
     private lateinit var binding: ActivityProductDetailBinding
 
@@ -165,6 +171,13 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                     }
 
                 })
+
+                // Analytics
+                firebaseAnalyticsRepository.onClickShareProduct(
+                    detailData?.nameProduct.toString(),
+                    detailData?.harga?.toInt()!!.toDouble(),
+                    productId
+                )
             }
         }
         return super.onOptionsItemSelected(item)
@@ -323,6 +336,13 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                 isFavorite = true
                 addProductToFavorite()
             }
+
+            // Analytics
+            firebaseAnalyticsRepository.onClickLoveIcon(
+                productId,
+                product?.nameProduct.toString(),
+                isFavorite.toString()
+            )
         }
         binding.btnTrolly.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
@@ -335,9 +355,13 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                     }
                 }
             }
+            // Analytics
+            firebaseAnalyticsRepository.onClickButtonAddToTrolley()
         }
         binding.btnBuy.setOnClickListener {
             showBottomSheetBuyProduct(product, choosenPaymentId, choosenPaymentName)
+            // Analytics
+            firebaseAnalyticsRepository.onClickButtonBuy(Constant.DETAIL_PRODUCT)
         }
     }
 
@@ -452,6 +476,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        firebaseAnalyticsRepository.onClickBackIcon(Constant.DETAIL_PRODUCT)
         onBackPressedDispatcher.onBackPressed()
         return true
     }
@@ -463,5 +488,11 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
     override fun onImageClicked(data: String?) {
         imgPrevDialog = ImagePreviewDialog(this@ProductDetailActivity, data)
         imgPrevDialog.showImagePreview()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Analytics
+        firebaseAnalyticsRepository.onLoadScreen(Constant.DETAIL_PRODUCT, this.javaClass.simpleName)
     }
 }

@@ -17,8 +17,10 @@ import com.bagaspardanailham.myecommerceapp.databinding.ActivityTrollyBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
+import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.ui.checkout.CheckoutActivity
 import com.bagaspardanailham.myecommerceapp.ui.payment.PaymentOptionsActivity
+import com.bagaspardanailham.myecommerceapp.utils.Constant
 import com.bagaspardanailham.myecommerceapp.utils.setPaymentImg
 import com.bagaspardanailham.myecommerceapp.utils.setVisibility
 import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
@@ -31,9 +33,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TrollyActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var firebaseAnalyticsRepository: FirebaseAnalyticsRepository
 
     private lateinit var binding: ActivityTrollyBinding
 
@@ -74,6 +80,15 @@ class TrollyActivity : AppCompatActivity() {
                         quantity?.plus(1)
                     )
                 }
+
+                // Analytics
+                firebaseAnalyticsRepository.onClickButtonQuantity(
+                    Constant.TROLLEY,
+                    "+",
+                    quantity?.plus(1),
+                    productId,
+                    it.nameProduct.toString()
+                )
             },
             onMinQuantity = {
                 val productId = it.id
@@ -86,6 +101,15 @@ class TrollyActivity : AppCompatActivity() {
                         quantity?.minus(1)
                     )
                 }
+
+                // Analytics
+                firebaseAnalyticsRepository.onClickButtonQuantity(
+                    Constant.TROLLEY,
+                    "-",
+                    quantity?.minus(1),
+                    productId,
+                    it.nameProduct.toString()
+                )
             },
             onCheckboxChecked = {
                 val productId = it.id
@@ -94,11 +118,17 @@ class TrollyActivity : AppCompatActivity() {
                     binding.btnBuy.isClickable = false
                     trollyViewModel.updateProductIsCheckedById(productId, isChecked)
                 }
+
+                // Analytics
+                firebaseAnalyticsRepository.onSelectCheckbox(
+                    productId,
+                    it.nameProduct.toString()
+                )
             }
         )
 
         binding.rvTrollyItem.layoutManager = LinearLayoutManager(this@TrollyActivity)
-
+        binding.rvTrollyItem.itemAnimator = null
         binding.rvTrollyItem.adapter = adapter
         binding.rvTrollyItem.setHasFixedSize(true)
     }
@@ -126,6 +156,11 @@ class TrollyActivity : AppCompatActivity() {
                                             Toast.makeText(this@TrollyActivity, result.message, Toast.LENGTH_SHORT).show()
                                         }
                                     }
+
+                                    // Analytics
+                                    firebaseAnalyticsRepository.onClickDelete(
+                                        data.id, data.nameProduct.toString()
+                                    )
                                 }
                             }
                         })
@@ -213,6 +248,10 @@ class TrollyActivity : AppCompatActivity() {
                                         }
                                     }
                                 }
+                                // Analytics
+                                firebaseAnalyticsRepository.onClickBuyButton(
+                                    mainTotalPrice.toDouble(), choosenPaymentName
+                                )
                             } else {
                                 val intent = Intent(this@TrollyActivity, PaymentOptionsActivity::class.java)
                                 intent.putExtra(PaymentOptionsActivity.EXTRA_PRODUCT_ID, 0)
@@ -220,11 +259,17 @@ class TrollyActivity : AppCompatActivity() {
                                 startActivity(intent)
                             }
                         }
+
+                        // Analytics
+                        firebaseAnalyticsRepository.onClickButtonBuy(Constant.TROLLEY)
                     }
                 }
             }
         }
         binding.tvChoosenPaymentMethod.setOnClickListener {
+            firebaseAnalyticsRepository.onClickIconBank(
+                Constant.TROLLEY, choosenPaymentName.toString()
+            )
             val intent = Intent(this@TrollyActivity, PaymentOptionsActivity::class.java)
             intent.putExtra(PaymentOptionsActivity.EXTRA_PRODUCT_ID, 0)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -269,7 +314,16 @@ class TrollyActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        firebaseAnalyticsRepository.onClickBackIcon(Constant.TROLLEY)
         onBackPressedDispatcher.onBackPressed()
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Analytics
+        firebaseAnalyticsRepository.onLoadScreen(
+            Constant.TROLLEY, this.javaClass.simpleName
+        )
     }
 }

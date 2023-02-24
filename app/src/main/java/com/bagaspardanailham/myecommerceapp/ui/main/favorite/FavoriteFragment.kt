@@ -21,11 +21,13 @@ import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.GetFavoriteProductListResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
+import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentFavoriteBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.ui.detail.ProductDetailActivity
 import com.bagaspardanailham.myecommerceapp.ui.main.home.HomeViewModel
 import com.bagaspardanailham.myecommerceapp.ui.main.home.ProductListAdapter
+import com.bagaspardanailham.myecommerceapp.utils.Constant
 import com.bagaspardanailham.myecommerceapp.utils.setVisibility
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
@@ -34,11 +36,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import org.json.JSONObject
+import javax.inject.Inject
 import kotlin.text.Typography.dagger
 
 
 @AndroidEntryPoint
 class FavoriteFragment : Fragment() {
+
+    @Inject
+    lateinit var firebaseAnalyticsRepository: FirebaseAnalyticsRepository
 
     private var _binding: FragmentFavoriteBinding? = null
 
@@ -109,6 +115,10 @@ class FavoriteFragment : Fragment() {
             val token = authViewModel.getUserPref().first()?.authTokenKey.toString()
             val userId = authViewModel.getUserPref().first()?.id.toString().toInt()
             if (query.toString().isNotEmpty()) {
+
+                // Analytics
+                firebaseAnalyticsRepository.onSearch(query)
+
                 queryString = query.toString()
                 favoriteViewModel.getFavoriteProductList(token, query, userId).observe(viewLifecycleOwner) { result ->
                     binding?.apply {
@@ -216,6 +226,9 @@ class FavoriteFragment : Fragment() {
 
         adapter.setOnItemClickCallback(object : FavoriteProductListAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ProductListItem) {
+                // Analytics
+                firebaseAnalyticsRepository.onClickProduct(data.id, data.nameProduct, data.harga?.toInt()!!.toDouble(), data.rate)
+
                 val intent = Intent(requireActivity(), ProductDetailActivity::class.java)
                 intent.putExtra(ProductDetailActivity.EXTRA_ID, data.id)
                 startActivity(intent)
@@ -235,8 +248,12 @@ class FavoriteFragment : Fragment() {
             .setPositiveButton(resources.getString(R.string.ok)) { dialog, which ->
                 if (selectedOption == options[0]) {
                     setProductData(queryString, 1)
+                    //Analytics
+                    firebaseAnalyticsRepository.onClickSortBy(options[0])
                 } else if (selectedOption == options[1]) {
                     setProductData(queryString, 2)
+                    //Analytics
+                    firebaseAnalyticsRepository.onClickSortBy(options[1])
                 } else {
                     setProductData(queryString, 0)
                 }
@@ -318,6 +335,11 @@ class FavoriteFragment : Fragment() {
             binding?.searchBar?.setQuery("", false)
             binding?.searchBar?.clearFocus()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        firebaseAnalyticsRepository.onLoadScreen(Constant.FAVORITE, this.javaClass.simpleName)
     }
 
     override fun onDetach() {

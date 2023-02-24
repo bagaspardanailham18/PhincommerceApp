@@ -14,7 +14,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.myecommerceapp.data.local.model.NotificationEntity
+import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityNotificationBinding
+import com.bagaspardanailham.myecommerceapp.utils.Constant
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -22,9 +24,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import okhttp3.internal.notify
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class NotificationActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var firebaseAnalyticsRepository: FirebaseAnalyticsRepository
 
     private lateinit var binding: ActivityNotificationBinding
 
@@ -68,6 +74,8 @@ class NotificationActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.menu_set_check_notif_item -> {
                 setMultipleSelectToolbar()
+                // Analytics
+                firebaseAnalyticsRepository.onClickMultipleSelectIcon()
             }
             R.id.menu_read_checked_notif -> {
                 setReadNotification()
@@ -126,6 +134,7 @@ class NotificationActivity : AppCompatActivity() {
             }
         )
         val linearLayoutManager = LinearLayoutManager(this@NotificationActivity)
+        binding.rvNotification.itemAnimator = null
         binding.rvNotification.adapter = adapter
         binding.rvNotification.layoutManager = linearLayoutManager
         binding.rvNotification.setHasFixedSize(true)
@@ -154,6 +163,10 @@ class NotificationActivity : AppCompatActivity() {
     private fun setReadNotification() {
         lifecycleScope.launch {
             //notificationViewModel.setAllNotificationIsRead(true)
+            notificationViewModel.getAllNotification().collect() { data ->
+                // Analytics
+                firebaseAnalyticsRepository.onClickReadIcon(data.filter { it.isChecked }.size)
+            }
             notificationViewModel.setMultipleNotificationIsRead(true)
         }
         onBackPressed()
@@ -161,6 +174,10 @@ class NotificationActivity : AppCompatActivity() {
 
     private fun setDeleteNotification() {
         lifecycleScope.launch {
+            notificationViewModel.getAllNotification().collect() { data ->
+                // Analytics
+                firebaseAnalyticsRepository.onClickDeleteIcon(data.filter { it.isChecked }.size)
+            }
             notificationViewModel.deleteNotification(true)
         }
         onBackPressed()
@@ -192,6 +209,12 @@ class NotificationActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
             .show()
+
+        // Analytics
+        firebaseAnalyticsRepository.onClickItemNotification(
+            data.title.toString(),
+            data.message.toString()
+        )
     }
 
     private fun onCheckboxChecked(data: NotificationEntity) {
@@ -200,6 +223,12 @@ class NotificationActivity : AppCompatActivity() {
         lifecycleScope.launch {
             notificationViewModel.updateNotificationIsChecked(isChecked, productId)
         }
+
+        // Analytics
+        firebaseAnalyticsRepository.onSelectCheckBox(
+            data.title.toString(),
+            data.message.toString()
+        )
     }
 
     private fun setCustomToolbar() {
@@ -225,12 +254,21 @@ class NotificationActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         if (isMultipleSelect) {
             setMultipleSelectToolbar()
+            firebaseAnalyticsRepository.onClickBackIcon(Constant.MULTIPLE_SELECT)
         } else {
             onBackPressedDispatcher.onBackPressed()
+            firebaseAnalyticsRepository.onClickBackIcon(Constant.NOTIFICATION)
         }
         lifecycleScope.launch {
             notificationViewModel.setAllUnchecked()
         }
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Analytics
+        firebaseAnalyticsRepository.onLoadScreen(Constant.NOTIFICATION, this.javaClass.simpleName)
     }
 }

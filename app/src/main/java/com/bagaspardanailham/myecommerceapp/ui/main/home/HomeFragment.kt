@@ -37,8 +37,10 @@ import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.GetProductListResponse
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListPagingItem
+import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthActivity
 import com.bagaspardanailham.myecommerceapp.ui.detail.ProductDetailActivity
+import com.bagaspardanailham.myecommerceapp.utils.Constant
 import com.bagaspardanailham.myecommerceapp.utils.setVisibility
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.internal.ViewUtils.hideKeyboard
@@ -49,6 +51,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import org.json.JSONObject
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -64,6 +67,9 @@ class HomeFragment : Fragment() {
 
     private var searchJob: Job? = null
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
+
+    @Inject
+    lateinit var firebaseAnalyticsRepository: FirebaseAnalyticsRepository
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -138,6 +144,9 @@ class HomeFragment : Fragment() {
                     isDataEmpty(true)
                 }
             }
+
+            // Analytics
+            firebaseAnalyticsRepository.onSearch(query)
         } else {
             queryString = query.toString()
             homeViewModel.getProductListPaging("").observe(viewLifecycleOwner) { result ->
@@ -168,6 +177,10 @@ class HomeFragment : Fragment() {
 
         adapter.setOnItemClickCallback(object : ProductListAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ProductListPagingItem) {
+
+                // Analytics
+                firebaseAnalyticsRepository.onClickProduct(data.id, data.nameProduct, data.harga?.toInt()!!.toDouble(), data.rate)
+
                 val intent = Intent(requireActivity(), ProductDetailActivity::class.java)
                 intent.putExtra(ProductDetailActivity.EXTRA_ID, data.id)
                 startActivity(intent)
@@ -345,6 +358,10 @@ class HomeFragment : Fragment() {
         super.onResume()
         searchJob?.cancel()
         setProductData(queryString)
+
+
+        // Analytics
+        firebaseAnalyticsRepository.onLoadScreen(Constant.HOME, this.javaClass.simpleName)
     }
 
     override fun onDestroyView() {

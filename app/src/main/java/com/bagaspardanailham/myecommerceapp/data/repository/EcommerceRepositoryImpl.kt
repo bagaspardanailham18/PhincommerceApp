@@ -426,7 +426,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
             ),
             pagingSourceFactory = {
                 ProductPagingSource(search, apiService)
-            }
+            },
         ).liveData
     }
 
