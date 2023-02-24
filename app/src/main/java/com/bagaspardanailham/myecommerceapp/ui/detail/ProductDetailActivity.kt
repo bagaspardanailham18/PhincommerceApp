@@ -476,7 +476,9 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        // Analytics
         firebaseAnalyticsRepository.onClickBackIcon(Constant.DETAIL_PRODUCT)
+
         onBackPressedDispatcher.onBackPressed()
         return true
     }
@@ -496,3 +498,21 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
         firebaseAnalyticsRepository.onLoadScreen(Constant.DETAIL_PRODUCT, this.javaClass.simpleName)
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

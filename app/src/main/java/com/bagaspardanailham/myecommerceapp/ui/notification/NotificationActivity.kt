@@ -271,4 +271,23 @@ class NotificationActivity : AppCompatActivity() {
         // Analytics
         firebaseAnalyticsRepository.onLoadScreen(Constant.NOTIFICATION, this.javaClass.simpleName)
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

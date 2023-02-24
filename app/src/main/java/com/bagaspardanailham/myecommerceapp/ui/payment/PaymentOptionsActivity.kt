@@ -119,7 +119,9 @@ class PaymentOptionsActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        // Analytics
         firebaseAnalyticsRepository.onClickBackIcon(Constant.CHOOSE_PAYMENT_METHOD)
+
         onBackPressedDispatcher.onBackPressed()
         return true
     }
@@ -127,7 +129,9 @@ class PaymentOptionsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         // Analytics
-        firebaseAnalyticsRepository.onLoadScreen(Constant.CHOOSE_PAYMENT_METHOD, this.javaClass.simpleName)
+        firebaseAnalyticsRepository.onLoadScreen(
+            Constant.CHOOSE_PAYMENT_METHOD, this.javaClass.simpleName
+        )
     }
 
     companion object {
@@ -136,3 +140,15 @@ class PaymentOptionsActivity : AppCompatActivity() {
         const val EXTRA_PAYMENT_METHOD_NAME = "extra_payment_method_NAME"
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+

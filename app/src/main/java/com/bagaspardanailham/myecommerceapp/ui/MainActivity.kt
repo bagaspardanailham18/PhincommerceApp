@@ -75,6 +75,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, NotificationActivity::class.java))
         }
         binding.menuCart.setOnClickListener {
+            firebaseAnalyticsRepository.onClickTrolleyIcon()
             startActivity(Intent(this, TrollyActivity::class.java))
         }
     }

@@ -117,7 +117,7 @@ class FavoriteFragment : Fragment() {
             if (query.toString().isNotEmpty()) {
 
                 // Analytics
-                firebaseAnalyticsRepository.onSearch(query)
+                firebaseAnalyticsRepository.onSearchFavorite(query)
 
                 queryString = query.toString()
                 favoriteViewModel.getFavoriteProductList(token, query, userId).observe(viewLifecycleOwner) { result ->
@@ -227,7 +227,9 @@ class FavoriteFragment : Fragment() {
         adapter.setOnItemClickCallback(object : FavoriteProductListAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ProductListItem) {
                 // Analytics
-                firebaseAnalyticsRepository.onClickProduct(data.id, data.nameProduct, data.harga?.toInt()!!.toDouble(), data.rate)
+                firebaseAnalyticsRepository.onClickProductFavorite(
+                    data.id, data.nameProduct, data.harga?.toInt()!!.toDouble(), data.rate
+                )
 
                 val intent = Intent(requireActivity(), ProductDetailActivity::class.java)
                 intent.putExtra(ProductDetailActivity.EXTRA_ID, data.id)

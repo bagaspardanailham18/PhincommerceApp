@@ -32,6 +32,7 @@ import com.bagaspardanailham.myecommerceapp.databinding.FragmentRegisterBinding
 import kotlinx.coroutines.launch
 import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
+import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.ui.CameraActivity
 import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
@@ -55,9 +56,13 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RegisterFragment : Fragment() {
+
+    @Inject
+    lateinit var firebaseAnalyticsRepository: FirebaseAnalyticsRepository
 
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding
@@ -96,7 +101,7 @@ class RegisterFragment : Fragment() {
         super.onResume()
 
         // Analytics
-        registerViewModel.onLoadSignup(this.javaClass.simpleName)
+        firebaseAnalyticsRepository.onLoadRegister(this.javaClass.simpleName)
     }
 
     override fun onCreateView(
@@ -123,14 +128,14 @@ class RegisterFragment : Fragment() {
             showImgPickerDialog()
 
             //analytics
-            registerViewModel.onClickCameraIcon(SIGNUP)
+            firebaseAnalyticsRepository.onClickCameraIcon(SIGNUP)
         }
 
         binding?.btnToLogin?.setOnClickListener {
             findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
 
             //analytics
-            registerViewModel.onClickButtonLogin()
+            firebaseAnalyticsRepository.onClickButtonLogin()
         }
 
         binding?.btnSignup?.setOnClickListener {
@@ -307,7 +312,7 @@ class RegisterFragment : Fragment() {
                     val gender = if (genderId == "0") "male" else "female"
 
                     //analytics
-                    registerViewModel.onSignUpButtonClicked(imageSource, email, name, phone, gender)
+                    firebaseAnalyticsRepository.onSignupButtonClicked(imageSource, email, name, phone, gender)
 
                     if (getFile != null) {
                         val file = getFile as File

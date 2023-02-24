@@ -21,10 +21,14 @@ import com.google.firebase.analytics.FirebaseAnalytics.Param.SCREEN_CLASS
 import com.google.firebase.analytics.FirebaseAnalytics.Param.SCREEN_NAME
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import javax.inject.Inject
 
 @AndroidEntryPoint
 @SuppressLint("CustomSplashScreen")
 class SplashScreenActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var firebaseAnalyticsRepository: FirebaseAnalyticsRepository
 
     private lateinit var binding: ActivitySplashScreenBinding
 
@@ -34,7 +38,7 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onResume()
 
         // Firebase Analytics
-        viewModel.onLoadSplash(screenClass = this.javaClass.simpleName)
+        firebaseAnalyticsRepository.onLoadSplash(screenClass = this.javaClass.simpleName)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -103,12 +103,6 @@ class FirebaseAnalyticsRepository @Inject constructor(private val firebaseAnalyt
 
 
     // HOME PAGE
-    fun onLoadHome(screenClass: String) {
-        val params = Bundle()
-        params.putString(SCREEN_NAME, HOME)
-        params.putString(SCREEN_CLASS, screenClass)
-        firebaseAnalytics.logEvent(SCREEN_VIEW, params)
-    }
     fun onPagingScroll(offset: Int) {
         val params = Bundle()
         params.putString(SCREEN_NAME, HOME)
@@ -145,12 +139,6 @@ class FirebaseAnalyticsRepository @Inject constructor(private val firebaseAnalyt
 
 
     // FAVORITE PAGE
-    fun onLoadFavorite(screenClass: String) {
-        val params = Bundle()
-        params.putString(SCREEN_NAME, FAVORITE)
-        params.putString(SCREEN_CLASS, screenClass)
-        firebaseAnalytics.logEvent(SCREEN_VIEW, params)
-    }
     fun onSearchFavorite(query: String?) {
         val params = Bundle()
         params.putString(SCREEN_NAME, FAVORITE)
@@ -163,13 +151,13 @@ class FirebaseAnalyticsRepository @Inject constructor(private val firebaseAnalyt
         params.putString(SORT_BY, sortType)
         firebaseAnalytics.logEvent(POPUP_SORT, params)
     }
-    fun onClickProductFavorite(productId: Int, productName: String, price: Double, rate: Int) {
+    fun onClickProductFavorite(productId: Int?, productName: String?, price: Double, rate: Int?) {
         val params = Bundle()
         params.putString(SCREEN_NAME, FAVORITE)
         params.putString(PRODUCT_NAME, productName)
         params.putDouble(PRODUCT_PRICE, price)
-        params.putInt(PRODUCT_RATE, rate)
-        params.putInt(PRODUCT_ID, productId)
+        rate?.let { params.putInt(PRODUCT_RATE, it) }
+        productId?.let { params.putInt(PRODUCT_ID, it) }
         firebaseAnalytics.logEvent(SELECT_ITEM, params)
     }
     fun onClickTrolleyIconFromFavorite() {
@@ -408,3 +396,19 @@ class FirebaseAnalyticsRepository @Inject constructor(private val firebaseAnalyt
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

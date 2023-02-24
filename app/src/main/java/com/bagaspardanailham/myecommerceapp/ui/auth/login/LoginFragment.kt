@@ -17,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import com.bagaspardanailham.myecommerceapp.data.Result
 import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
+import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentLoginBinding
 import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog
 import com.bagaspardanailham.myecommerceapp.ui.MainActivity
@@ -31,9 +32,13 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.delay
 import org.json.JSONObject
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
+
+    @Inject
+    lateinit var firebaseAnalyticsRepository: FirebaseAnalyticsRepository
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding
@@ -46,7 +51,7 @@ class LoginFragment : Fragment() {
         super.onResume()
 
         // firebase analytics
-        viewModel.onLoadLogin(this.javaClass.simpleName)
+        firebaseAnalyticsRepository.onLoadLogin(this.javaClass.simpleName)
     }
 
     override fun onCreateView(
@@ -67,7 +72,7 @@ class LoginFragment : Fragment() {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
 
             // Analytics
-            viewModel.onRegisterButtonClicked()
+            firebaseAnalyticsRepository.onClickButtonRegister()
         }
 
         binding?.btnLogin?.setOnClickListener {
@@ -95,7 +100,7 @@ class LoginFragment : Fragment() {
                     return
                 } else {
                     // Btn Login Analytics
-                    viewModel.onLoginButtonClicked(email)
+                    firebaseAnalyticsRepository.onLoginButtonClicked(email)
 
                     FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
                         val token = task.result

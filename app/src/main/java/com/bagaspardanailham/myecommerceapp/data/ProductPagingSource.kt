@@ -14,9 +14,6 @@ import javax.inject.Inject
 
 class ProductPagingSource(private val search: String?, private val apiService: ApiService) : PagingSource<Int, ProductListPagingItem>() {
 
-//    @Inject
-//    lateinit var firebaseAnalyticsRepository: FirebaseAnalyticsRepository
-
     private companion object {
         const val INITIAL_PAGE_INDEX = 0
     }
@@ -25,8 +22,6 @@ class ProductPagingSource(private val search: String?, private val apiService: A
         return try {
             val position = params.key ?: INITIAL_PAGE_INDEX
             val responseData = apiService.getProductListPaging(search, position)
-
-            //firebaseAnalyticsRepository.onPagingScroll(position)
 
             LoadResult.Page(
                 data = responseData.success!!.data,

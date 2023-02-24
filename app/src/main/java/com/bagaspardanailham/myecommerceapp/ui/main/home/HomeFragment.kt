@@ -120,8 +120,10 @@ class HomeFragment : Fragment() {
 
     private fun setProductData(query: String?) {
         adapter.addLoadStateListener { loadState ->
-//            binding.shimmerProduct.isVisible = loadState.refresh == LoadState.Loading
-//            binding.rvProduct.isVisible = loadState.refresh != LoadState.Loading
+            val state = loadState.source.refresh
+            val offset = state.let { it as? LoadState.NotLoading }?.endOfPaginationReached?.not() ?: false
+            val result = if (offset) adapter.itemCount else 0
+            result.let { firebaseAnalyticsRepository.onPagingScroll(it) }
 
             if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
                 isDataEmpty(true)
@@ -179,7 +181,9 @@ class HomeFragment : Fragment() {
             override fun onItemClicked(data: ProductListPagingItem) {
 
                 // Analytics
-                firebaseAnalyticsRepository.onClickProduct(data.id, data.nameProduct, data.harga?.toInt()!!.toDouble(), data.rate)
+                firebaseAnalyticsRepository.onClickProduct(
+                    data.id, data.nameProduct, data.harga?.toInt()!!.toDouble(), data.rate
+                )
 
                 val intent = Intent(requireActivity(), ProductDetailActivity::class.java)
                 intent.putExtra(ProductDetailActivity.EXTRA_ID, data.id)
@@ -371,3 +375,10 @@ class HomeFragment : Fragment() {
     }
 
 }
+
+
+
+
+
+
+
