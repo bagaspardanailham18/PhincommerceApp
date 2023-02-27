@@ -7,37 +7,27 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import com.bagaspardanailham.myecommerceapp.data.Result
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
+import com.bagaspardanailham.core.data.remote.response.product.GetFavoriteProductListResponse
 import com.bagaspardanailham.myecommerceapp.R
-import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
-import com.bagaspardanailham.myecommerceapp.data.remote.response.GetFavoriteProductListResponse
-import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
-import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
+import com.bagaspardanailham.core.data.remote.response.product.ProductListItem
+import com.bagaspardanailham.core.data.repository.FirebaseAnalyticsRepository
+import com.bagaspardanailham.core.utils.Constant
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentFavoriteBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.ui.detail.ProductDetailActivity
-import com.bagaspardanailham.myecommerceapp.ui.main.home.HomeViewModel
-import com.bagaspardanailham.myecommerceapp.ui.main.home.ProductListAdapter
-import com.bagaspardanailham.myecommerceapp.utils.Constant
-import com.bagaspardanailham.myecommerceapp.utils.setVisibility
+import com.bagaspardanailham.core.utils.setVisibility
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.gson.Gson
-import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import org.json.JSONObject
 import javax.inject.Inject
-import kotlin.text.Typography.dagger
+import com.bagaspardanailham.core.data.Result
 
 
 @AndroidEntryPoint

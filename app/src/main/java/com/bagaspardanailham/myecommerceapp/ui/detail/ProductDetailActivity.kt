@@ -9,31 +9,27 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bagaspardanailham.myecommerceapp.R
-import com.bagaspardanailham.myecommerceapp.data.Result
-import com.bagaspardanailham.myecommerceapp.data.RoomResult
-import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
-import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductDetailItem
-import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
-import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
+import com.bagaspardanailham.core.data.Result
+import com.bagaspardanailham.core.data.RoomResult
+import com.bagaspardanailham.core.data.local.model.TrolleyEntity
+import com.bagaspardanailham.core.data.remote.response.product.ProductDetailItem
+import com.bagaspardanailham.core.data.remote.response.product.ProductListItem
+import com.bagaspardanailham.core.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityProductDetailBinding
 import com.bagaspardanailham.myecommerceapp.ui.detail.bottomsheet.BuyProductModalBottomSheet
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.myecommerceapp.ui.payment.PaymentOptionsActivity
-import com.bagaspardanailham.myecommerceapp.utils.Constant
-import com.bagaspardanailham.myecommerceapp.utils.setVisibility
-import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
+import com.bagaspardanailham.core.utils.Constant
+import com.bagaspardanailham.core.utils.setVisibility
+import com.bagaspardanailham.core.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
@@ -210,10 +206,10 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                             bottomAppBarLayout.visibility = View.VISIBLE
 
                             isFavorite = result.data.success?.data!!.isFavorite
-                            populateData(result.data.success.data)
-                            detailData = result.data.success.data
+                            populateData(result.data.success?.data)
+                            detailData = result.data.success?.data
                             checkChoosenPaymentMethod()
-                            setAction(result.data.success.data)
+                            setAction(result.data.success?.data)
                         }
                         is Result.Error -> {
                             shimmerVisibility(false)
@@ -270,7 +266,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                                 rvOtherProduct?.layoutManager = LinearLayoutManager(this@ProductDetailActivity)
                                 rvOtherProduct?.adapter = adapter
                                 rvOtherProduct?.setHasFixedSize(true)
-                                adapter.submitList(result.data.success.data)
+                                adapter.submitList(result.data.success?.data)
                                 setOnItemClicked()
                             } else {
                                 dividerOtherProduct?.setVisibility(false)
@@ -299,7 +295,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                                 rvProductSearchHistory?.layoutManager = LinearLayoutManager(this@ProductDetailActivity)
                                 rvProductSearchHistory?.adapter = adapter
                                 rvProductSearchHistory?.setHasFixedSize(true)
-                                adapter.submitList(result.data.success.data)
+                                adapter.submitList(result.data.success?.data)
                                 setOnItemClicked()
                             } else {
                                 dividerSearchHistory?.setVisibility(false)

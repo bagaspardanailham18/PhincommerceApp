@@ -13,10 +13,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bagaspardanailham.myecommerceapp.R
-import com.bagaspardanailham.myecommerceapp.data.local.model.NotificationEntity
-import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
+import com.bagaspardanailham.core.data.local.model.NotificationEntity
+import com.bagaspardanailham.core.data.repository.FirebaseAnalyticsRepository
+import com.bagaspardanailham.core.utils.Constant
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityNotificationBinding
-import com.bagaspardanailham.myecommerceapp.utils.Constant
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope

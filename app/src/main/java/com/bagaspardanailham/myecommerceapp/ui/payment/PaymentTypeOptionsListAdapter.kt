@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bagaspardanailham.core.data.remote.response.payment.PaymentOptionsDataItem
+import com.bagaspardanailham.core.data.remote.response.payment.PaymentTypeOptionsItem
 import com.bagaspardanailham.myecommerceapp.R
-import com.bagaspardanailham.myecommerceapp.data.remote.response.payment.PaymentOptionsDataItem
-import com.bagaspardanailham.myecommerceapp.data.remote.response.payment.PaymentTypeOptionsItem
 import com.bagaspardanailham.myecommerceapp.databinding.ItemRowPaymentTypeBinding
 
 class PaymentTypeOptionsListAdapter(

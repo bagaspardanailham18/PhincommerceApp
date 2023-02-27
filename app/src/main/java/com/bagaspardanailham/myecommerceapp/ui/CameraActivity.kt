@@ -13,10 +13,9 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
-import com.bagaspardanailham.myecommerceapp.R
+import com.bagaspardanailham.core.utils.createFile
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityCameraBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.register.RegisterFragment.Companion.CAMERA_X_RESULT
-import com.bagaspardanailham.myecommerceapp.utils.createFile
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

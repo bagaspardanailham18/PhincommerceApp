@@ -3,9 +3,9 @@ package com.bagaspardanailham.myecommerceapp.ui.detail.bottomsheet
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.bagaspardanailham.myecommerceapp.data.DataStock
-import com.bagaspardanailham.myecommerceapp.data.DataStockItem
-import com.bagaspardanailham.myecommerceapp.data.repository.EcommerceRepository
+import com.bagaspardanailham.core.data.DataStock
+import com.bagaspardanailham.core.data.DataStockItem
+import com.bagaspardanailham.core.data.repository.EcommerceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

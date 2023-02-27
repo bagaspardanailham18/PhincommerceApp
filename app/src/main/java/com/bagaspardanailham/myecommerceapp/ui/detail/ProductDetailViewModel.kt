@@ -2,8 +2,8 @@ package com.bagaspardanailham.myecommerceapp.ui.detail
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.bagaspardanailham.myecommerceapp.data.repository.EcommerceRepository
-import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
+import com.bagaspardanailham.core.data.repository.EcommerceRepository
+import com.bagaspardanailham.core.data.local.model.TrolleyEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

@@ -3,22 +3,17 @@ package com.bagaspardanailham.myecommerceapp.ui.checkout
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.bagaspardanailham.myecommerceapp.R
-import com.bagaspardanailham.myecommerceapp.data.Result
-import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
-import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
+import com.bagaspardanailham.core.data.Result
+import com.bagaspardanailham.core.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityCheckoutBinding
 import com.bagaspardanailham.myecommerceapp.ui.MainActivity
-import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyViewModel
-import com.bagaspardanailham.myecommerceapp.utils.Constant
-import com.bagaspardanailham.myecommerceapp.utils.setPaymentImg
-import com.bagaspardanailham.myecommerceapp.utils.setVisibility
-import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
+import com.bagaspardanailham.core.utils.Constant
+import com.bagaspardanailham.core.utils.setPaymentImg
+import com.bagaspardanailham.core.utils.setVisibility
+import com.bagaspardanailham.core.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -26,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
+import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 
 @AndroidEntryPoint
 class CheckoutActivity : AppCompatActivity() {

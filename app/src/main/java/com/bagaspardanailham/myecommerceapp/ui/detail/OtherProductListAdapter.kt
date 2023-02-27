@@ -3,15 +3,13 @@ package com.bagaspardanailham.myecommerceapp.ui.detail
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
+import com.bagaspardanailham.core.data.remote.response.product.ProductListItem
 import com.bagaspardanailham.myecommerceapp.databinding.ItemRowProductBinding
-import com.bagaspardanailham.myecommerceapp.ui.main.favorite.FavoriteProductListAdapter
-import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
+import com.bagaspardanailham.core.utils.toRupiahFormat
 import com.bumptech.glide.Glide
 import java.text.SimpleDateFormat
 import java.util.*

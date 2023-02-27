@@ -136,7 +136,7 @@
         </provider>
 
         <service
-            android:name=".service.MyFirebaseNotification"
+            android:name="com.bagaspardanailham.core.service.MyFirebaseNotification"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

@@ -9,7 +9,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
 import com.bagaspardanailham.myecommerceapp.R
-import com.bagaspardanailham.myecommerceapp.data.remote.response.ImageProductItem
+import com.bagaspardanailham.core.data.remote.response.product.ImageProductItem
 import com.bumptech.glide.Glide
 import java.util.*
 

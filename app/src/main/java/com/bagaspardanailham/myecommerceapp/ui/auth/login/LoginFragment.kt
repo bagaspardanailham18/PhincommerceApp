@@ -15,24 +15,19 @@ import androidx.navigation.fragment.findNavController
 import com.bagaspardanailham.myecommerceapp.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import com.bagaspardanailham.myecommerceapp.data.Result
-import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
-import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
+import com.bagaspardanailham.core.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentLoginBinding
 import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog
 import com.bagaspardanailham.myecommerceapp.ui.MainActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
-import com.bagaspardanailham.myecommerceapp.utils.Constant
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.FirebaseAnalytics.Event.SCREEN_VIEW
-import com.google.firebase.analytics.FirebaseAnalytics.Param.SCREEN_CLASS
-import com.google.firebase.analytics.FirebaseAnalytics.Param.SCREEN_NAME
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.delay
 import org.json.JSONObject
 import javax.inject.Inject
+import com.bagaspardanailham.core.data.Result
+import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {

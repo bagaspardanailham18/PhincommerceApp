@@ -5,11 +5,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.bagaspardanailham.myecommerceapp.R
-import com.bagaspardanailham.myecommerceapp.data.local.model.TrolleyEntity
-import com.bagaspardanailham.myecommerceapp.data.remote.response.payment.PaymentOptionsDataItem
+import com.bagaspardanailham.core.data.remote.response.payment.PaymentOptionsDataItem
+import com.bagaspardanailham.core.utils.setPaymentImg
 import com.bagaspardanailham.myecommerceapp.databinding.ItemRowPaymentOptionsBinding
-import com.bagaspardanailham.myecommerceapp.utils.setPaymentImg
 import com.bumptech.glide.Glide
 
 class PaymentOptionsListAdapter(

@@ -4,17 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bagaspardanailham.myecommerceapp.data.remote.response.payment.PaymentTypeOptionsItem
-import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseRemoteConfigRepository
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.ktx.remoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.bagaspardanailham.core.data.repository.FirebaseRemoteConfigRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import com.bagaspardanailham.myecommerceapp.data.Result
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.awaitClose
+import com.bagaspardanailham.core.data.Result
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 

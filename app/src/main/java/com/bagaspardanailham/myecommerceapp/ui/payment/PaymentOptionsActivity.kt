@@ -3,26 +3,20 @@ package com.bagaspardanailham.myecommerceapp.ui.payment
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bagaspardanailham.myecommerceapp.data.remote.response.payment.PaymentOptionsDataItem
-import com.bagaspardanailham.myecommerceapp.data.remote.response.payment.PaymentTypeOptionsItem
+import com.bagaspardanailham.core.data.remote.response.payment.PaymentTypeOptionsItem
+import com.bagaspardanailham.core.data.repository.FirebaseAnalyticsRepository
+import com.bagaspardanailham.core.utils.Constant
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityPaymentOptionsBinding
 import com.bagaspardanailham.myecommerceapp.ui.detail.ProductDetailActivity
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyActivity
-import com.bagaspardanailham.myecommerceapp.data.Result
-import com.bagaspardanailham.myecommerceapp.data.repository.FirebaseAnalyticsRepository
-import com.bagaspardanailham.myecommerceapp.utils.Constant
-import com.bagaspardanailham.myecommerceapp.utils.setVisibility
+import com.bagaspardanailham.core.utils.setVisibility
+import com.bagaspardanailham.core.data.Result
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint

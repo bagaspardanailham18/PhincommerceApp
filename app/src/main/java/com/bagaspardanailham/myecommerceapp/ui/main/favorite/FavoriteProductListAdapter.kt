@@ -8,12 +8,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bagaspardanailham.myecommerceapp.data.remote.response.ProductListItem
+import com.bagaspardanailham.core.data.remote.response.product.ProductListItem
+import com.bagaspardanailham.core.utils.toRupiahFormat
 import com.bagaspardanailham.myecommerceapp.databinding.ItemRowProductBinding
-import com.bagaspardanailham.myecommerceapp.ui.main.home.ProductListAdapter
-import com.bagaspardanailham.myecommerceapp.utils.toRupiahFormat
 import com.bumptech.glide.Glide
-import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
