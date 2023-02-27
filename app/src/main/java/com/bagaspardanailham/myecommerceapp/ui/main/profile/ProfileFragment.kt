@@ -25,13 +25,13 @@ import com.bagaspardanailham.core.data.Result
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.bagaspardanailham.core.data.remote.response.ErrorResponse
 import com.bagaspardanailham.core.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.core.utils.Constant
 import com.bagaspardanailham.core.utils.createCustomTempFile
 import com.bagaspardanailham.core.utils.reduceFileImage
 import com.bagaspardanailham.core.utils.reduceGalleryFileImage
 import com.bagaspardanailham.myecommerceapp.R
-import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentProfileBinding
 import com.bagaspardanailham.myecommerceapp.ui.CameraActivity
 import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog

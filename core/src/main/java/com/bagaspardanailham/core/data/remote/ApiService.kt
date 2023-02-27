@@ -27,12 +27,12 @@ interface ApiService {
     @POST("api/ecommerce/registration")
     suspend fun registerUser(
         @Header("apikey") apikey: String,
-        @Part("name") name: RequestBody,
-        @Part("email") email: RequestBody,
-        @Part("password") password: RequestBody,
-        @Part("phone") phone: RequestBody,
-        @Part("gender") gender: RequestBody,
-        @Part image: MultipartBody.Part,
+        @Part("name") name: RequestBody?,
+        @Part("email") email: RequestBody?,
+        @Part("password") password: RequestBody?,
+        @Part("phone") phone: RequestBody?,
+        @Part("gender") gender: RequestBody?,
+        @Part image: MultipartBody.Part?,
     ) : RegisterResponse
 
     @FormUrlEncoded

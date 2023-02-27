@@ -17,7 +17,7 @@ import com.bagaspardanailham.core.utils.setPaymentImg
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityTrollyBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.bagaspardanailham.core.data.Result
-import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
+import com.bagaspardanailham.core.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.ui.checkout.CheckoutActivity
 import com.bagaspardanailham.myecommerceapp.ui.payment.PaymentOptionsActivity
 import com.bagaspardanailham.core.utils.setVisibility
@@ -31,6 +31,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import retrofit2.Response.error
 import javax.inject.Inject
 
 @AndroidEntryPoint

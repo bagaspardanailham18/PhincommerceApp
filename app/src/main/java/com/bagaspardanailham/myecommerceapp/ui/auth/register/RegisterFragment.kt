@@ -31,7 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentRegisterBinding
 import kotlinx.coroutines.launch
 import com.bagaspardanailham.core.data.Result
-import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
+import com.bagaspardanailham.core.data.remote.response.ErrorResponse
 import com.bagaspardanailham.core.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.ui.CameraActivity
 import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog

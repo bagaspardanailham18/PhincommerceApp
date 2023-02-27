@@ -16,7 +16,7 @@ import com.bagaspardanailham.core.utils.Constant
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityChangePasswordBinding
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
+import com.bagaspardanailham.core.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog
 import com.bagaspardanailham.myecommerceapp.ui.MainActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

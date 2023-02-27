@@ -39,7 +39,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
         const val API_KEY = "TuIBt77u7tZHi8n7WqUC"
     }
 
-    override suspend fun registerUser(name: RequestBody, email: RequestBody, password: RequestBody, phone: RequestBody, image: MultipartBody.Part, gender: RequestBody): LiveData<Result<RegisterResponse>> = liveData {
+    override suspend fun registerUser(name: RequestBody?, email: RequestBody?, password: RequestBody?, phone: RequestBody?, image: MultipartBody.Part?, gender: RequestBody?): LiveData<Result<RegisterResponse>> = liveData {
         emit(Result.Loading)
         try {
             val response = apiService.registerUser(API_KEY, name, email, password, phone, gender, image)

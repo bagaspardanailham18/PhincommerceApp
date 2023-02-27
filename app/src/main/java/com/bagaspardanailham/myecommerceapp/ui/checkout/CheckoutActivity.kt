@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
-import com.bagaspardanailham.myecommerceapp.data.remote.response.ErrorResponse
+import com.bagaspardanailham.core.data.remote.response.ErrorResponse
 
 @AndroidEntryPoint
 class CheckoutActivity : AppCompatActivity() {

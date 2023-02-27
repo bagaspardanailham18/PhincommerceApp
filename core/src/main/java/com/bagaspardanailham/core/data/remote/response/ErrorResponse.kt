@@ -1,4 +1,4 @@
-package com.bagaspardanailham.myecommerceapp.data.remote.response
+package com.bagaspardanailham.core.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 
