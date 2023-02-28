@@ -98,41 +98,40 @@ class AuthViewModelTest {
             requestImageFile
         )
 
+        val nameRequestBody = NAME.toRequestBody("text/plain".toMediaType())
+        val emailRequestBody = EMAIL.toRequestBody("text/plain".toMediaType())
+        val passwordRequestBody = PASSWORD.toRequestBody("text/plain".toMediaType())
+        val phoneRequestBody = PHONE.toRequestBody("text/plain".toMediaType())
+        val genderRequestBody = GENDER.toRequestBody("text/plain".toMediaType())
+
         val expectedData = MutableLiveData<Result<RegisterResponse>>()
         expectedData.value = Result.Success(DataDummy.generateDummyRegisterResponse())
 
         `when`(ecommerceRepository.registerUser(
-            any(RequestBody::class.java),
-            any(RequestBody::class.java),
-            any(RequestBody::class.java),
-            any(RequestBody::class.java),
+            nameRequestBody,
+            emailRequestBody,
+            passwordRequestBody,
+            phoneRequestBody,
             imageMultipart,
-            any(RequestBody::class.java),
+            genderRequestBody
         )).thenReturn(expectedData)
 
         val actualData = authViewModel.registerUser(
-//            "EMAIL".toRequestBody("text/plain".toMediaType()),
-//            "PASSWORD".toRequestBody("text/plain".toMediaType()),
-//            "NAME".toRequestBody("text/plain".toMediaType()),
-//            "GENDER".toRequestBody("text/plain".toMediaType()),
-//            "PHONE".toRequestBody("text/plain".toMediaType()),
-            any(RequestBody::class.java),
-            any(RequestBody::class.java),
-            any(RequestBody::class.java),
-            any(RequestBody::class.java),
-            any(RequestBody::class.java),
+            emailRequestBody,
+            passwordRequestBody,
+            nameRequestBody,
+            genderRequestBody,
+            phoneRequestBody,
             imageMultipart
         ).getOrAwaitValue()
 
-        Log.d("actual", actualData.toString())
-
         verify(ecommerceRepository).registerUser(
-            any(RequestBody::class.java),
-            any(RequestBody::class.java),
-            any(RequestBody::class.java),
-            any(RequestBody::class.java),
+            nameRequestBody,
+            emailRequestBody,
+            passwordRequestBody,
+            phoneRequestBody,
             imageMultipart,
-            any(RequestBody::class.java),
+            genderRequestBody
         )
 
         assertNotNull(actualData)
@@ -149,40 +148,44 @@ class AuthViewModelTest {
             requestImageFile
         )
 
+        val nameRequestBody = NAME.toRequestBody("text/plain".toMediaType())
+        val emailRequestBody = EMAIL.toRequestBody("text/plain".toMediaType())
+        val passwordRequestBody = PASSWORD.toRequestBody("text/plain".toMediaType())
+        val phoneRequestBody = PHONE.toRequestBody("text/plain".toMediaType())
+        val genderRequestBody = GENDER.toRequestBody("text/plain".toMediaType())
+
         val expectedData = MutableLiveData<Result<RegisterResponse>>()
         expectedData.value = Result.Error(true, null, null, "")
 
-        Mockito.`when`(ecommerceRepository.registerUser(
-            NAME.toRequestBody("text/plain".toMediaType()),
-            EMAIL.toRequestBody("text/plain".toMediaType()),
-            PASSWORD.toRequestBody("text/plain".toMediaType()),
-            PHONE.toRequestBody("text/plain".toMediaType()),
+        `when`(ecommerceRepository.registerUser(
+            nameRequestBody,
+            emailRequestBody,
+            passwordRequestBody,
+            phoneRequestBody,
             imageMultipart,
-            GENDER.toRequestBody("text/plain".toMediaType())
+            genderRequestBody
         )).thenReturn(expectedData)
 
         val actualData = authViewModel.registerUser(
-            "EMAIL".toRequestBody("text/plain".toMediaType()),
-            "PASSWORD".toRequestBody("text/plain".toMediaType()),
-            "NAME".toRequestBody("text/plain".toMediaType()),
-            "GENDER".toRequestBody("text/plain".toMediaType()),
-            "PHONE".toRequestBody("text/plain".toMediaType()),
+            emailRequestBody,
+            passwordRequestBody,
+            nameRequestBody,
+            genderRequestBody,
+            phoneRequestBody,
             imageMultipart
         ).getOrAwaitValue()
 
-        Log.d("actual", actualData.toString())
-
         verify(ecommerceRepository).registerUser(
-            NAME.toRequestBody("text/plain".toMediaType()),
-            EMAIL.toRequestBody("text/plain".toMediaType()),
-            PASSWORD.toRequestBody("text/plain".toMediaType()),
-            PHONE.toRequestBody("text/plain".toMediaType()),
+            nameRequestBody,
+            emailRequestBody,
+            passwordRequestBody,
+            phoneRequestBody,
             imageMultipart,
-            GENDER.toRequestBody("text/plain".toMediaType())
+            genderRequestBody
         )
 
         assertNotNull(actualData)
-        //assertTrue(actualData is Result.Success)
+        assertTrue(actualData is Result.Error)
         //assertEquals(expectedData.value, (actualData as Result.Success).data.success)
     }
 
