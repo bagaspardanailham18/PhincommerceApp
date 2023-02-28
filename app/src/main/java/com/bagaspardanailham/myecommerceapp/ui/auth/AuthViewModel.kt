@@ -45,7 +45,6 @@ class AuthViewModel @Inject constructor(private val repository: EcommerceReposit
         auth: String, id: Int, pass: String, newPass: String, confirmNewPass: String
     ) = repository.changePassword(auth, id, pass, newPass, confirmNewPass)
 
-
     // Analytics
     fun onLoadSplash(screenClass: String) {
         firebaseAnalyticsRepository.onLoadSplash(screenClass)

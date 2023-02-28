@@ -5,6 +5,8 @@ import com.bagaspardanailham.core.data.remote.response.auth.DataUser
 import com.bagaspardanailham.core.data.remote.response.auth.LoginResponse
 import com.bagaspardanailham.core.data.remote.response.auth.LoginSuccess
 import com.bagaspardanailham.core.data.remote.response.auth.RegisterResponse
+import com.bagaspardanailham.core.data.remote.response.profile.ChangeImageResponse
+import com.bagaspardanailham.core.data.remote.response.profile.ChangeImageSuccess
 import com.bagaspardanailham.core.data.remote.response.profile.ChangePasswordResponse
 
 object DataDummy {
@@ -42,6 +44,12 @@ object DataDummy {
     fun generateDummyChangePasswordResponse(): ChangePasswordResponse {
         return ChangePasswordResponse(
             SuccessResponse("message", 200)
+        )
+    }
+
+    fun generateDummyChangeImageResponse(): ChangeImageResponse {
+        return ChangeImageResponse(
+            ChangeImageSuccess("path", "message", 200)
         )
     }
 

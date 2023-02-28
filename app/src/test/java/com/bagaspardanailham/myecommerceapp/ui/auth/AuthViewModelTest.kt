@@ -18,6 +18,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import com.bagaspardanailham.core.data.Result
 import com.bagaspardanailham.core.data.remote.response.auth.RegisterResponse
+import com.bagaspardanailham.core.data.remote.response.profile.ChangeImageResponse
 import com.bagaspardanailham.core.data.remote.response.profile.ChangePasswordResponse
 import com.bagaspardanailham.myecommerceapp.DataDummy
 import com.bagaspardanailham.myecommerceapp.getOrAwaitValue
@@ -210,6 +211,12 @@ class AuthViewModelTest {
 
         assertTrue(actualData is Result.Error)
     }
+
+//    @Test
+//    fun `when Change Image Success data should not null and return Success`() = runTest {
+//        val expectedData = MutableLiveData<Result<ChangeImageResponse>>()
+//        expectedData.value = Result.Success()
+//    }
 
     @Test
     fun `Loading state`() = runTest {
