@@ -20,7 +20,7 @@ import okhttp3.RequestBody
 
 interface EcommerceRepository {
 
-    suspend fun registerUser(name: RequestBody?, email: RequestBody?, password: RequestBody?, phone: RequestBody?, image: MultipartBody.Part?, gender: RequestBody?): LiveData<Result<RegisterResponse>>
+    suspend fun registerUser(name: RequestBody?, email: RequestBody?, password: RequestBody?, phone: RequestBody?, image: MultipartBody.Part?, gender: RequestBody?): Flow<Result<RegisterResponse>>
 
     suspend fun loginUser(email: String, password: String, tokenFcm: String): LiveData<Result<LoginResponse>>
 
@@ -87,6 +87,8 @@ interface EcommerceRepository {
     suspend fun setAllUnchecked(isChecked: Boolean = false)
 
     suspend fun deleteNotification(isChecked: Boolean)
+
+    suspend fun getIsCheckedSize(): Int
 
 
 }

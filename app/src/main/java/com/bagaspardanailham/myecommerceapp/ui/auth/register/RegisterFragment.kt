@@ -46,6 +46,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.NonCancellable.cancel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -335,7 +337,7 @@ class RegisterFragment : Fragment() {
                                 genderId.toRequestBody("text/plain".toMediaType()),
                                 phone.toRequestBody("text/plain".toMediaType()),
                                 imageMultipart
-                            ).observe(viewLifecycleOwner) { result ->
+                            ).collectLatest { result ->
                                 when(result) {
                                     is Result.Success -> {
                                         loading.isDismiss()

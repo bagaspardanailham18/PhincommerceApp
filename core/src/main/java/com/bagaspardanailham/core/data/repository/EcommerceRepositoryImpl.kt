@@ -24,6 +24,7 @@ import com.bagaspardanailham.core.data.remote.response.profile.ChangeImageRespon
 import com.bagaspardanailham.core.data.remote.response.profile.ChangePasswordResponse
 import com.bagaspardanailham.core.data.repository.EcommerceRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okio.IOException
@@ -39,7 +40,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
         const val API_KEY = "TuIBt77u7tZHi8n7WqUC"
     }
 
-    override suspend fun registerUser(name: RequestBody?, email: RequestBody?, password: RequestBody?, phone: RequestBody?, image: MultipartBody.Part?, gender: RequestBody?): LiveData<Result<RegisterResponse>> = liveData {
+    override suspend fun registerUser(name: RequestBody?, email: RequestBody?, password: RequestBody?, phone: RequestBody?, image: MultipartBody.Part?, gender: RequestBody?): Flow<Result<RegisterResponse>> = flow {
         emit(Result.Loading)
         try {
             val response = apiService.registerUser(API_KEY, name, email, password, phone, gender, image)
@@ -519,6 +520,10 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
 
     override suspend fun deleteNotification(isChecked: Boolean) {
         ecommerceDatabase.notificationDao().deleteNotification(isChecked)
+    }
+
+    override suspend fun getIsCheckedSize(): Int {
+        return ecommerceDatabase.notificationDao().getIsCheckedSize()
     }
 
 }

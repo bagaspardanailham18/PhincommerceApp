@@ -3,6 +3,7 @@ package com.bagaspardanailham.myecommerceapp.ui.notification
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -161,23 +162,24 @@ class NotificationActivity : AppCompatActivity() {
     }
 
     private fun setReadNotification() {
-        lifecycleScope.launch {
-            //notificationViewModel.setAllNotificationIsRead(true)
-            notificationViewModel.getAllNotification().collect() { data ->
-                // Analytics
-                firebaseAnalyticsRepository.onClickReadIcon(data.filter { it.isChecked }.size)
-            }
+        lifecycleScope.launch(Dispatchers.IO) {
+            val size = notificationViewModel.getIsCheckedSize()
+            // Analytics
+            firebaseAnalyticsRepository.onClickReadIcon(size)
+            Log.d("size", size.toString())
+
             notificationViewModel.setMultipleNotificationIsRead(true)
         }
         onBackPressed()
     }
 
     private fun setDeleteNotification() {
-        lifecycleScope.launch {
-            notificationViewModel.getAllNotification().collect() { data ->
-                // Analytics
-                firebaseAnalyticsRepository.onClickDeleteIcon(data.filter { it.isChecked }.size)
-            }
+        lifecycleScope.launch(Dispatchers.IO) {
+            val size = notificationViewModel.getIsCheckedSize()
+            // Analytics
+            firebaseAnalyticsRepository.onClickDeleteIcon(size)
+            Log.d("size", size.toString())
+
             notificationViewModel.deleteNotification(true)
         }
         onBackPressed()

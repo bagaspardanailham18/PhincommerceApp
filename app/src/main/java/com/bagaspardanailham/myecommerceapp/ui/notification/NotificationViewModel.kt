@@ -23,4 +23,6 @@ class NotificationViewModel @Inject constructor(private val repository: Ecommerc
     suspend fun setAllUnchecked() = repository.setAllUnchecked()
 
     suspend fun deleteNotification(isChecked: Boolean) = repository.deleteNotification(isChecked)
+
+    suspend fun getIsCheckedSize() = repository.getIsCheckedSize()
 }

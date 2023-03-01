@@ -1,5 +1,6 @@
 package com.bagaspardanailham.core.data.local.room
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -30,5 +31,8 @@ interface NotificationDao {
 
     @Query("DELETE FROM notification WHERE is_checked = :isChecked")
     suspend fun deleteNotification(isChecked: Boolean)
+
+    @Query("SELECT COUNT(*) FROM notification WHERE is_checked = 1")
+    suspend fun getIsCheckedSize(): Int
 
 }

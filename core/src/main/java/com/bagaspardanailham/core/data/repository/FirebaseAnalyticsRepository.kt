@@ -208,11 +208,11 @@ class FirebaseAnalyticsRepository @Inject constructor(private val firebaseAnalyt
         params.putInt("total_select_item", totalSelectItem)
         firebaseAnalytics.logEvent(BUTTON_CLICK, params)
     }
-    fun onClickReadIcon(totalSelectItem: Int) {
+    fun onClickReadIcon(totalSelectItem: Int?) {
         val params = Bundle()
         params.putString(SCREEN_NAME, MULTIPLE_SELECT)
         params.putString(BUTTON_NAME, "Read Icon")
-        params.putInt("total_select_item", totalSelectItem)
+        totalSelectItem?.let { params.putInt("total_select_item", it) }
         firebaseAnalytics.logEvent(BUTTON_CLICK, params)
     }
 

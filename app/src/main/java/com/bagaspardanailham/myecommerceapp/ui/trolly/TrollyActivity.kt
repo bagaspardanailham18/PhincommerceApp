@@ -252,15 +252,15 @@ class TrollyActivity : AppCompatActivity() {
                                     mainTotalPrice.toDouble(), choosenPaymentName
                                 )
                             } else {
+                                // Analytics
+                                firebaseAnalyticsRepository.onClickButtonBuy(Constant.TROLLEY)
+
                                 val intent = Intent(this@TrollyActivity, PaymentOptionsActivity::class.java)
                                 intent.putExtra(PaymentOptionsActivity.EXTRA_PRODUCT_ID, 0)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                 startActivity(intent)
                             }
                         }
-
-                        // Analytics
-                        firebaseAnalyticsRepository.onClickButtonBuy(Constant.TROLLEY)
                     }
                 }
             }

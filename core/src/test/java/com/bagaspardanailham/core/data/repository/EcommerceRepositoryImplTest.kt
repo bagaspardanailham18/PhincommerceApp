@@ -30,6 +30,8 @@ import java.io.File
 import com.bagaspardanailham.core.data.Result
 import com.bagaspardanailham.core.data.remote.response.auth.RegisterResponse
 import com.bagaspardanailham.core.getOrAwaitValue
+import okhttp3.RequestBody
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.`when`
 
 @ExperimentalCoroutinesApi
@@ -55,12 +57,6 @@ class EcommerceRepositoryImplTest {
     @Mock
     private var mockFile = File("filename")
 
-    private val nameRequestBody = NAME.toRequestBody("text/plain".toMediaType())
-    private val emailRequestBody = EMAIL.toRequestBody("text/plain".toMediaType())
-    private val passwordRequestBody = PASSWORD.toRequestBody("text/plain".toMediaType())
-    private val phoneRequestBody = PHONE.toRequestBody("text/plain".toMediaType())
-    private val genderRequestBody = GENDER.toRequestBody("text/plain".toMediaType())
-
 
     @Before
     fun setUp() {
@@ -78,9 +74,14 @@ class EcommerceRepositoryImplTest {
             requestImageFile
         )
 
-        val dummyData = DataDummy.generateDummyRegisterResponse()
+        val nameRequestBody = NAME.toRequestBody("text/plain".toMediaType())
+        val emailRequestBody = EMAIL.toRequestBody("text/plain".toMediaType())
+        val passwordRequestBody = PASSWORD.toRequestBody("text/plain".toMediaType())
+        val phoneRequestBody = PHONE.toRequestBody("text/plain".toMediaType())
+        val genderRequestBody = GENDER.toRequestBody("text/plain".toMediaType())
+
         val expected = MutableLiveData<Result<RegisterResponse>>()
-        expected.value = Result.Success(dummyData)
+        expected.value = Result.Success(DataDummy.generateDummyRegisterResponse())
 
         `when`(apiService.registerUser(
             "",
@@ -89,7 +90,8 @@ class EcommerceRepositoryImplTest {
             passwordRequestBody,
             phoneRequestBody,
             genderRequestBody,
-            imageMultipart)).thenReturn(dummyData)
+            imageMultipart
+        )).thenReturn(DataDummy.generateDummyRegisterResponse())
 
         val actual = ecommerceRepositoryImpl.registerUser(
             nameRequestBody,
@@ -100,16 +102,16 @@ class EcommerceRepositoryImplTest {
             genderRequestBody
         )
 
-        actual.asFlow().test {
+        actual.test {
             assertTrue(awaitItem() is Result.Loading)
             assertTrue(awaitItem() is Result.Success)
             awaitComplete()
         }
 
 //        assertNotNull(actual)
-//        assertTrue(actual is Result.Loading)
-//        assertTrue(actual is Result.Success)
-//        assertEquals((expected.value as Result.Success).data.success?.message, (actual as Result.Success).data.success?.message)
+//        assert(actual is Result.Loading)
+//        assert(actual is Result.Success)
+        //assertEquals((expected.value as Result.Success).data.success?.message, (actual as Result.Success).data.success?.message)
     }
 
     companion object {
