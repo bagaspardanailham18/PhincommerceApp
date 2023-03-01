@@ -20,13 +20,13 @@ import okhttp3.RequestBody
 
 interface EcommerceRepository {
 
-    suspend fun registerUser(name: RequestBody?, email: RequestBody?, password: RequestBody?, phone: RequestBody?, image: MultipartBody.Part?, gender: RequestBody?): Flow<Result<RegisterResponse>>
+    suspend fun registerUser(name: RequestBody?, email: RequestBody?, password: RequestBody?, phone: RequestBody?, image: MultipartBody.Part?, gender: Int): Flow<Result<RegisterResponse>>
 
-    suspend fun loginUser(email: String, password: String, tokenFcm: String): LiveData<Result<LoginResponse>>
+    suspend fun loginUser(email: String, password: String, tokenFcm: String): Flow<Result<LoginResponse>>
 
-    suspend fun changePassword(auth: String, id: Int, pass: String, newPass: String, confirmNewPass: String): LiveData<Result<ChangePasswordResponse>>
+    suspend fun changePassword(id: Int, pass: String, newPass: String, confirmNewPass: String): Flow<Result<ChangePasswordResponse>>
 
-    suspend fun changeImage(token: String, id: RequestBody, image: MultipartBody.Part): LiveData<Result<ChangeImageResponse>>
+    suspend fun changeImage(id: Int, image: MultipartBody.Part): Flow<Result<ChangeImageResponse>>
 
 
     // Product

@@ -18,6 +18,7 @@ import com.bagaspardanailham.core.data.local.model.TrolleyEntity
 import com.bagaspardanailham.core.data.local.room.EcommerceDatabase
 import com.bagaspardanailham.core.data.remote.ApiService
 import com.bagaspardanailham.core.data.remote.response.*
+import com.bagaspardanailham.core.data.remote.response.auth.LoginResponse
 import com.bagaspardanailham.core.data.remote.response.auth.RegisterResponse
 import com.bagaspardanailham.core.data.remote.response.product.*
 import com.bagaspardanailham.core.data.remote.response.profile.ChangeImageResponse
@@ -40,11 +41,10 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
         const val API_KEY = "TuIBt77u7tZHi8n7WqUC"
     }
 
-    override suspend fun registerUser(name: RequestBody?, email: RequestBody?, password: RequestBody?, phone: RequestBody?, image: MultipartBody.Part?, gender: RequestBody?): Flow<Result<RegisterResponse>> = flow {
+    override suspend fun registerUser(name: RequestBody?, email: RequestBody?, password: RequestBody?, phone: RequestBody?, image: MultipartBody.Part?, gender: Int): Flow<Result<RegisterResponse>> = flow {
         emit(Result.Loading)
         try {
-            val response = apiService.registerUser(API_KEY, name, email, password, phone, gender, image)
-            Log.d("result", response.success?.message.toString())
+            val response = apiService.registerUser(name, email, password, phone, gender, image)
             emit(Result.Success(response))
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {
@@ -63,11 +63,10 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
         }
     }
 
-    override suspend fun loginUser(email: String, password: String, tokenFcm: String) = liveData {
+    override suspend fun loginUser(email: String, password: String, tokenFcm: String): Flow<Result<LoginResponse>> = flow {
         emit(Result.Loading)
         try {
-            val response = apiService.loginUser(API_KEY, email, password, tokenFcm)
-            Log.d("result", response.success?.message.toString())
+            val response = apiService.loginUser(email, password, tokenFcm)
             emit(Result.Success(response))
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {
@@ -90,10 +89,10 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
         }
     }
 
-    override suspend fun changePassword(auth: String, id: Int, pass: String, newPass: String, confirmNewPass: String): LiveData<Result<ChangePasswordResponse>> = liveData {
+    override suspend fun changePassword(id: Int, pass: String, newPass: String, confirmNewPass: String): Flow<Result<ChangePasswordResponse>> = flow {
         emit(Result.Loading)
         try {
-            val response = apiService.changePassword(API_KEY, auth, id, pass, newPass, confirmNewPass)
+            val response = apiService.changePassword(id, pass, newPass, confirmNewPass)
             emit(Result.Success(response))
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {
@@ -121,10 +120,10 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
 
 
 
-    override suspend fun changeImage(token: String, id: RequestBody, image: MultipartBody.Part): LiveData<Result<ChangeImageResponse>> = liveData {
+    override suspend fun changeImage(id: Int, image: MultipartBody.Part): Flow<Result<ChangeImageResponse>> = flow {
         emit(Result.Loading)
         try {
-            val response = apiService.changeImage(API_KEY, token, id, image)
+            val response = apiService.changeImage(id, image)
             emit(Result.Success(response))
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {

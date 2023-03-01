@@ -5,6 +5,9 @@ import com.bagaspardanailham.core.data.remote.response.auth.DataUser
 import com.bagaspardanailham.core.data.remote.response.auth.LoginResponse
 import com.bagaspardanailham.core.data.remote.response.auth.LoginSuccess
 import com.bagaspardanailham.core.data.remote.response.auth.RegisterResponse
+import com.bagaspardanailham.core.data.remote.response.product.GetProductListPagingResponse
+import com.bagaspardanailham.core.data.remote.response.product.GetProductListPagingSuccess
+import com.bagaspardanailham.core.data.remote.response.product.ProductListPagingItem
 import com.bagaspardanailham.core.data.remote.response.profile.ChangeImageResponse
 import com.bagaspardanailham.core.data.remote.response.profile.ChangeImageSuccess
 import com.bagaspardanailham.core.data.remote.response.profile.ChangePasswordResponse
@@ -36,21 +39,47 @@ object DataDummy {
     }
 
     fun generateDummyRegisterResponse(): RegisterResponse {
+        val response = SuccessResponse("message", 200)
+
         return RegisterResponse(
-            SuccessResponse("message", 200)
+            success = response
         )
     }
 
     fun generateDummyChangePasswordResponse(): ChangePasswordResponse {
+        val respone = SuccessResponse("message", null)
+
         return ChangePasswordResponse(
-            SuccessResponse("message", 200)
+            success = respone
         )
     }
 
     fun generateDummyChangeImageResponse(): ChangeImageResponse {
+        val response = ChangeImageSuccess("path", "message", 200)
         return ChangeImageResponse(
-            ChangeImageSuccess("path", "message", 200)
+            success = response
         )
+    }
+
+    fun generateDummyProductListPaging(): List<ProductListPagingItem> {
+        val items: MutableList<ProductListPagingItem> = arrayListOf()
+        for (i in 0..100) {
+            val product = ProductListPagingItem(
+                "date",
+                "image",
+                "name",
+                "harga",
+                "size",
+                0,
+                "weight",
+                0,
+                0,
+                "type",
+                "desc"
+            )
+            items.add(product)
+        }
+        return items
     }
 
 }

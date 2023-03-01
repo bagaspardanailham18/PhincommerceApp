@@ -11,7 +11,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val repository: EcommerceRepository, private val firebaseAnalyticsRepository: FirebaseAnalyticsRepository): ViewModel() {
 
-    suspend fun getProductList(token: String, query: String?) = repository.getProductList(token, query)
+    //suspend fun getProductList(token: String, query: String?) = repository.getProductList(token, query)
 
     fun getProductListPaging(query: String?) = repository.getProductListPaging(query).cachedIn(viewModelScope)
 

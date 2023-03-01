@@ -17,7 +17,6 @@ interface ApiService {
     @FormUrlEncoded
     @POST("api/ecommerce/authentication")
     suspend fun loginUser(
-        @Header("apikey") apikey: String,
         @Field("email") email: String,
         @Field("password") password: String,
         @Field("token_fcm") tokenFcm: String
@@ -26,20 +25,17 @@ interface ApiService {
     @Multipart
     @POST("api/ecommerce/registration")
     suspend fun registerUser(
-        @Header("apikey") apikey: String,
         @Part("name") name: RequestBody?,
         @Part("email") email: RequestBody?,
         @Part("password") password: RequestBody?,
         @Part("phone") phone: RequestBody?,
-        @Part("gender") gender: RequestBody?,
+        @Part("gender") gender: Int,
         @Part image: MultipartBody.Part?,
     ) : RegisterResponse
 
     @FormUrlEncoded
     @PUT("api/ecommerce/change-password/{id}")
     suspend fun changePassword(
-        @Header("apikey") apikey: String,
-        @Header("Authorization") token: String,
         @Path("id") id: Int,
         @Field("password") password: String,
         @Field("new_password") new_password: String,
@@ -49,9 +45,7 @@ interface ApiService {
     @Multipart
     @POST("api/ecommerce/change-image")
     suspend fun changeImage(
-        @Header("apikey") apikey: String,
-        @Header("Authorization") token: String,
-        @Part("id") id: RequestBody,
+        @Part("id") id: Int,
         @Part image: MultipartBody.Part
     ) : ChangeImageResponse
 

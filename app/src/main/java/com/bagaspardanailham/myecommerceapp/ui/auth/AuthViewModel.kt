@@ -38,12 +38,12 @@ class AuthViewModel @Inject constructor(private val repository: EcommerceReposit
     suspend fun loginUser(email: String, password: String, tokenFcm: String) = repository.loginUser(email, password, tokenFcm)
 
     suspend fun registerUser(
-        email: RequestBody?, password: RequestBody?, name: RequestBody?, gender: RequestBody?, phone: RequestBody?, image: MultipartBody.Part?
+        email: RequestBody?, password: RequestBody?, name: RequestBody?, gender: Int, phone: RequestBody?, image: MultipartBody.Part?
     ) = repository.registerUser(name, email, password, phone, image, gender)
 
     suspend fun changePassword(
-        auth: String, id: Int, pass: String, newPass: String, confirmNewPass: String
-    ) = repository.changePassword(auth, id, pass, newPass, confirmNewPass)
+        id: Int, pass: String, newPass: String, confirmNewPass: String
+    ) = repository.changePassword(id, pass, newPass, confirmNewPass)
 
     // Analytics
     fun onLoadSplash(screenClass: String) {

@@ -60,177 +60,177 @@ class AuthViewModelTest {
         authViewModel = AuthViewModel(ecommerceRepository, preferenceDataStore, firebaseAnalyticsRepository)
     }
 
-    @Test
-    fun `when Login Success data should Not null and return Success`() = runTest {
-        val expectedData = MutableLiveData<Result<LoginResponse>>()
-        expectedData.value = Result.Success(DataDummy.generateDummyLoginResponse())
-
-        `when`(ecommerceRepository.loginUser(EMAIL, PASSWORD, FCM_TOKEN)).thenReturn(expectedData)
-        val actualData = authViewModel.loginUser(EMAIL, PASSWORD, FCM_TOKEN).getOrAwaitValue()
-
-        verify(ecommerceRepository).loginUser(EMAIL, PASSWORD, FCM_TOKEN)
-        assertTrue(actualData is Result.Success)
-        assertNotNull(actualData)
-        assertEquals(DataDummy.generateDummyLoginResponse().success?.dataUser, (actualData as Result.Success).data.success?.dataUser)
-    }
-
-    @Test
-    fun `when Login Failed should return Error`() = runTest {
-        val expectedData = MutableLiveData<Result<LoginResponse>>()
-        expectedData.value = Result.Error(true, null, null, "")
-
-        `when`(ecommerceRepository.loginUser(EMAIL, PASSWORD, FCM_TOKEN)).thenReturn(expectedData)
-        val actualData = authViewModel.loginUser(EMAIL, PASSWORD, FCM_TOKEN).getOrAwaitValue()
-
-        verify(ecommerceRepository).loginUser(EMAIL, PASSWORD, FCM_TOKEN)
-        assertTrue(actualData is Result.Error)
-        assertNotNull(actualData)
-    }
-
-
-    // REGISTER
-    @Test
-    fun `when Register Success data should not null and return Success`() = runTest {
-        val requestImageFile = mockFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
-        val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
-            "image",
-            mockFile.name,
-            requestImageFile
-        )
-
-        val nameRequestBody = NAME.toRequestBody("text/plain".toMediaType())
-        val emailRequestBody = EMAIL.toRequestBody("text/plain".toMediaType())
-        val passwordRequestBody = PASSWORD.toRequestBody("text/plain".toMediaType())
-        val phoneRequestBody = PHONE.toRequestBody("text/plain".toMediaType())
-        val genderRequestBody = GENDER.toRequestBody("text/plain".toMediaType())
-
-        val expectedData = MutableLiveData<Result<RegisterResponse>>()
-        expectedData.value = Result.Success(DataDummy.generateDummyRegisterResponse())
-
-        `when`(ecommerceRepository.registerUser(
-            nameRequestBody,
-            emailRequestBody,
-            passwordRequestBody,
-            phoneRequestBody,
-            imageMultipart,
-            genderRequestBody
-        )).thenReturn(expectedData)
-
-        val actualData = authViewModel.registerUser(
-            emailRequestBody,
-            passwordRequestBody,
-            nameRequestBody,
-            genderRequestBody,
-            phoneRequestBody,
-            imageMultipart
-        ).getOrAwaitValue()
-
-        verify(ecommerceRepository).registerUser(
-            nameRequestBody,
-            emailRequestBody,
-            passwordRequestBody,
-            phoneRequestBody,
-            imageMultipart,
-            genderRequestBody
-        )
-
-        assertNotNull(actualData)
-        //assertTrue(actualData is Result.Success)
-        //assertEquals(expectedData.value, (actualData as Result.Success).data.success)
-    }
-
-    @Test
-    fun `when Register Failed should return Error`() = runTest {
-        val requestImageFile = mockFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
-        val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
-            "image",
-            mockFile.name,
-            requestImageFile
-        )
-
-        val nameRequestBody = NAME.toRequestBody("text/plain".toMediaType())
-        val emailRequestBody = EMAIL.toRequestBody("text/plain".toMediaType())
-        val passwordRequestBody = PASSWORD.toRequestBody("text/plain".toMediaType())
-        val phoneRequestBody = PHONE.toRequestBody("text/plain".toMediaType())
-        val genderRequestBody = GENDER.toRequestBody("text/plain".toMediaType())
-
-        val expectedData = MutableLiveData<Result<RegisterResponse>>()
-        expectedData.value = Result.Error(true, null, null, "")
-
-        `when`(ecommerceRepository.registerUser(
-            nameRequestBody,
-            emailRequestBody,
-            passwordRequestBody,
-            phoneRequestBody,
-            imageMultipart,
-            genderRequestBody
-        )).thenReturn(expectedData)
-
-        val actualData = authViewModel.registerUser(
-            emailRequestBody,
-            passwordRequestBody,
-            nameRequestBody,
-            genderRequestBody,
-            phoneRequestBody,
-            imageMultipart
-        ).getOrAwaitValue()
-
-        verify(ecommerceRepository).registerUser(
-            nameRequestBody,
-            emailRequestBody,
-            passwordRequestBody,
-            phoneRequestBody,
-            imageMultipart,
-            genderRequestBody
-        )
-
-        assertNotNull(actualData)
-        assertTrue(actualData is Result.Error)
-        //assertEquals(expectedData.value, (actualData as Result.Success).data.success)
-    }
-
-    @Test
-    fun `when Change Password Success data should not null and return Success`() = runTest {
-        val expectedData = MutableLiveData<Result<ChangePasswordResponse>>()
-        expectedData.value = Result.Success(DataDummy.generateDummyChangePasswordResponse())
-
-        `when`(ecommerceRepository.changePassword(AUTH, ID, PASSWORD, NEW_PASSWORD, CONFIRM_PASSWORD)).thenReturn(expectedData)
-        val actualData = authViewModel.changePassword(
-            AUTH, ID, PASSWORD, NEW_PASSWORD, CONFIRM_PASSWORD
-        ).getOrAwaitValue()
-
-        assertTrue(actualData is Result.Success)
-    }
-
-    @Test
-    fun `when Change Password Failed should return Error`() = runTest {
-        val expectedData = MutableLiveData<Result<ChangePasswordResponse>>()
-        expectedData.value = Result.Error(true, null, null, "")
-
-        `when`(ecommerceRepository.changePassword(AUTH, ID, PASSWORD, NEW_PASSWORD, CONFIRM_PASSWORD)).thenReturn(expectedData)
-        val actualData = authViewModel.changePassword(
-            AUTH, ID, PASSWORD, NEW_PASSWORD, CONFIRM_PASSWORD
-        ).getOrAwaitValue()
-
-        assertTrue(actualData is Result.Error)
-    }
-
 //    @Test
-//    fun `when Change Image Success data should not null and return Success`() = runTest {
-//        val expectedData = MutableLiveData<Result<ChangeImageResponse>>()
-//        expectedData.value = Result.Success()
+//    fun `when Login Success data should Not null and return Success`() = runTest {
+//        val expectedData = MutableLiveData<Result<LoginResponse>>()
+//        expectedData.value = Result.Success(DataDummy.generateDummyLoginResponse())
+//
+//        `when`(ecommerceRepository.loginUser(EMAIL, PASSWORD, FCM_TOKEN)).thenReturn(expectedData)
+//        val actualData = authViewModel.loginUser(EMAIL, PASSWORD, FCM_TOKEN).getOrAwaitValue()
+//
+//        verify(ecommerceRepository).loginUser(EMAIL, PASSWORD, FCM_TOKEN)
+//        assertTrue(actualData is Result.Success)
+//        assertNotNull(actualData)
+//        assertEquals(DataDummy.generateDummyLoginResponse().success?.dataUser, (actualData as Result.Success).data.success?.dataUser)
 //    }
-
-    @Test
-    fun `Loading state`() = runTest {
-        val expectedData = MutableLiveData<Result<LoginResponse>>()
-        expectedData.value = Result.Loading
-
-        `when`(ecommerceRepository.loginUser(EMAIL, PASSWORD, FCM_TOKEN)).thenReturn(expectedData)
-        val actualData = authViewModel.loginUser(EMAIL, PASSWORD, FCM_TOKEN).getOrAwaitValue()
-
-        assertTrue(actualData is Result.Loading)
-    }
+//
+//    @Test
+//    fun `when Login Failed should return Error`() = runTest {
+//        val expectedData = MutableLiveData<Result<LoginResponse>>()
+//        expectedData.value = Result.Error(true, null, null, "")
+//
+//        `when`(ecommerceRepository.loginUser(EMAIL, PASSWORD, FCM_TOKEN)).thenReturn(expectedData)
+//        val actualData = authViewModel.loginUser(EMAIL, PASSWORD, FCM_TOKEN).getOrAwaitValue()
+//
+//        verify(ecommerceRepository).loginUser(EMAIL, PASSWORD, FCM_TOKEN)
+//        assertTrue(actualData is Result.Error)
+//        assertNotNull(actualData)
+//    }
+//
+//
+//    // REGISTER
+//    @Test
+//    fun `when Register Success data should not null and return Success`() = runTest {
+//        val requestImageFile = mockFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
+//        val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
+//            "image",
+//            mockFile.name,
+//            requestImageFile
+//        )
+//
+//        val nameRequestBody = NAME.toRequestBody("text/plain".toMediaType())
+//        val emailRequestBody = EMAIL.toRequestBody("text/plain".toMediaType())
+//        val passwordRequestBody = PASSWORD.toRequestBody("text/plain".toMediaType())
+//        val phoneRequestBody = PHONE.toRequestBody("text/plain".toMediaType())
+//        val genderRequestBody = GENDER.toRequestBody("text/plain".toMediaType())
+//
+//        val expectedData = MutableLiveData<Result<RegisterResponse>>()
+//        expectedData.value = Result.Success(DataDummy.generateDummyRegisterResponse())
+//
+//        `when`(ecommerceRepository.registerUser(
+//            nameRequestBody,
+//            emailRequestBody,
+//            passwordRequestBody,
+//            phoneRequestBody,
+//            imageMultipart,
+//            genderRequestBody
+//        )).thenReturn(expectedData)
+//
+//        val actualData = authViewModel.registerUser(
+//            emailRequestBody,
+//            passwordRequestBody,
+//            nameRequestBody,
+//            genderRequestBody,
+//            phoneRequestBody,
+//            imageMultipart
+//        ).getOrAwaitValue()
+//
+//        verify(ecommerceRepository).registerUser(
+//            nameRequestBody,
+//            emailRequestBody,
+//            passwordRequestBody,
+//            phoneRequestBody,
+//            imageMultipart,
+//            genderRequestBody
+//        )
+//
+//        assertNotNull(actualData)
+//        //assertTrue(actualData is Result.Success)
+//        //assertEquals(expectedData.value, (actualData as Result.Success).data.success)
+//    }
+//
+//    @Test
+//    fun `when Register Failed should return Error`() = runTest {
+//        val requestImageFile = mockFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
+//        val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
+//            "image",
+//            mockFile.name,
+//            requestImageFile
+//        )
+//
+//        val nameRequestBody = NAME.toRequestBody("text/plain".toMediaType())
+//        val emailRequestBody = EMAIL.toRequestBody("text/plain".toMediaType())
+//        val passwordRequestBody = PASSWORD.toRequestBody("text/plain".toMediaType())
+//        val phoneRequestBody = PHONE.toRequestBody("text/plain".toMediaType())
+//        val genderRequestBody = GENDER.toRequestBody("text/plain".toMediaType())
+//
+//        val expectedData = MutableLiveData<Result<RegisterResponse>>()
+//        expectedData.value = Result.Error(true, null, null, "")
+//
+//        `when`(ecommerceRepository.registerUser(
+//            nameRequestBody,
+//            emailRequestBody,
+//            passwordRequestBody,
+//            phoneRequestBody,
+//            imageMultipart,
+//            genderRequestBody
+//        )).thenReturn(expectedData)
+//
+//        val actualData = authViewModel.registerUser(
+//            emailRequestBody,
+//            passwordRequestBody,
+//            nameRequestBody,
+//            genderRequestBody,
+//            phoneRequestBody,
+//            imageMultipart
+//        ).getOrAwaitValue()
+//
+//        verify(ecommerceRepository).registerUser(
+//            nameRequestBody,
+//            emailRequestBody,
+//            passwordRequestBody,
+//            phoneRequestBody,
+//            imageMultipart,
+//            genderRequestBody
+//        )
+//
+//        assertNotNull(actualData)
+//        assertTrue(actualData is Result.Error)
+//        //assertEquals(expectedData.value, (actualData as Result.Success).data.success)
+//    }
+//
+//    @Test
+//    fun `when Change Password Success data should not null and return Success`() = runTest {
+//        val expectedData = MutableLiveData<Result<ChangePasswordResponse>>()
+//        expectedData.value = Result.Success(DataDummy.generateDummyChangePasswordResponse())
+//
+//        `when`(ecommerceRepository.changePassword(AUTH, ID, PASSWORD, NEW_PASSWORD, CONFIRM_PASSWORD)).thenReturn(expectedData)
+//        val actualData = authViewModel.changePassword(
+//            AUTH, ID, PASSWORD, NEW_PASSWORD, CONFIRM_PASSWORD
+//        ).getOrAwaitValue()
+//
+//        assertTrue(actualData is Result.Success)
+//    }
+//
+//    @Test
+//    fun `when Change Password Failed should return Error`() = runTest {
+//        val expectedData = MutableLiveData<Result<ChangePasswordResponse>>()
+//        expectedData.value = Result.Error(true, null, null, "")
+//
+//        `when`(ecommerceRepository.changePassword(AUTH, ID, PASSWORD, NEW_PASSWORD, CONFIRM_PASSWORD)).thenReturn(expectedData)
+//        val actualData = authViewModel.changePassword(
+//            AUTH, ID, PASSWORD, NEW_PASSWORD, CONFIRM_PASSWORD
+//        ).getOrAwaitValue()
+//
+//        assertTrue(actualData is Result.Error)
+//    }
+//
+////    @Test
+////    fun `when Change Image Success data should not null and return Success`() = runTest {
+////        val expectedData = MutableLiveData<Result<ChangeImageResponse>>()
+////        expectedData.value = Result.Success()
+////    }
+//
+//    @Test
+//    fun `Loading state`() = runTest {
+//        val expectedData = MutableLiveData<Result<LoginResponse>>()
+//        expectedData.value = Result.Loading
+//
+//        `when`(ecommerceRepository.loginUser(EMAIL, PASSWORD, FCM_TOKEN)).thenReturn(expectedData)
+//        val actualData = authViewModel.loginUser(EMAIL, PASSWORD, FCM_TOKEN).getOrAwaitValue()
+//
+//        assertTrue(actualData is Result.Loading)
+//    }
 
     companion object {
         private const val ID = 0

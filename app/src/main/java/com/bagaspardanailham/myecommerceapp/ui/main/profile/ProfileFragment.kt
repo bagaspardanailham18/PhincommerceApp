@@ -316,10 +316,9 @@ class ProfileFragment : Fragment() {
                 val id = viewModel.getUserPref().first()?.id
                 val authToken = viewModel.getUserPref().first()?.authTokenKey.toString()
                 profileViewModel.changeImage(
-                    authToken,
-                    id?.toRequestBody("text/plain".toMediaType())!!,
+                    id!!.toInt(),
                     imageMultipart
-                ).observe(viewLifecycleOwner) { response ->
+                ).collect { response ->
                     Log.d("repeat", "repeat")
                     when (response) {
                         is Result.Loading -> {

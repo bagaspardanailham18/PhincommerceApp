@@ -22,6 +22,7 @@ import com.bagaspardanailham.myecommerceapp.ui.MainActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
@@ -63,12 +64,11 @@ class ChangePasswordActivity : AppCompatActivity() {
                     lifecycleScope.launch {
                         viewModel.getUserPref().collect { data ->
                             viewModel.changePassword(
-                                data!!.authTokenKey,
-                                data.id.toInt(),
+                                data?.id!!.toInt(),
                                 oldPass,
                                 newPass,
                                 newPassConfirm
-                            ).observe(this@ChangePasswordActivity) { response ->
+                            ).collect { response ->
                                 when (response) {
                                     is Result.Loading -> {
                                         loading.startLoading()

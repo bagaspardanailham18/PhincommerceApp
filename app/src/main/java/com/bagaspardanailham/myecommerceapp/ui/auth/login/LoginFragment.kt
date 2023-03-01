@@ -28,7 +28,6 @@ import org.json.JSONObject
 import javax.inject.Inject
 import com.bagaspardanailham.core.data.Result
 import com.bagaspardanailham.core.data.remote.response.ErrorResponse
-import retrofit2.Response.error
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -101,7 +100,7 @@ class LoginFragment : Fragment() {
                     FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
                         val token = task.result
                         lifecycleScope.launch {
-                            viewModel.loginUser(email, password, token).observe(viewLifecycleOwner) { result ->
+                            viewModel.loginUser(email, password, token).collect { result ->
                                 when (result) {
                                     is Result.Loading -> {
                                         loading.startLoading()

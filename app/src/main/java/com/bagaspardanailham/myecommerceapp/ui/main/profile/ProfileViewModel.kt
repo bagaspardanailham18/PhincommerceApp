@@ -23,6 +23,6 @@ class ProfileViewModel @Inject constructor(private val repository: EcommerceRepo
 
     fun getSettingPref(): Flow<LocalSettingPreferencesModel?> = pref.localSettingPrefFlow
 
-    suspend fun changeImage(token: String, id: RequestBody, image: MultipartBody.Part) = repository.changeImage(token, id, image)
+    suspend fun changeImage(id: Int, image: MultipartBody.Part) = repository.changeImage(id, image)
 
 }

@@ -310,8 +310,8 @@ class RegisterFragment : Fragment() {
                     return
                 }
                 else {
-                    val genderId = if (binding?.rgMale!!.isChecked) "0" else "1"
-                    val gender = if (genderId == "0") "male" else "female"
+                    val genderId = if (binding?.rgMale!!.isChecked) 0 else 1
+                    val gender = if (genderId == 0) "male" else "female"
 
                     //analytics
                     firebaseAnalyticsRepository.onSignupButtonClicked(imageSource, email, name, phone, gender)
@@ -334,7 +334,7 @@ class RegisterFragment : Fragment() {
                                 email.toRequestBody("text/plain".toMediaType()),
                                 password.toRequestBody("text/plain".toMediaType()),
                                 name.toRequestBody("text/plain".toMediaType()),
-                                genderId.toRequestBody("text/plain".toMediaType()),
+                                genderId,
                                 phone.toRequestBody("text/plain".toMediaType()),
                                 imageMultipart
                             ).collectLatest { result ->

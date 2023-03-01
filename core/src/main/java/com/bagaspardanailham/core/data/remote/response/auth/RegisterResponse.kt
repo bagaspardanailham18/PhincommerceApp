@@ -8,4 +8,4 @@ data class RegisterResponse(
 	@field:SerializedName("success")
 	val success: SuccessResponse? = null,
 
-	)
+)
