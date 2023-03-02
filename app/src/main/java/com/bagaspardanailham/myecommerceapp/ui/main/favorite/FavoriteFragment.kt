@@ -28,6 +28,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import com.bagaspardanailham.core.data.Result
+import kotlinx.coroutines.flow.collectLatest
 
 
 @AndroidEntryPoint
@@ -110,7 +111,7 @@ class FavoriteFragment : Fragment() {
                 firebaseAnalyticsRepository.onSearchFavorite(query)
 
                 queryString = query.toString()
-                favoriteViewModel.getFavoriteProductList(token, query, userId).observe(viewLifecycleOwner) { result ->
+                favoriteViewModel.getFavoriteProductList(query, userId).collectLatest { result ->
                     binding?.apply {
                         when (result) {
                             is Result.Loading -> {
@@ -148,7 +149,7 @@ class FavoriteFragment : Fragment() {
                 }
             } else {
                 queryString = query.toString()
-                favoriteViewModel.getFavoriteProductList(token, null, userId).observe(viewLifecycleOwner) { result ->
+                favoriteViewModel.getFavoriteProductList(null, userId).collectLatest { result ->
                     binding?.apply {
                         when (result) {
                             is Result.Loading -> {

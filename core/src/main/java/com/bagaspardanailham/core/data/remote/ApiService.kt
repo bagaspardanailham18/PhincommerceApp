@@ -67,8 +67,6 @@ interface ApiService {
 
     @GET("api/ecommerce/get_list_product_favorite")
     suspend fun getFavoriteProductList(
-        @Header("apikey") apikey: String,
-        @Header("Authorization") token: String,
         @Query("search") search: String?,
         @Query("id_user") iduser: Int
     ) : GetFavoriteProductListResponse

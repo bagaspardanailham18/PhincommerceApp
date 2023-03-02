@@ -1,26 +1,38 @@
-package com.bagaspardanailham.core.data.repository
+package com.bagaspardanailham.myecommerceapp.data
 
 import android.content.Context
-import android.provider.Telephony.Carriers.PASSWORD
+import android.provider.ContactsContract.Data
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
-import androidx.paging.*
+import androidx.paging.AsyncPagingDataDiffer
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.room.Room
 import app.cash.turbine.test
-import com.bagaspardanailham.core.DataDummy
-import com.bagaspardanailham.core.MainDispatcherRule
-import com.bagaspardanailham.core.data.ProductPagingSource
+import com.bagaspardanailham.core.data.Result
 import com.bagaspardanailham.core.data.local.room.EcommerceDatabase
 import com.bagaspardanailham.core.data.remote.ApiService
+import com.bagaspardanailham.core.data.remote.response.auth.LoginResponse
+import com.bagaspardanailham.core.data.remote.response.auth.RegisterResponse
+import com.bagaspardanailham.core.data.remote.response.product.ProductListPagingItem
+import com.bagaspardanailham.core.data.remote.response.profile.ChangePasswordResponse
+import com.bagaspardanailham.core.data.repository.EcommerceRepositoryImpl
+import com.bagaspardanailham.myecommerceapp.DataDummy
+import com.bagaspardanailham.myecommerceapp.MainDispatcherRule
+import com.bagaspardanailham.myecommerceapp.getOrAwaitValue
+import com.bagaspardanailham.myecommerceapp.ui.main.home.ProductListAdapter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.ResponseBody.Companion.toResponseBody
+import org.junit.Assert
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
@@ -28,24 +40,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.junit.MockitoJUnitRunner
-import java.io.File
-import com.bagaspardanailham.core.data.Result
-import com.bagaspardanailham.core.data.remote.response.auth.LoginResponse
-import com.bagaspardanailham.core.data.remote.response.auth.RegisterResponse
-import com.bagaspardanailham.core.data.remote.response.product.ProductListPagingItem
-import com.bagaspardanailham.core.data.remote.response.profile.ChangePasswordResponse
-import com.bagaspardanailham.core.getOrAwaitValue
-import com.bagaspardanailham.core.utils.Constant.GENDER
-import kotlinx.coroutines.*
-import okhttp3.RequestBody
-import okhttp3.ResponseBody.Companion.toResponseBody
-import org.mockito.ArgumentMatcher
-import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.`when`
+import org.mockito.junit.MockitoJUnitRunner
 import retrofit2.HttpException
 import retrofit2.Response
+import java.io.File
+
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -81,7 +81,7 @@ class EcommerceRepositoryImplTest {
     fun `when registerUser is Success`() = runTest {
         val imageMultipart: MultipartBody.Part = MultipartBody.Part.create("text".toRequestBody())
 
-        `when`(
+        Mockito.`when`(
             apiService.registerUser(
                 "".toRequestBody(),
                 "".toRequestBody(),
@@ -102,9 +102,9 @@ class EcommerceRepositoryImplTest {
         )
 
         actual.test {
-            assertTrue(awaitItem() is Result.Loading)
+            Assert.assertTrue(awaitItem() is Result.Loading)
             val data = awaitItem() as Result.Success
-            assertEquals(DataDummy.generateDummyRegisterResponse(), data)
+            Assert.assertEquals(DataDummy.generateDummyRegisterResponse(), data)
             awaitComplete()
         }
     }
@@ -114,7 +114,7 @@ class EcommerceRepositoryImplTest {
         val response = Response.error<RegisterResponse>(400, "".toResponseBody(null))
         val imageMultipart: MultipartBody.Part = MultipartBody.Part.create("text".toRequestBody())
 
-        `when`(
+        Mockito.`when`(
             apiService.registerUser(
                 "".toRequestBody(),
                 "".toRequestBody(),
@@ -135,8 +135,8 @@ class EcommerceRepositoryImplTest {
         )
 
         actual.test {
-            assertTrue(awaitItem() is Result.Loading)
-            assertTrue(awaitItem() is Result.Error)
+            Assert.assertTrue(awaitItem() is Result.Loading)
+            Assert.assertTrue(awaitItem() is Result.Error)
             awaitComplete()
         }
     }
@@ -157,9 +157,9 @@ class EcommerceRepositoryImplTest {
         )
 
         resultFlow.test {
-            assertTrue(awaitItem() is Result.Loading)
+            Assert.assertTrue(awaitItem() is Result.Loading)
             val data = awaitItem() as Result.Success
-            assertEquals(dataDummy, data.data)
+            Assert.assertEquals(dataDummy, data.data)
             awaitComplete()
         }
     }
@@ -180,8 +180,8 @@ class EcommerceRepositoryImplTest {
         )
 
         resultFlow.test {
-            assertTrue(awaitItem() is Result.Loading)
-            assertTrue(awaitItem() is Result.Error)
+            Assert.assertTrue(awaitItem() is Result.Loading)
+            Assert.assertTrue(awaitItem() is Result.Error)
             awaitComplete()
         }
     }
@@ -202,9 +202,9 @@ class EcommerceRepositoryImplTest {
         )
 
         resultFlow.test {
-            assertTrue(awaitItem() is Result.Loading)
+            Assert.assertTrue(awaitItem() is Result.Loading)
             val data = awaitItem() as Result.Success
-            assertEquals(dataDummy, data.data)
+            Assert.assertEquals(dataDummy, data.data)
             awaitComplete()
         }
     }
@@ -225,8 +225,8 @@ class EcommerceRepositoryImplTest {
         )
 
         resultFlow.test {
-            assertTrue(awaitItem() is Result.Loading)
-            assertTrue(awaitItem() is Result.Error)
+            Assert.assertTrue(awaitItem() is Result.Loading)
+            Assert.assertTrue(awaitItem() is Result.Error)
             awaitComplete()
         }
     }
@@ -245,9 +245,9 @@ class EcommerceRepositoryImplTest {
         )
 
         resultFlow.test {
-            assertTrue(awaitItem() is Result.Loading)
+            Assert.assertTrue(awaitItem() is Result.Loading)
             val data = awaitItem() as Result.Success
-            assertEquals(dataDummy, data.data)
+            Assert.assertEquals(dataDummy, data.data)
             awaitComplete()
         }
     }
@@ -266,25 +266,49 @@ class EcommerceRepositoryImplTest {
         )
 
         resultFlow.test {
-            assertTrue(awaitItem() is Result.Loading)
-            assertTrue(awaitItem() is Result.Error)
+            Assert.assertTrue(awaitItem() is Result.Loading)
+            Assert.assertTrue(awaitItem() is Result.Error)
             awaitComplete()
         }
     }
 
-//    @Test
-//    fun `when getProductList isSuccess`() = runTest {
-//        val data = ProductPagingSource.snapshot(DataDummy.generateDummyProductListPaging())
-//        val expectedProduct = MutableLiveData<PagingData<ProductListPagingItem>>()
-//        expectedProduct.value = data
-//
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val actualData: PagingData<ProductListPagingItem> = ecommerceRepositoryImpl.getProductListPaging("").getOrAwaitValue()
-//            val differ = AsyncPagingDataDiffer(
-//                diffCallback = ProductListAda
-//            )
-//        }
-//    }
+    @Test
+    fun `when getProductList isSuccess`() = runTest {
+        val data = ProductPagingSource.snapshot(DataDummy.generateDummyProductListPaging())
+        val expectedProduct = MutableLiveData<PagingData<ProductListPagingItem>>()
+        expectedProduct.value = data
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val actualData: PagingData<ProductListPagingItem> = ecommerceRepositoryImpl.getProductListPaging("").getOrAwaitValue()
+            val differ = AsyncPagingDataDiffer(
+                diffCallback = ProductListAdapter.DIFF_CALLBACK,
+                updateCallback = noopListUpdateCallback,
+                workerDispatcher = Dispatchers.Main
+            )
+            differ.submitData(actualData)
+
+            assertNotNull(differ.snapshot())
+            assertEquals(DataDummy.generateDummyProductListPaging().size, differ.snapshot().size)
+            assertEquals(DataDummy.generateDummyProductListPaging()[0].nameProduct, differ.snapshot()[0]?.nameProduct)
+        }
+    }
+
+    @Test
+    fun `when getFavoriteProductList isSuccess`() = runTest {
+        val dataDummy = DataDummy.generateDummyFavoriteProductListResponse()
+
+        `when`(apiService.getFavoriteProductList("query", 0)).thenReturn(dataDummy)
+
+        val actual = ecommerceRepositoryImpl.getFavoriteProductList("query", 0)
+
+        actual.test {
+            assertTrue(awaitItem() is Result.Loading)
+            val data = awaitItem() as Result.Success
+            assertEquals(dataDummy, data.data)
+            awaitComplete()
+        }
+
+    }
 
     class ProductPagingSource : PagingSource<Int, LiveData<List<ProductListPagingItem>>>() {
         companion object {

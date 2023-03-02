@@ -151,43 +151,43 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
 
 
     // Product
-    override suspend fun getProductList(accessToken: String, query: String?): LiveData<Result<GetProductListResponse>> = liveData {
-        emit(Result.Loading)
-        try {
-            val response = apiService.getProductList(API_KEY, accessToken, query)
-            emit(Result.Success(response))
-        } catch (throwable: Throwable) {
-            if (throwable is HttpException) {
-                when (throwable.code()) {
-                    401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    500 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    else -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                }
-            } else if (throwable is IOException) {
-                emit(
-                    Result.Error(false, null, null, "No Internet Connection")
-                )
-            } else {
-                emit(
-                    Result.Error(false, null, null, null)
-                )
-            }
-        }
-    }
+//    override suspend fun getProductList(accessToken: String, query: String?): LiveData<Result<GetProductListResponse>> = liveData {
+//        emit(Result.Loading)
+//        try {
+//            val response = apiService.getProductList(API_KEY, accessToken, query)
+//            emit(Result.Success(response))
+//        } catch (throwable: Throwable) {
+//            if (throwable is HttpException) {
+//                when (throwable.code()) {
+//                    401 -> emit(
+//                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
+//                    )
+//                    404 -> emit(
+//                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
+//                    )
+//                    500 -> emit(
+//                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
+//                    )
+//                    else -> emit(
+//                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
+//                    )
+//                }
+//            } else if (throwable is IOException) {
+//                emit(
+//                    Result.Error(false, null, null, "No Internet Connection")
+//                )
+//            } else {
+//                emit(
+//                    Result.Error(false, null, null, null)
+//                )
+//            }
+//        }
+//    }
 
-    override suspend fun getFavoriteProductList(accessToken: String, query: String?, id: Int): LiveData<Result<GetFavoriteProductListResponse>> = liveData {
+    override suspend fun getFavoriteProductList(query: String?, id: Int): Flow<Result<GetFavoriteProductListResponse>> = flow {
         emit(Result.Loading)
         try {
-            val response = apiService.getFavoriteProductList(API_KEY, accessToken, query, id)
+            val response = apiService.getFavoriteProductList(query, id)
             emit(Result.Success(response))
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {

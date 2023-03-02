@@ -30,9 +30,9 @@ interface EcommerceRepository {
 
 
     // Product
-    suspend fun getProductList(accessToken: String, query: String?): LiveData<Result<GetProductListResponse>>
+    //suspend fun getProductList(accessToken: String, query: String?): LiveData<Result<GetProductListResponse>>
 
-    suspend fun getFavoriteProductList(accessToken: String, query: String?, id: Int): LiveData<Result<GetFavoriteProductListResponse>>
+    suspend fun getFavoriteProductList(query: String?, id: Int): Flow<Result<GetFavoriteProductListResponse>>
 
     suspend fun getProductDetail(accessToken: String, idProduct: Int?, idUser: Int?) : LiveData<Result<GetProductDetailResponse>>
 

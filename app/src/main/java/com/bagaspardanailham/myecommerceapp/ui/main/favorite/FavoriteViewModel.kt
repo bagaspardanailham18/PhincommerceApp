@@ -8,6 +8,6 @@ import javax.inject.Inject
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(private val repository: EcommerceRepository): ViewModel() {
 
-    suspend fun getFavoriteProductList(token: String, query: String?, id: Int) = repository.getFavoriteProductList(token, query, id)
+    suspend fun getFavoriteProductList(query: String?, id: Int) = repository.getFavoriteProductList(query, id)
 
 }

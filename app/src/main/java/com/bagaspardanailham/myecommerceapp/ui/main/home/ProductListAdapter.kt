@@ -70,7 +70,7 @@ class ProductListAdapter(private val context: Context): PagingDataAdapter<Produc
     }
 
     companion object {
-        private val DIFF_CALLBACK: DiffUtil.ItemCallback<ProductListPagingItem> =
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<ProductListPagingItem> =
             object : DiffUtil.ItemCallback<ProductListPagingItem>() {
                 override fun areItemsTheSame(
                     oldItem: ProductListPagingItem,
