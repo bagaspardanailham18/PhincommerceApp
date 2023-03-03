@@ -27,6 +27,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -167,7 +168,7 @@ class BuyProductModalBottomSheet(private val product: ProductDetailItem?, privat
             if (choosenPaymentId != "null") {
                 lifecycleScope.launch {
                     val idUser = authViewModel.getUserPref().first()?.id.toString()
-                    viewModel.updateStock(accessToken, idProduct, quantity, idUser).observe(viewLifecycleOwner) { response ->
+                    viewModel.updateStock(idProduct, quantity, idUser).collect { response ->
                         when (response) {
                             is Result.Loading -> {
 

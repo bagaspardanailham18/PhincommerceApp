@@ -16,24 +16,4 @@ class HomeViewModel @Inject constructor(private val repository: EcommerceReposit
     fun getProductListPaging(query: String?) = repository.getProductListPaging(query).cachedIn(viewModelScope)
 
 
-    // Analytics
-    fun onLoadScreen(screenName: String, screenClass: String) {
-        firebaseAnalyticsRepository.onLoadScreen(screenName, screenClass)
-    }
-    fun onPagingScroll(offset: Int) {
-        firebaseAnalyticsRepository.onPagingScroll(offset)
-    }
-    fun onSearch(query: String?) {
-        firebaseAnalyticsRepository.onSearch(query)
-    }
-    fun onClickProduct(productId: Int, productName: String, rate: Int, price: Double) {
-        firebaseAnalyticsRepository.onClickProduct(productId, productName, price, rate)
-    }
-    fun onClickTrolleyIcon() {
-        firebaseAnalyticsRepository.onClickTrolleyIcon()
-    }
-    fun onClickNotificationIcon() {
-        firebaseAnalyticsRepository.onClickNotificationIcon()
-    }
-
 }

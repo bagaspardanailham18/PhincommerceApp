@@ -28,6 +28,7 @@ import org.json.JSONObject
 import javax.inject.Inject
 import com.bagaspardanailham.core.data.Result
 import com.bagaspardanailham.core.data.remote.response.ErrorResponse
+import org.json.JSONException
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -141,7 +142,6 @@ class LoginFragment : Fragment() {
                                     }
                                     is Result.Error -> {
                                         loading.isDismiss()
-                                        Log.d("errorBody", result.errorBody!!.string())
                                         val errorres = JSONObject(result.errorBody?.string()).toString()
                                         val gson = Gson()
                                         val jsonObject = gson.fromJson(errorres, JsonObject::class.java)

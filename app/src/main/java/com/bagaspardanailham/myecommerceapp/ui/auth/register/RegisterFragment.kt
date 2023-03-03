@@ -196,7 +196,7 @@ class RegisterFragment : Fragment() {
         launcherIntentCameraX.launch(intent)
 
         //analytics
-        registerViewModel.onChangeImage(SIGNUP, "camera")
+        firebaseAnalyticsRepository.onChangeImage(SIGNUP, "camera")
     }
 
     private val launcherIntentCameraX = registerForActivityResult(
@@ -231,7 +231,7 @@ class RegisterFragment : Fragment() {
         launcherIntentGallery.launch(chooser)
 
         // Analytics
-        registerViewModel.onChangeImage(SIGNUP, "gallery")
+        firebaseAnalyticsRepository.onChangeImage(SIGNUP, "gallery")
     }
 
     fun uriToFile(selectedImg: Uri, context: Context): File {
@@ -337,7 +337,37 @@ class RegisterFragment : Fragment() {
                                 genderId,
                                 phone.toRequestBody("text/plain".toMediaType()),
                                 imageMultipart
-                            ).collectLatest { result ->
+                            ).collect { result ->
+                                when(result) {
+                                    is Result.Success -> {
+                                        loading.isDismiss()
+                                        showSuccessDialog()
+                                        Toast.makeText(requireActivity(), result.data.success?.message, Toast.LENGTH_SHORT).show()
+                                    }
+                                    is Result.Error -> {
+                                        loading.isDismiss()
+                                        val errorres = JSONObject(result.errorBody?.string()).toString()
+                                        val gson = Gson()
+                                        val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
+                                        val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
+                                        Toast.makeText(requireActivity(), errorResponse.error?.message, Toast.LENGTH_SHORT).show()
+                                    }
+                                    is Result.Loading -> {
+                                        loading.startLoading()
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        lifecycleScope.launch {
+                            registerViewModel.registerUser(
+                                email.toRequestBody("text/plain".toMediaType()),
+                                password.toRequestBody("text/plain".toMediaType()),
+                                name.toRequestBody("text/plain".toMediaType()),
+                                genderId,
+                                phone.toRequestBody("text/plain".toMediaType()),
+                                null
+                            ).collect { result ->
                                 when(result) {
                                     is Result.Success -> {
                                         loading.isDismiss()

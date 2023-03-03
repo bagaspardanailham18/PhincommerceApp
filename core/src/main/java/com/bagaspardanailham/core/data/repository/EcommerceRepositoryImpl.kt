@@ -41,18 +41,15 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
         const val API_KEY = "TuIBt77u7tZHi8n7WqUC"
     }
 
-    override suspend fun registerUser(name: RequestBody?, email: RequestBody?, password: RequestBody?, phone: RequestBody?, image: MultipartBody.Part?, gender: Int): Flow<Result<RegisterResponse>> = flow {
+    override suspend fun registerUser(name: RequestBody?, email: RequestBody?, password: RequestBody?, phone: RequestBody?,gender: Int, image: MultipartBody.Part?): Flow<Result<RegisterResponse>> = flow {
         emit(Result.Loading)
         try {
-            val response = apiService.registerUser(name, email, password, phone, gender, image)
+            val response = apiService.registerUser(name, email, password, phone,gender, image )
             emit(Result.Success(response))
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {
                 when (throwable.code()) {
-                    404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    500 -> emit(
+                    400 -> emit(
                         Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
@@ -71,10 +68,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {
                 when (throwable.code()) {
-                    404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    500 -> emit(
+                    400 -> emit(
                         Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
@@ -97,13 +91,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {
                 when (throwable.code()) {
-                    401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    500 -> emit(
+                    400 -> emit(
                         Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
@@ -128,13 +116,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {
                 when (throwable.code()) {
-                    401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    500 -> emit(
+                    400 -> emit(
                         Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
@@ -192,49 +174,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {
                 when (throwable.code()) {
-                    401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    429 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    500 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    else -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                }
-            } else if (throwable is IOException) {
-                emit(
-                    Result.Error(false, null, null, "No Internet Connection")
-                )
-            } else {
-                emit(
-                    Result.Error(false, null, null, null)
-                )
-            }
-        }
-    }
-
-    override suspend fun getProductDetail(accessToken: String, idProduct: Int?, idUser: Int?) : LiveData<Result<GetProductDetailResponse>> = liveData {
-        emit(Result.Loading)
-        try {
-            val response = apiService.getProductDetail(API_KEY, accessToken, idProduct, idUser)
-            emit(com.bagaspardanailham.core.data.Result.Success(response))
-        } catch (throwable: Throwable) {
-            if (throwable is HttpException) {
-                when (throwable.code()) {
-                    401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    500 -> emit(
+                    400 -> emit(
                         Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
@@ -249,108 +189,107 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
         }
     }
 
-    override suspend fun addProductToFavorite(accessToken: String, idProduct: Int?, idUser: Int?): LiveData<Result<AddFavoriteResponse>> = liveData {
+    override suspend fun getProductDetail(idProduct: Int?, idUser: Int?) : Flow<Result<GetProductDetailResponse>> = flow {
         emit(Result.Loading)
         try {
-            val response = apiService.addFavoriteProduct(API_KEY, accessToken, idProduct, idUser)
-            emit(Result.Success(response))
-        } catch (throwable : Throwable) {
-            if (throwable is HttpException) {
-                when (throwable.code()) {
-                    401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    500 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    else -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                }
-            } else {
-                emit(
-                    Result.Error(false, null, null, null)
-                )
-            }
-        }
-    }
-
-    override suspend fun removeProductFromFavorite(accessToken: String, idProduct: Int?, idUser: Int?): LiveData<Result<RemoveFavoriteResponse>> = liveData {
-        emit(Result.Loading)
-        try {
-            val response = apiService.removeFavoriteProduct(API_KEY, accessToken, idProduct, idUser)
-            emit(Result.Success(response))
-        } catch (throwable : Throwable) {
-            if (throwable is HttpException) {
-                when (throwable.code()) {
-                    401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    500 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    else -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                }
-            } else {
-                emit(
-                    Result.Error(false, null, null, null)
-                )
-            }
-        }
-    }
-
-    override suspend fun updateStock(accessToken: String, data: DataStock): LiveData<Result<UpdateStockResponse>> = liveData {
-        emit(Result.Loading)
-        try {
-            val response = apiService.updateStock(API_KEY, accessToken, data)
-            emit(Result.Success(response))
-        } catch (throwable : Throwable) {
-            if (throwable is HttpException) {
-                when (throwable.code()) {
-                    401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    500 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    else -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                }
-            } else {
-                emit(
-                    Result.Error(false, null, null, null)
-                )
-            }
-        }
-    }
-
-    override suspend fun updateRate(accessToken: String, idProduct: Int?, rate: String): LiveData<Result<UpdateRateResponse>> = liveData {
-        emit(Result.Loading)
-        try {
-            val response = apiService.updateRate(API_KEY, accessToken, idProduct, rate)
+            val response = apiService.getProductDetail(idProduct, idUser)
             emit(Result.Success(response))
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {
                 when (throwable.code()) {
-                    401 -> emit(
+                    400 -> emit(
                         Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
-                    404 -> emit(
+                    else -> emit(
                         Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
-                    500 -> emit(
+                }
+            } else {
+                emit(
+                    Result.Error(false, null, null, null)
+                )
+            }
+        }
+    }
+
+    override suspend fun addProductToFavorite(idProduct: Int?, idUser: Int?): Flow<Result<AddFavoriteResponse>> = flow {
+        emit(Result.Loading)
+        try {
+            val response = apiService.addFavoriteProduct(idProduct, idUser)
+            emit(Result.Success(response))
+        } catch (throwable : Throwable) {
+            if (throwable is HttpException) {
+                when (throwable.code()) {
+                    400 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
+                    )
+                    else -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
+                    )
+                }
+            } else {
+                emit(
+                    Result.Error(false, null, null, null)
+                )
+            }
+        }
+    }
+
+    override suspend fun removeProductFromFavorite(idProduct: Int?, idUser: Int?): Flow<Result<RemoveFavoriteResponse>> = flow {
+        emit(Result.Loading)
+        try {
+            val response = apiService.removeFavoriteProduct(idProduct, idUser)
+            emit(Result.Success(response))
+        } catch (throwable : Throwable) {
+            if (throwable is HttpException) {
+                when (throwable.code()) {
+                    400 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
+                    )
+                    else -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
+                    )
+                }
+            } else {
+                emit(
+                    Result.Error(false, null, null, null)
+                )
+            }
+        }
+    }
+
+    override suspend fun updateStock(data: DataStock): Flow<Result<UpdateStockResponse>> = flow {
+        emit(Result.Loading)
+        try {
+            val response = apiService.updateStock(data)
+            emit(Result.Success(response))
+        } catch (throwable : Throwable) {
+            if (throwable is HttpException) {
+                when (throwable.code()) {
+                    400 -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
+                    )
+                    else -> emit(
+                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
+                    )
+                }
+            } else {
+                emit(
+                    Result.Error(false, null, null, null)
+                )
+            }
+        }
+    }
+
+    override suspend fun updateRate(idProduct: Int?, rate: String): Flow<Result<UpdateRateResponse>> = flow {
+        emit(Result.Loading)
+        try {
+            val response = apiService.updateRate(idProduct, rate)
+            emit(Result.Success(response))
+        } catch (throwable: Throwable) {
+            if (throwable is HttpException) {
+                when (throwable.code()) {
+                    400 -> emit(
                         Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
@@ -429,7 +368,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
         ).liveData
     }
 
-    override fun getOtherProductList(idUser: Int?): LiveData<Result<GetOtherProductListResponse>> = liveData {
+    override suspend fun getOtherProductList(idUser: Int?): Flow<Result<GetOtherProductListResponse>> = flow {
         emit(Result.Loading)
         try {
             val response = apiService.getOtherProducts(idUser)
@@ -437,13 +376,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {
                 when (throwable.code()) {
-                    401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    500 -> emit(
+                    400 -> emit(
                         Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(
@@ -458,7 +391,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
         }
     }
 
-    override fun getProductSearchHistory(idUser: Int?): LiveData<Result<GetProductSearchHistoryResponse>> = liveData {
+    override suspend fun getProductSearchHistory(idUser: Int?): Flow<Result<GetProductSearchHistoryResponse>> = flow {
         emit(Result.Loading)
         try {
             val response = apiService.getProductSearchHistory(idUser)
@@ -466,13 +399,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
         } catch (throwable: Throwable) {
             if (throwable is HttpException) {
                 when (throwable.code()) {
-                    401 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    404 -> emit(
-                        Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
-                    )
-                    500 -> emit(
+                    400 -> emit(
                         Result.Error(true, throwable.code(), throwable.response()?.errorBody(), null)
                     )
                     else -> emit(

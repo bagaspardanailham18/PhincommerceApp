@@ -59,7 +59,7 @@ class CheckoutActivity : AppCompatActivity() {
             val rate = binding.edtRating.rating.toString()
             if (!productId.isNullOrEmpty()) {
                 lifecycleScope.launch {
-                    checkoutViewModel.updateRate(accessToken, productId.toString().toInt(), rate).observe(this@CheckoutActivity) { response ->
+                    checkoutViewModel.updateRate(productId.toString().toInt(), rate).collect { response ->
                         when (response) {
                             is Result.Loading -> {
                                 binding.progressBar.setVisibility(true)
@@ -85,7 +85,7 @@ class CheckoutActivity : AppCompatActivity() {
                 binding.progressBar.setVisibility(true)
                 for (i in listProductId!!.indices) {
                     lifecycleScope.launch {
-                        checkoutViewModel.updateRate(accessToken, listProductId[i].toInt(), rate).observe(this@CheckoutActivity) { response ->
+                        checkoutViewModel.updateRate(listProductId[i].toInt(), rate).collect { response ->
                             when (response) {
                                 is Result.Loading -> {
 

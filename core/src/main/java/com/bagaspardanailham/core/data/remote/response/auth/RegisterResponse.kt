@@ -6,6 +6,6 @@ import com.google.gson.annotations.SerializedName
 data class RegisterResponse(
 
 	@field:SerializedName("success")
-	val success: SuccessResponse? = null,
+	val success: SuccessResponse,
 
 )

@@ -35,6 +35,7 @@ import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -192,7 +193,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                 }
             }
 
-            productDetailViewModel.getProductDetail(accessToken, productId, userId).observe(this@ProductDetailActivity) { result ->
+            productDetailViewModel.getProductDetail(productId, userId).collect { result ->
                 with(binding) {
                     when (result) {
                         is Result.Loading -> {
@@ -227,7 +228,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
             tvProductName.text = data?.nameProduct
             tvProductPrice.text = data?.harga?.toInt()?.toRupiahFormat(this@ProductDetailActivity)
             tvProductRating.rating = data?.rate.toString().toFloat()
-            tvProductStock.text = if (data?.stock == 1) resources.getString(R.string.out_of_stock) else data?.stock.toString()
+            tvProductStock.text = if (data?.stock == 0) resources.getString(R.string.out_of_stock) else data?.stock.toString()
             tvProductSize.text = data?.size
             tvProductWeight.text = data?.weight
             tvProductType.text = data?.type
@@ -255,7 +256,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
 
     private fun setOtherProductData() {
         lifecycleScope.launch {
-            productDetailViewModel.getOtherProducts(userId).observe(this@ProductDetailActivity) { result ->
+            productDetailViewModel.getOtherProducts(userId).collect { result ->
                 when (result) {
                     is Result.Loading -> {
 
@@ -284,7 +285,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
 
     private fun setProductSearchHistoryData() {
         lifecycleScope.launch {
-            productDetailViewModel.getProductSearchHistory(userId).observe(this@ProductDetailActivity) { result ->
+            productDetailViewModel.getProductSearchHistory(userId).collect { result ->
                 when (result) {
                     is Result.Loading -> {
 
@@ -363,7 +364,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
 
     private fun removeProductFromFavorite() {
         lifecycleScope.launch {
-            productDetailViewModel.removeProductFromFavorite(accessToken, productId, userId).observe(this@ProductDetailActivity) { result ->
+            productDetailViewModel.removeProductFromFavorite(productId, userId).collect { result ->
                 when (result) {
                     is Result.Loading -> {
 
@@ -381,7 +382,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
 
     private fun addProductToFavorite() {
         lifecycleScope.launch {
-            productDetailViewModel.addProductToFavorite(accessToken, productId, userId).observe(this@ProductDetailActivity) { result ->
+            productDetailViewModel.addProductToFavorite(productId, userId).collect { result ->
                 when (result) {
                     is Result.Loading -> {
 
@@ -398,7 +399,7 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
     }
 
     private fun addProductToTrolly(product: ProductDetailItem?) {
-        if (product?.stock!! > 1) {
+        if (product?.stock!! > 0) {
             lifecycleScope.launch {
                 productDetailViewModel.addProductToTrolley(
                     this@ProductDetailActivity,
@@ -422,12 +423,14 @@ class ProductDetailActivity : AppCompatActivity(), ImageViewPagerAdapter.OnItemC
                         }
                         is RoomResult.Error -> {
                             Toast.makeText(this@ProductDetailActivity, result.message, Toast.LENGTH_SHORT).show()
+                            Log.d("addTrolley", "RoomResult")
                         }
                     }
                 }
             }
         } else {
             Toast.makeText(this, resources.getString(R.string.failed_add_product_to_trolly), Toast.LENGTH_SHORT).show()
+            Log.d("addTrolley", "NoRoomResult")
         }
     }
 

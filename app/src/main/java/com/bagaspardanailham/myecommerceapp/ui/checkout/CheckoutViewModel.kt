@@ -8,6 +8,6 @@ import javax.inject.Inject
 @HiltViewModel
 class CheckoutViewModel @Inject constructor(val repository: EcommerceRepository): ViewModel() {
 
-    suspend fun updateRate(accessToken: String, idProduct: Int?, rate: String) = repository.updateRate(accessToken, idProduct, rate)
+    suspend fun updateRate(idProduct: Int?, rate: String) = repository.updateRate(idProduct, rate)
 
 }

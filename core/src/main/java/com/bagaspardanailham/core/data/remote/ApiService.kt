@@ -30,7 +30,7 @@ interface ApiService {
         @Part("password") password: RequestBody?,
         @Part("phone") phone: RequestBody?,
         @Part("gender") gender: Int,
-        @Part image: MultipartBody.Part?,
+        @Part image: MultipartBody.Part?
     ) : RegisterResponse
 
     @FormUrlEncoded
@@ -73,8 +73,6 @@ interface ApiService {
 
     @GET("api/ecommerce/get_detail_product")
     suspend fun getProductDetail(
-        @Header("apikey") apikey: String,
-        @Header("Authorization") token: String,
         @Query("id_product") idproduct: Int?,
         @Query("id_user") isuser: Int?
     ) : GetProductDetailResponse
@@ -82,8 +80,6 @@ interface ApiService {
     @FormUrlEncoded
     @POST("api/ecommerce/add_favorite")
     suspend fun addFavoriteProduct(
-        @Header("apikey") apikey: String,
-        @Header("Authorization") token: String,
         @Field("id_product") idproduct: Int?,
         @Field("id_user") iduser: Int?
     ) : AddFavoriteResponse
@@ -91,24 +87,18 @@ interface ApiService {
     @FormUrlEncoded
     @POST("api/ecommerce/remove_favorite")
     suspend fun removeFavoriteProduct(
-        @Header("apikey") apikey: String,
-        @Header("Authorization") token: String,
         @Field("id_product") idproduct: Int?,
         @Field("id_user") iduser: Int?
     ) : RemoveFavoriteResponse
 
     @POST("api/ecommerce/update-stock")
     suspend fun updateStock(
-        @Header("apikey") apikey: String,
-        @Header("Authorization") token: String,
         @Body dataStock: DataStock
     ) : UpdateStockResponse
 
     @FormUrlEncoded
     @PUT("api/ecommerce/update_rate/{id_product}")
     suspend fun updateRate(
-        @Header("apikey") apikey: String,
-        @Header("Authorization") token: String,
         @Path("id_product") idproduct: Int?,
         @Field("rate") rate: String
     ) : UpdateRateResponse

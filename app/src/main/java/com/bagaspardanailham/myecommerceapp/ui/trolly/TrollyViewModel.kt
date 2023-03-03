@@ -26,6 +26,6 @@ class TrollyViewModel @Inject constructor(private val repository: EcommerceRepos
 
     suspend fun deleteProductByIdFromTrolly(context: Context, id: Int?) = repository.removeProductByIdFromTrolly(context, id)
 
-    suspend fun updateStock(accessToken: String, data: List<DataStockItem>, idUser: String) =
-        repository.updateStock(accessToken, DataStock(idUser, data))
+    suspend fun updateStock(data: List<DataStockItem>, idUser: String) =
+        repository.updateStock(DataStock(idUser, data))
 }

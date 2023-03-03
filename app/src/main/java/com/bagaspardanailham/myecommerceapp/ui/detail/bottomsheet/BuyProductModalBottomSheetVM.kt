@@ -46,7 +46,7 @@ class BuyProductModalBottomSheetVM @Inject constructor(val repository: Ecommerce
         _price.value = productPrice
     }
 
-    suspend fun updateStock(accessToken: String, idProduct: String, stock: Int?, idUser: String) =
-        repository.updateStock(accessToken, DataStock(idUser, listOf(DataStockItem(idProduct, stock))))
+    suspend fun updateStock(idProduct: String, stock: Int?, idUser: String) =
+        repository.updateStock(DataStock(idUser, listOf(DataStockItem(idProduct, stock))))
 
 }

@@ -20,7 +20,7 @@ import okhttp3.RequestBody
 
 interface EcommerceRepository {
 
-    suspend fun registerUser(name: RequestBody?, email: RequestBody?, password: RequestBody?, phone: RequestBody?, image: MultipartBody.Part?, gender: Int): Flow<Result<RegisterResponse>>
+    suspend fun registerUser(name: RequestBody?, email: RequestBody?, password: RequestBody?, phone: RequestBody?, gender: Int, image: MultipartBody.Part?): Flow<Result<RegisterResponse>>
 
     suspend fun loginUser(email: String, password: String, tokenFcm: String): Flow<Result<LoginResponse>>
 
@@ -34,15 +34,15 @@ interface EcommerceRepository {
 
     suspend fun getFavoriteProductList(query: String?, id: Int): Flow<Result<GetFavoriteProductListResponse>>
 
-    suspend fun getProductDetail(accessToken: String, idProduct: Int?, idUser: Int?) : LiveData<Result<GetProductDetailResponse>>
+    suspend fun getProductDetail(idProduct: Int?, idUser: Int?) : Flow<Result<GetProductDetailResponse>>
 
-    suspend fun addProductToFavorite(accessToken: String, idProduct: Int?, idUser: Int?): LiveData<Result<AddFavoriteResponse>>
+    suspend fun addProductToFavorite(idProduct: Int?, idUser: Int?): Flow<Result<AddFavoriteResponse>>
 
-    suspend fun removeProductFromFavorite(accessToken: String, idProduct: Int?, idUser: Int?): LiveData<Result<RemoveFavoriteResponse>>
+    suspend fun removeProductFromFavorite(idProduct: Int?, idUser: Int?): Flow<Result<RemoveFavoriteResponse>>
 
-    suspend fun updateStock(accessToken: String, data: DataStock): LiveData<Result<UpdateStockResponse>>
+    suspend fun updateStock(data: DataStock): Flow<Result<UpdateStockResponse>>
 
-    suspend fun updateRate(accessToken: String, idProduct: Int?, rate: String): LiveData<Result<UpdateRateResponse>>
+    suspend fun updateRate(idProduct: Int?, rate: String): Flow<Result<UpdateRateResponse>>
 
 
     // Call Room Database
@@ -66,9 +66,9 @@ interface EcommerceRepository {
 
     fun getProductListPaging(search: String?): LiveData<PagingData<ProductListPagingItem>>
 
-    fun getOtherProductList(idUser: Int?): LiveData<Result<GetOtherProductListResponse>>
+    suspend fun getOtherProductList(idUser: Int?): Flow<Result<GetOtherProductListResponse>>
 
-    fun getProductSearchHistory(idUser: Int?): LiveData<Result<GetProductSearchHistoryResponse>>
+    suspend fun getProductSearchHistory(idUser: Int?): Flow<Result<GetProductSearchHistoryResponse>>
 
     fun countDataById(id: Int?, name: String?): Int
 

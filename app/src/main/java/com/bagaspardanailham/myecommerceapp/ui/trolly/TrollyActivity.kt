@@ -217,7 +217,7 @@ class TrollyActivity : AppCompatActivity() {
                         lifecycleScope.launch {
                             if (choosenPaymentId != "null") {
                                 val idUser = authViewModel.getUserPref().first()?.id.toString()
-                                trollyViewModel.updateStock(accessToken, dataStockItems, idUser).observe(this@TrollyActivity) { buyResult ->
+                                trollyViewModel.updateStock(dataStockItems, idUser).collect { buyResult ->
                                     when (buyResult) {
                                         is Result.Loading -> {
 
