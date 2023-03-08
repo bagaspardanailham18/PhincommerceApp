@@ -4,11 +4,12 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.bagaspardanailham.core.data.repository.EcommerceRepository
 import com.bagaspardanailham.core.data.local.model.TrolleyEntity
+import com.bagaspardanailham.core.data.repository.LocalRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ProductDetailViewModel @Inject constructor(private val repository: EcommerceRepository): ViewModel() {
+class ProductDetailViewModel @Inject constructor(private val repository: EcommerceRepository, private val localRepository: LocalRepository): ViewModel() {
 
     suspend fun getProductDetail(idProduct: Int?, idUser: Int?) = repository.getProductDetail(idProduct, idUser)
 
@@ -16,11 +17,11 @@ class ProductDetailViewModel @Inject constructor(private val repository: Ecommer
 
     suspend fun removeProductFromFavorite(idProduct: Int?, idUser: Int?) = repository.removeProductFromFavorite(idProduct, idUser)
 
-    suspend fun addProductToTrolley(context: Context, dataProduct: TrolleyEntity) = repository.addProductToTrolly(context, dataProduct)
+    suspend fun addProductToTrolley(context: Context, dataProduct: TrolleyEntity) = localRepository.addProductToTrolly(context, dataProduct)
 
-    fun getProductById(idProduct: Int?) = repository.getProductById(idProduct)
+    fun getProductById(idProduct: Int?) = localRepository.getProductById(idProduct)
 
-    fun countDataById(id: Int?, name: String?): Int = repository.countDataById(id, name)
+    fun countDataById(id: Int?, name: String?): Int = localRepository.countDataById(id, name)
 
     suspend fun getOtherProducts(idUser: Int?) = repository.getOtherProductList(idUser)
 

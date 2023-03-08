@@ -103,7 +103,6 @@ class FavoriteFragment : Fragment() {
 
     private fun setProductData(query: String?, sort: Int) {
         lifecycleScope.launch {
-            val token = authViewModel.getUserPref().first()?.authTokenKey.toString()
             val userId = authViewModel.getUserPref().first()?.id.toString().toInt()
             if (query.toString().isNotEmpty()) {
 
@@ -226,7 +225,6 @@ class FavoriteFragment : Fragment() {
                 intent.putExtra(ProductDetailActivity.EXTRA_ID, data.id)
                 startActivity(intent)
             }
-
         })
     }
 
@@ -255,14 +253,6 @@ class FavoriteFragment : Fragment() {
                 dialog.dismiss()
             }
             .show()
-    }
-
-    private fun showFabFilterState(state: Boolean) {
-        if (state) {
-            binding?.floatingBtnFilter?.visibility = View.VISIBLE
-        } else  {
-            binding?.floatingBtnFilter?.hide()
-        }
     }
 
     private fun shimmerVisibility(isVisible: Boolean) {

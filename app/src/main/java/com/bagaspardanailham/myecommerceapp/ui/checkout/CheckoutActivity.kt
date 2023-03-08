@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bagaspardanailham.core.data.Result
 import com.bagaspardanailham.core.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.databinding.ActivityCheckoutBinding
-import com.bagaspardanailham.myecommerceapp.ui.MainActivity
+import com.bagaspardanailham.myecommerceapp.ui.main.MainActivity
 import com.bagaspardanailham.core.utils.Constant
 import com.bagaspardanailham.core.utils.setPaymentImg
 import com.bagaspardanailham.core.utils.setVisibility

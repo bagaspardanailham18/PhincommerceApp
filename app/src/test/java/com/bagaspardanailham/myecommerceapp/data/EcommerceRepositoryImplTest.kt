@@ -59,9 +59,6 @@ class EcommerceRepositoryImplTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
-
     private lateinit var ecommerceRepositoryImpl: EcommerceRepositoryImpl
 
     @Mock
@@ -78,8 +75,7 @@ class EcommerceRepositoryImplTest {
 
     @Before
     fun setUp() {
-        ecommerceDatabase =
-            Room.inMemoryDatabaseBuilder(context, EcommerceDatabase::class.java).build()
+        ecommerceDatabase = Room.inMemoryDatabaseBuilder(context, EcommerceDatabase::class.java).build()
         ecommerceRepositoryImpl = EcommerceRepositoryImpl(apiService, ecommerceDatabase)
     }
 
@@ -247,6 +243,27 @@ class EcommerceRepositoryImplTest {
         val token = "token"
 
         Mockito.`when`(apiService.loginUser(email, pass, token)).thenThrow(HttpException(response))
+
+        val resultFlow = ecommerceRepositoryImpl.loginUser(
+            email,
+            pass,
+            token
+        )
+
+        resultFlow.test {
+            assertTrue(awaitItem() is Result.Loading)
+            assertTrue(awaitItem() is Result.Error)
+            awaitComplete()
+        }
+    }
+
+    @Test
+    fun `when login Error RunTimeException`() = runTest {
+        val email = "bagass@gmail.com"
+        val pass = "654321"
+        val token = "token"
+
+        Mockito.`when`(apiService.loginUser(email, pass, token)).thenThrow(RuntimeException())
 
         val resultFlow = ecommerceRepositoryImpl.loginUser(
             email,
@@ -752,7 +769,7 @@ class EcommerceRepositoryImplTest {
         val actual = ecommerceRepositoryImpl.getOtherProductList(0)
 
         actual.test {
-            assertTrue(awaitItem() is Result.Loading)
+            assertEquals(awaitItem(), Result.Loading)
             val data = awaitItem() as Result.Success
             assertEquals(dataDummy, data.data)
             awaitComplete()

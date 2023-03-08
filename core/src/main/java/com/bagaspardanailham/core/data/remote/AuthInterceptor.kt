@@ -1,10 +1,7 @@
 package com.bagaspardanailham.core.data.remote
 
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -16,7 +13,9 @@ class AuthInterceptor @Inject constructor(private val tokenManager: TokenManager
         val originalRequest = chain.request()
 
         val token = runBlocking {
-            tokenManager.getAuthToken().first()
+            withContext(Dispatchers.IO) {
+                tokenManager.getAuthToken().first()
+            }
         }
 
         val requestBuilder = originalRequest.newBuilder()

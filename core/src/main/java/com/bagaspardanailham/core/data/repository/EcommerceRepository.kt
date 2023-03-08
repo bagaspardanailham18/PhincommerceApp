@@ -44,51 +44,10 @@ interface EcommerceRepository {
 
     suspend fun updateRate(idProduct: Int?, rate: String): Flow<Result<UpdateRateResponse>>
 
-
-    // Call Room Database
-    suspend fun addProductToTrolly(context: Context, dataProduct: TrolleyEntity): LiveData<RoomResult<String>>
-
-    fun getAllProductFromTrolly(): LiveData<List<TrolleyEntity>>
-
-    fun getAllCheckedProductFromTrolly(): LiveData<List<TrolleyEntity>>
-
-    fun getProductById(id: Int?): LiveData<List<TrolleyEntity>>
-
-    suspend fun updateProductData(id: Int?, itemTotalPrice: Int?, quantity: Int?)
-
-    suspend fun updateProductIsCheckedAll(isChecked: Boolean)
-
-    suspend fun updateProductIsCheckedById(id: Int?, isChecked: Boolean)
-
-    fun removeProductFromTrolly(context: Context, data: TrolleyEntity): LiveData<RoomResult<String>>
-
-    suspend fun removeProductByIdFromTrolly(context: Context, id: Int?)
-
-    fun getProductListPaging(search: String?): LiveData<PagingData<ProductListPagingItem>>
+    suspend fun getProductListPaging(search: String?): LiveData<PagingData<ProductListPagingItem>>
 
     suspend fun getOtherProductList(idUser: Int?): Flow<Result<GetOtherProductListResponse>>
 
     suspend fun getProductSearchHistory(idUser: Int?): Flow<Result<GetProductSearchHistoryResponse>>
-
-    fun countDataById(id: Int?, name: String?): Int
-
-
-    // Notification
-    suspend fun insertNotification(data: NotificationEntity)
-
-    fun getAllNotification(): Flow<List<NotificationEntity>>
-
-    suspend fun updateNotificationIsRead(isRead: Boolean, id: Int?)
-
-    suspend fun setMultipleNotificationIsRead(isRead: Boolean)
-
-    suspend fun updateNotificationIsChecked(isChecked: Boolean, id: Int?)
-
-    suspend fun setAllUnchecked(isChecked: Boolean = false)
-
-    suspend fun deleteNotification(isChecked: Boolean)
-
-    suspend fun getIsCheckedSize(): Int
-
 
 }

@@ -3,12 +3,9 @@ package com.bagaspardanailham.myecommerceapp.ui.main.profile
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.bagaspardanailham.myecommerceapp.R
 import com.bagaspardanailham.core.data.Result
 import com.bagaspardanailham.core.data.repository.FirebaseAnalyticsRepository
@@ -18,11 +15,10 @@ import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.bagaspardanailham.core.data.remote.response.ErrorResponse
 import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog
-import com.bagaspardanailham.myecommerceapp.ui.MainActivity
+import com.bagaspardanailham.myecommerceapp.ui.main.MainActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject

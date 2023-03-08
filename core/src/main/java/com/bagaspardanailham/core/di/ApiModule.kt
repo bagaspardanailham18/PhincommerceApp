@@ -31,11 +31,11 @@ class ApiModule {
         }
 
         return OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
-            .addInterceptor(authInterceptor)
-            .addInterceptor(authErrorInterceptor)
-            .addInterceptor(networkErrorInterceptor)
-            .authenticator(authAuthenticator)
+            .addInterceptor(loggingInterceptor) // Debug
+            .addInterceptor(authInterceptor) // Set header
+            .addInterceptor(authErrorInterceptor) // Catch Response Error
+            .addInterceptor(networkErrorInterceptor) // No Internet connection
+            .authenticator(authAuthenticator) // Refresh Token
             .build()
     }
 

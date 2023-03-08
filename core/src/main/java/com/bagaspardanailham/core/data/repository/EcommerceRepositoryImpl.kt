@@ -24,8 +24,10 @@ import com.bagaspardanailham.core.data.remote.response.product.*
 import com.bagaspardanailham.core.data.remote.response.profile.ChangeImageResponse
 import com.bagaspardanailham.core.data.remote.response.profile.ChangePasswordResponse
 import com.bagaspardanailham.core.data.repository.EcommerceRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okio.IOException
@@ -36,10 +38,6 @@ import javax.inject.Singleton
 @Singleton
 class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiService, private val ecommerceDatabase: EcommerceDatabase):
     EcommerceRepository {
-
-    companion object {
-        const val API_KEY = "TuIBt77u7tZHi8n7WqUC"
-    }
 
     override suspend fun registerUser(name: RequestBody?, email: RequestBody?, password: RequestBody?, phone: RequestBody?,gender: Int, image: MultipartBody.Part?): Flow<Result<RegisterResponse>> = flow {
         emit(Result.Loading)
@@ -58,7 +56,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
                 }
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun loginUser(email: String, password: String, tokenFcm: String): Flow<Result<LoginResponse>> = flow {
         emit(Result.Loading)
@@ -81,7 +79,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
                 )
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun changePassword(id: Int, pass: String, newPass: String, confirmNewPass: String): Flow<Result<ChangePasswordResponse>> = flow {
         emit(Result.Loading)
@@ -104,7 +102,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
                 )
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
 
 
@@ -129,7 +127,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
                 )
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
 
     // Product
@@ -187,7 +185,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
                 )
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun getProductDetail(idProduct: Int?, idUser: Int?) : Flow<Result<GetProductDetailResponse>> = flow {
         emit(Result.Loading)
@@ -210,7 +208,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
                 )
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun addProductToFavorite(idProduct: Int?, idUser: Int?): Flow<Result<AddFavoriteResponse>> = flow {
         emit(Result.Loading)
@@ -233,7 +231,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
                 )
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun removeProductFromFavorite(idProduct: Int?, idUser: Int?): Flow<Result<RemoveFavoriteResponse>> = flow {
         emit(Result.Loading)
@@ -256,7 +254,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
                 )
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun updateStock(data: DataStock): Flow<Result<UpdateStockResponse>> = flow {
         emit(Result.Loading)
@@ -279,7 +277,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
                 )
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun updateRate(idProduct: Int?, rate: String): Flow<Result<UpdateRateResponse>> = flow {
         emit(Result.Loading)
@@ -302,60 +300,9 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
                 )
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
-
-    // Call Room Database
-    override suspend fun addProductToTrolly(context: Context, dataProduct: TrolleyEntity): LiveData<RoomResult<String>> = liveData {
-        emit(RoomResult.Loading)
-        try {
-            ecommerceDatabase.ecommerceDao().addProductToTrolley(dataProduct)
-            emit(RoomResult.Success(context.resources.getString(R.string.success_add_product_to_trolly)))
-        } catch (e: Exception) {
-            emit(RoomResult.Error(context.resources.getString(R.string.failed_add_product_to_trolly)))
-        }
-    }
-
-    override fun getAllProductFromTrolly(): LiveData<List<TrolleyEntity>> {
-        return ecommerceDatabase.ecommerceDao().getAllProduct()
-    }
-
-    override fun getAllCheckedProductFromTrolly(): LiveData<List<TrolleyEntity>> {
-        return ecommerceDatabase.ecommerceDao().getAllCheckedProduct()
-    }
-
-    override fun getProductById(id: Int?): LiveData<List<TrolleyEntity>> {
-        return ecommerceDatabase.ecommerceDao().getProductById(id)
-    }
-
-    override suspend fun updateProductData(id: Int?, itemTotalPrice: Int?, quantity: Int?) {
-        ecommerceDatabase.ecommerceDao().updateProductData(quantity, itemTotalPrice, id)
-    }
-
-    override suspend fun updateProductIsCheckedAll(isChecked: Boolean) {
-        ecommerceDatabase.ecommerceDao().updateProductIsCheckedAll(isChecked)
-    }
-
-    override suspend fun updateProductIsCheckedById(id: Int?, isChecked: Boolean) {
-        ecommerceDatabase.ecommerceDao().updateProductIsCheckedById(isChecked, id)
-    }
-
-    override fun removeProductFromTrolly(context: Context, data: TrolleyEntity): LiveData<RoomResult<String>> = liveData {
-        emit(RoomResult.Loading)
-        try {
-            ecommerceDatabase.ecommerceDao()
-                .deleteProductFromTrolly(data)
-            emit(RoomResult.Success(context.resources.getString(R.string.success_remove_product_from_trolly)))
-        } catch (e: Exception) {
-            emit(RoomResult.Success(context.resources.getString(R.string.success_remove_product_from_trolly)))
-        }
-    }
-
-    override suspend fun removeProductByIdFromTrolly(context: Context, id: Int?) {
-        ecommerceDatabase.ecommerceDao().deleteProductByIdFromTrolly(id)
-    }
-
-    override fun getProductListPaging(search: String?): LiveData<PagingData<ProductListPagingItem>> {
+    override suspend fun getProductListPaging(search: String?): LiveData<PagingData<ProductListPagingItem>> {
         return Pager(
             config = PagingConfig(
                 initialLoadSize = 5,
@@ -389,7 +336,7 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
                 )
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun getProductSearchHistory(idUser: Int?): Flow<Result<GetProductSearchHistoryResponse>> = flow {
         emit(Result.Loading)
@@ -412,44 +359,6 @@ class EcommerceRepositoryImpl @Inject constructor(private val apiService: ApiSer
                 )
             }
         }
-    }
-
-    override fun countDataById(id: Int?, name: String?): Int {
-        return ecommerceDatabase.ecommerceDao().countDataById(id, name)
-    }
-
-
-    // Notification
-    override suspend fun insertNotification(data: NotificationEntity) {
-        ecommerceDatabase.notificationDao().insertNotification(data)
-    }
-
-    override fun getAllNotification(): Flow<List<NotificationEntity>> {
-        return ecommerceDatabase.notificationDao().getAllNotification()
-    }
-
-    override suspend fun updateNotificationIsRead(isRead: Boolean, id: Int?) {
-        ecommerceDatabase.notificationDao().updateNotificationIsRead(isRead, id)
-    }
-
-    override suspend fun setMultipleNotificationIsRead(isRead: Boolean) {
-        ecommerceDatabase.notificationDao().setMultipleNotificationIsRead(isRead)
-    }
-
-    override suspend fun updateNotificationIsChecked(isChecked: Boolean, id: Int?) {
-        ecommerceDatabase.notificationDao().updateNotificationIsChecked(isChecked, id)
-    }
-
-    override suspend fun setAllUnchecked(isChecked: Boolean) {
-        ecommerceDatabase.notificationDao().setAllUnchecked(isChecked)
-    }
-
-    override suspend fun deleteNotification(isChecked: Boolean) {
-        ecommerceDatabase.notificationDao().deleteNotification(isChecked)
-    }
-
-    override suspend fun getIsCheckedSize(): Int {
-        return ecommerceDatabase.notificationDao().getIsCheckedSize()
-    }
+    }.flowOn(Dispatchers.IO)
 
 }

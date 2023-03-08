@@ -104,7 +104,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan">
             <meta-data

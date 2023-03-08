@@ -18,17 +18,15 @@ import kotlinx.coroutines.launch
 import com.bagaspardanailham.core.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.databinding.FragmentLoginBinding
 import com.bagaspardanailham.myecommerceapp.ui.LoadingDialog
-import com.bagaspardanailham.myecommerceapp.ui.MainActivity
+import com.bagaspardanailham.myecommerceapp.ui.main.MainActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import kotlinx.coroutines.delay
 import org.json.JSONObject
 import javax.inject.Inject
 import com.bagaspardanailham.core.data.Result
 import com.bagaspardanailham.core.data.remote.response.ErrorResponse
-import org.json.JSONException
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -122,18 +120,17 @@ class LoginFragment : Fragment() {
                                                 viewModel.saveToken(authToken, refreshToken, id, name, email, phone, gender, imgPath)
                                             }
 
-                                            Log.d("AuthToken", "Auth Token : $authToken")
                                             Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show()
-                                            Log.d("pref", """
-                                            authToken : $authToken,
-                                            refreshToken : $refreshToken,
-                                            id : $id,
-                                            name : $name,
-                                            email : $email,
-                                            phone : $phone,
-                                            gender : $gender,
-                                            imgPath : $imgPath
-                                        """.trimIndent())
+//                                            Log.d("pref", """
+//                                            authToken : $authToken,
+//                                            refreshToken : $refreshToken,
+//                                            id : $id,
+//                                            name : $name,
+//                                            email : $email,
+//                                            phone : $phone,
+//                                            gender : $gender,
+//                                            imgPath : $imgPath
+//                                        """.trimIndent())
                                         }
 
                                         val intent = Intent(requireActivity(), MainActivity::class.java)

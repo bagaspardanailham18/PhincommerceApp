@@ -1,4 +1,4 @@
-package com.bagaspardanailham.myecommerceapp.ui
+package com.bagaspardanailham.myecommerceapp.ui.main
 
 import android.content.Intent
 import android.content.res.Configuration

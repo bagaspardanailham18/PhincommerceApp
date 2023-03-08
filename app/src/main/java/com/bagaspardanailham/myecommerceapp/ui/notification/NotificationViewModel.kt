@@ -1,28 +1,28 @@
 package com.bagaspardanailham.myecommerceapp.ui.notification
 
 import androidx.lifecycle.ViewModel
-import com.bagaspardanailham.core.data.repository.EcommerceRepository
 import com.bagaspardanailham.core.data.local.model.NotificationEntity
+import com.bagaspardanailham.core.data.repository.LocalRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
-class NotificationViewModel @Inject constructor(private val repository: EcommerceRepository): ViewModel() {
+class NotificationViewModel @Inject constructor(private val localRepository: LocalRepository): ViewModel() {
 
-    fun getAllNotification(): Flow<List<NotificationEntity>> = repository.getAllNotification()
+    fun getAllNotification(): Flow<List<NotificationEntity>> = localRepository.getAllNotification()
 
-    suspend fun insertNotification(data: NotificationEntity) = repository.insertNotification(data)
+    suspend fun insertNotification(data: NotificationEntity) = localRepository.insertNotification(data)
 
-    suspend fun updateNotificationIsRead(isRead: Boolean, id: Int?) = repository.updateNotificationIsRead(isRead, id)
+    suspend fun updateNotificationIsRead(isRead: Boolean, id: Int?) = localRepository.updateNotificationIsRead(isRead, id)
 
-    suspend fun setMultipleNotificationIsRead(isRead: Boolean) = repository.setMultipleNotificationIsRead(isRead)
+    suspend fun setMultipleNotificationIsRead(isRead: Boolean) = localRepository.setMultipleNotificationIsRead(isRead)
 
-    suspend fun updateNotificationIsChecked(isChecked: Boolean, id: Int?) = repository.updateNotificationIsChecked(isChecked, id)
+    suspend fun updateNotificationIsChecked(isChecked: Boolean, id: Int?) = localRepository.updateNotificationIsChecked(isChecked, id)
 
-    suspend fun setAllUnchecked() = repository.setAllUnchecked()
+    suspend fun setAllUnchecked() = localRepository.setAllUnchecked()
 
-    suspend fun deleteNotification(isChecked: Boolean) = repository.deleteNotification(isChecked)
+    suspend fun deleteNotification(isChecked: Boolean) = localRepository.deleteNotification(isChecked)
 
-    suspend fun getIsCheckedSize() = repository.getIsCheckedSize()
+    suspend fun getIsCheckedSize() = localRepository.getIsCheckedSize()
 }

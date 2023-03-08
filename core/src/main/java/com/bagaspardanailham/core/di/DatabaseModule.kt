@@ -6,6 +6,8 @@ import com.bagaspardanailham.core.data.local.room.NotificationDao
 import com.bagaspardanailham.core.data.remote.ApiService
 import com.bagaspardanailham.core.data.repository.EcommerceRepository
 import com.bagaspardanailham.core.data.repository.EcommerceRepositoryImpl
+import com.bagaspardanailham.core.data.repository.LocalRepository
+import com.bagaspardanailham.core.data.repository.LocalRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,6 +31,9 @@ class DatabaseModule {
     }
 
     @Provides
-    fun provideRepository(apiService: ApiService, ecommerceDatabase: EcommerceDatabase): EcommerceRepository = EcommerceRepositoryImpl(apiService, ecommerceDatabase)
+    fun provideRemoteRepository(apiService: ApiService, ecommerceDatabase: EcommerceDatabase): EcommerceRepository = EcommerceRepositoryImpl(apiService, ecommerceDatabase)
+
+    @Provides
+    fun provideLocalRepository(ecommerceDatabase: EcommerceDatabase): LocalRepository = LocalRepositoryImpl(ecommerceDatabase)
 
 }

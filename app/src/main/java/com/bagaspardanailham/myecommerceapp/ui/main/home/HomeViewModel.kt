@@ -13,7 +13,7 @@ class HomeViewModel @Inject constructor(private val repository: EcommerceReposit
 
     //suspend fun getProductList(token: String, query: String?) = repository.getProductList(token, query)
 
-    fun getProductListPaging(query: String?) = repository.getProductListPaging(query).cachedIn(viewModelScope)
+    suspend fun getProductListPaging(query: String?) = repository.getProductListPaging(query).cachedIn(viewModelScope)
 
 
 }

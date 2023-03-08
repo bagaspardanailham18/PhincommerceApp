@@ -164,33 +164,6 @@ class RegisterFragment : Fragment() {
 
     }
 
-//    private val launcherIntentCamera = registerForActivityResult(
-//        ActivityResultContracts.StartActivityForResult()
-//    ) {
-//        if (it.resultCode == RESULT_OK) {
-//            val imageBitmap = it.data?.extras?.get("data") as Bitmap
-//            binding?.tvUserImg?.setImageBitmap(imageBitmap)
-//        }
-//    }
-
-//    private val requestPermissionLauncher =
-//        registerForActivityResult(
-//            ActivityResultContracts.RequestMultiplePermissions()
-//        ) { permission ->
-//            when {
-//                permission[Manifest.permission.CAMERA] ?: false -> {
-//                    getImgFromCamera()
-//                }
-//            }
-//        }
-//
-//    private fun checkSelfPermission(permission: String): Boolean {
-//        return ContextCompat.checkSelfPermission(
-//            requireActivity(),
-//            permission
-//        ) == PackageManager.PERMISSION_GRANTED
-//    }
-
     private fun getImgFromCamera() {
         val intent = Intent(requireActivity(), CameraActivity::class.java)
         launcherIntentCameraX.launch(intent)
@@ -207,13 +180,7 @@ class RegisterFragment : Fragment() {
 
             val myFile = reduceFileImage(it.data?.getSerializableExtra("picture") as File, isBackCamera)
 
-//            val result = rotateBitmap(
-//                BitmapFactory.decodeFile(myFile.path),
-//                isBackCamera
-//            )
-
             getFile = myFile
-            //binding?.tvUserImgPrev?.setImageBitmap(result)
             Glide.with(requireActivity())
                 .load(myFile)
                 .into(binding?.tvUserImgPrev!!)
@@ -260,7 +227,6 @@ class RegisterFragment : Fragment() {
             Glide.with(requireActivity())
                 .load(selectedImg)
                 .into(binding?.tvUserImgPrev!!)
-            //binding?.tvUserImgPrev?.setImageURI(selectedImg)
 
             //analiytics
             imageSource = "gallery"
@@ -325,10 +291,6 @@ class RegisterFragment : Fragment() {
                             requestImageFile
                         )
 
-                        Log.d("register", """
-                        MyFile: ${getFile}
-                    """.trimIndent())
-
                         lifecycleScope.launch {
                             registerViewModel.registerUser(
                                 email.toRequestBody("text/plain".toMediaType()),
@@ -342,7 +304,7 @@ class RegisterFragment : Fragment() {
                                     is Result.Success -> {
                                         loading.isDismiss()
                                         showSuccessDialog()
-                                        Toast.makeText(requireActivity(), result.data.success?.message, Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(requireActivity(), result.data.success.message, Toast.LENGTH_SHORT).show()
                                     }
                                     is Result.Error -> {
                                         loading.isDismiss()
@@ -372,7 +334,7 @@ class RegisterFragment : Fragment() {
                                     is Result.Success -> {
                                         loading.isDismiss()
                                         showSuccessDialog()
-                                        Toast.makeText(requireActivity(), result.data.success?.message, Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(requireActivity(), result.data.success.message, Toast.LENGTH_SHORT).show()
                                     }
                                     is Result.Error -> {
                                         loading.isDismiss()

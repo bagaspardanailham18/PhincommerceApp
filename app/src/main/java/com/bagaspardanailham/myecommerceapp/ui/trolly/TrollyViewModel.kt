@@ -6,26 +6,27 @@ import com.bagaspardanailham.core.data.DataStock
 import com.bagaspardanailham.core.data.DataStockItem
 import com.bagaspardanailham.core.data.repository.EcommerceRepository
 import com.bagaspardanailham.core.data.local.model.TrolleyEntity
+import com.bagaspardanailham.core.data.repository.LocalRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class TrollyViewModel @Inject constructor(private val repository: EcommerceRepository): ViewModel() {
+class TrollyViewModel @Inject constructor(private val localRepository: LocalRepository, private val ecommerceRepository: EcommerceRepository): ViewModel() {
 
-    fun getAllProductFromTrolly() = repository.getAllProductFromTrolly()
+    fun getAllProductFromTrolly() = localRepository.getAllProductFromTrolly()
 
-    fun getAllCheckedProductFromTrolly() = repository.getAllCheckedProductFromTrolly()
+    fun getAllCheckedProductFromTrolly() = localRepository.getAllCheckedProductFromTrolly()
 
-    suspend fun updateProductQuantity(id: Int?, itemTotalPrice: Int?, quantity: Int?) = repository.updateProductData(id, itemTotalPrice, quantity)
+    suspend fun updateProductQuantity(id: Int?, itemTotalPrice: Int?, quantity: Int?) = localRepository.updateProductData(id, itemTotalPrice, quantity)
 
-    suspend fun updateProductIsCheckedAll(isChecked: Boolean) = repository.updateProductIsCheckedAll(isChecked)
+    suspend fun updateProductIsCheckedAll(isChecked: Boolean) = localRepository.updateProductIsCheckedAll(isChecked)
 
-    suspend fun updateProductIsCheckedById(id: Int?, isChecked: Boolean) = repository.updateProductIsCheckedById(id, isChecked)
+    suspend fun updateProductIsCheckedById(id: Int?, isChecked: Boolean) = localRepository.updateProductIsCheckedById(id, isChecked)
 
-    fun deleteProductFromTrolly(context: Context, data: TrolleyEntity) = repository.removeProductFromTrolly(context, data)
+    fun deleteProductFromTrolly(context: Context, data: TrolleyEntity) = localRepository.removeProductFromTrolly(context, data)
 
-    suspend fun deleteProductByIdFromTrolly(context: Context, id: Int?) = repository.removeProductByIdFromTrolly(context, id)
+    suspend fun deleteProductByIdFromTrolly(context: Context, id: Int?) = localRepository.removeProductByIdFromTrolly(context, id)
 
     suspend fun updateStock(data: List<DataStockItem>, idUser: String) =
-        repository.updateStock(DataStock(idUser, data))
+        ecommerceRepository.updateStock(DataStock(idUser, data))
 }

@@ -5,33 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout2"
-        android:layout_width="0dp"
-        android:layout_height="?actionBarSize"
-        android:background="@color/background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/custom_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/tv_toolbar_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppinsbold"
-                tools:text="Product Name"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-        </com.google.android.material.appbar.MaterialToolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -44,188 +17,321 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ScrollView
+            <me.didik.component.StickyNestedScrollView
                 android:id="@+id/scrollView"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="?actionBarSize"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:paddingBottom="?actionBarSize"
+                tools:context="me.didik.stickynestedscrollview.MainActivity"
+                tools:showIn="@layout/activity_product_detail"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="50dp">
+                    android:orientation="vertical">
 
-                    <!--            <com.google.android.material.card.MaterialCardView-->
-                    <!--                android:id="@+id/tv_img_carousel"-->
-                    <!--                android:layout_width="0dp"-->
-                    <!--                android:layout_height="194dp"-->
-                    <!--                android:layout_marginStart="18dp"-->
-                    <!--                android:layout_marginTop="28dp"-->
-                    <!--                android:layout_marginEnd="18dp"-->
-                    <!--                app:cardBackgroundColor="@color/background"-->
-                    <!--                app:cardCornerRadius="10dp"-->
-                    <!--                app:layout_constraintEnd_toEndOf="parent"-->
-                    <!--                app:layout_constraintStart_toStartOf="parent"-->
-                    <!--                app:layout_constraintTop_toTopOf="parent">-->
-
-                    <!--            </com.google.android.material.card.MaterialCardView>-->
-
-                    <androidx.viewpager.widget.ViewPager
-                        android:id="@+id/img_slider_viewpager"
-                        android:layout_width="0dp"
-                        android:layout_height="500dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-                        android:id="@+id/dots_indicator"
-                        android:layout_width="wrap_content"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        app:dotsColor="@color/lighter_grey"
-                        app:dotsCornerRadius="8dp"
-                        app:dotsSize="8dp"
-                        app:dotsSpacing="4dp"
-                        app:dotsWidthFactor="2.5"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/img_slider_viewpager"
-                        app:progressMode="true"
-                        app:selectedDotColor="@color/background" />
+                        android:paddingBottom="50dp">
 
-                    <TextView
-                        android:id="@+id/tv_product_name"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="28dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="8dp"
-                        android:fontFamily="@font/poppinsregular"
-                        android:maxLines="4"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        app:layout_constraintEnd_toStartOf="@+id/tv_product_price"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/dots_indicator"
-                        tools:text="Jam Tangan" />
+                        <!--            <com.google.android.material.card.MaterialCardView-->
+                        <!--                android:id="@+id/tv_img_carousel"-->
+                        <!--                android:layout_width="0dp"-->
+                        <!--                android:layout_height="194dp"-->
+                        <!--                android:layout_marginStart="18dp"-->
+                        <!--                android:layout_marginTop="28dp"-->
+                        <!--                android:layout_marginEnd="18dp"-->
+                        <!--                app:cardBackgroundColor="@color/background"-->
+                        <!--                app:cardCornerRadius="10dp"-->
+                        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+                        <!--                app:layout_constraintStart_toStartOf="parent"-->
+                        <!--                app:layout_constraintTop_toTopOf="parent">-->
 
-                    <TextView
-                        android:id="@+id/tv_product_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="28dp"
-                        android:fontFamily="@font/poppinsbold"
-                        android:textColor="@color/black"
-                        android:textSize="20sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_product_name"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/tv_product_name"
-                        tools:text="Rp 10.000" />
+                        <!--            </com.google.android.material.card.MaterialCardView>-->
 
-                    <androidx.appcompat.widget.AppCompatRatingBar
-                        android:id="@+id/tv_product_rating"
-                        style="@style/Widget.AppCompat.RatingBar.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:theme="@style/RatingBar"
-                        app:layout_constraintStart_toStartOf="@+id/tv_product_name"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_product_name" />
+                        <androidx.viewpager.widget.ViewPager
+                            android:id="@+id/img_slider_viewpager"
+                            android:layout_width="0dp"
+                            android:layout_height="500dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/textView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="27dp"
-                        android:fontFamily="@font/poppinsmedium"
-                        android:text="Detail Product"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-                        app:layout_constraintStart_toStartOf="@+id/tv_product_rating"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_product_rating" />
-
-                    <androidx.appcompat.widget.AppCompatToggleButton
-                        android:id="@+id/btn_toggle_favorite"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/toggle_favorite"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:src="@drawable/ic_baseline_favorite_24"
-                        android:textOff=""
-                        android:textOn=""
-                        app:layout_constraintBottom_toBottomOf="@+id/textView2"
-                        app:layout_constraintEnd_toEndOf="@+id/tv_product_price"
-                        app:layout_constraintTop_toTopOf="@+id/textView2" />
-
-                    <View
-                        android:id="@+id/view"
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:layout_marginStart="11dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="11dp"
-                        android:background="@color/lighter_grey"
-                        android:backgroundTint="@color/lighter_grey"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-                    <GridLayout
-                        android:id="@+id/gridLayout"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:columnCount="2"
-                        app:layout_constraintEnd_toEndOf="@+id/btn_toggle_favorite"
-                        app:layout_constraintStart_toStartOf="@+id/textView2"
-                        app:layout_constraintTop_toBottomOf="@+id/view">
-
-                        <TableLayout
+                        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                            android:id="@+id/dots_indicator"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_rowWeight="1">
+                            android:layout_marginTop="8dp"
+                            app:dotsColor="@color/lighter_grey"
+                            app:dotsCornerRadius="8dp"
+                            app:dotsSize="8dp"
+                            app:dotsSpacing="4dp"
+                            app:dotsWidthFactor="2.5"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/img_slider_viewpager"
+                            app:progressMode="true"
+                            app:selectedDotColor="@color/background" />
 
-                            <TableRow
-                                android:layout_width="fill_parent"
-                                android:layout_height="fill_parent">
+                        <TextView
+                            android:id="@+id/tv_product_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="28dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginEnd="8dp"
+                            android:fontFamily="@font/poppinsregular"
+                            android:maxLines="4"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            app:layout_constraintEnd_toStartOf="@+id/tv_product_price"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/dots_indicator"
+                            tools:text="Jam Tangan" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_column="1"
-                                    android:fontFamily="@font/poppinsregular"
-                                    android:text="@string/weight_string"
-                                    android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/tv_product_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="28dp"
+                            android:fontFamily="@font/poppinsbold"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/tv_product_name"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/tv_product_name"
+                            tools:text="Rp 10.000" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_column="2"
-                                    android:layout_marginStart="80dp"
-                                    android:fontFamily="@font/poppinsregular"
-                                    android:text="@string/double_dot"
-                                    android:textSize="12sp" />
+                        <androidx.appcompat.widget.AppCompatRatingBar
+                            android:id="@+id/tv_product_rating"
+                            style="@style/Widget.AppCompat.RatingBar.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:theme="@style/RatingBar"
+                            app:layout_constraintStart_toStartOf="@+id/tv_product_name"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_product_name" />
 
-                                <TextView
-                                    android:id="@+id/tv_product_weight"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_column="3"
-                                    android:layout_marginStart="10dp"
-                                    android:fontFamily="@font/poppinsregular"
-                                    android:textSize="12sp"
-                                    tools:text="100 gram" />
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="27dp"
+                            android:fontFamily="@font/poppinsmedium"
+                            android:text="Detail Product"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            app:layout_constraintStart_toStartOf="@+id/tv_product_rating"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_product_rating" />
 
-                            </TableRow>
+                        <androidx.appcompat.widget.AppCompatToggleButton
+                            android:id="@+id/btn_toggle_favorite"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/toggle_favorite"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:src="@drawable/ic_baseline_favorite_24"
+                            android:textOff=""
+                            android:textOn=""
+                            app:layout_constraintBottom_toBottomOf="@+id/textView2"
+                            app:layout_constraintEnd_toEndOf="@+id/tv_product_price"
+                            app:layout_constraintTop_toTopOf="@+id/textView2" />
+
+                        <View
+                            android:id="@+id/view"
+                            android:layout_width="0dp"
+                            android:layout_height="2dp"
+                            android:layout_marginStart="11dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginEnd="11dp"
+                            android:background="@color/lighter_grey"
+                            android:backgroundTint="@color/lighter_grey"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+                        <GridLayout
+                            android:id="@+id/gridLayout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:columnCount="2"
+                            app:layout_constraintEnd_toEndOf="@+id/btn_toggle_favorite"
+                            app:layout_constraintStart_toStartOf="@+id/textView2"
+                            app:layout_constraintTop_toBottomOf="@+id/view">
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_rowWeight="1">
+
+                                <TableRow
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="1"
+                                        android:fontFamily="@font/poppinsregular"
+                                        android:text="@string/weight_string"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="2"
+                                        android:layout_marginStart="80dp"
+                                        android:fontFamily="@font/poppinsregular"
+                                        android:text="@string/double_dot"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:id="@+id/tv_product_weight"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="3"
+                                        android:layout_marginStart="10dp"
+                                        android:fontFamily="@font/poppinsregular"
+                                        android:textSize="12sp"
+                                        tools:text="100 gram" />
+
+                                </TableRow>
+
+                                <TableRow
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent"
+                                    android:layout_marginTop="23dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="1"
+                                        android:fontFamily="@font/poppinsregular"
+                                        android:text="@string/type_string"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="2"
+                                        android:layout_marginStart="80dp"
+                                        android:fontFamily="@font/poppinsregular"
+                                        android:text="@string/double_dot"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:id="@+id/tv_product_type"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="3"
+                                        android:layout_marginStart="10dp"
+                                        android:fontFamily="@font/poppinsregular"
+                                        android:textSize="12sp"
+                                        tools:text="Accessoris" />
+
+                                </TableRow>
+
+                            </TableLayout>
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="200dp"
+                                android:weightSum="1">
+
+                                <TableRow
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="1"
+                                        android:fontFamily="@font/poppinsregular"
+                                        android:text="@string/stock_string"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="2"
+                                        android:layout_marginStart="80dp"
+                                        android:fontFamily="@font/poppinsregular"
+                                        android:text="@string/double_dot"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:id="@+id/tv_product_stock"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="3"
+                                        android:layout_marginStart="10dp"
+                                        android:fontFamily="@font/poppinsregular"
+                                        android:textSize="12sp"
+                                        tools:text="20" />
+
+                                </TableRow>
+
+                                <TableRow
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent"
+                                    android:layout_marginTop="23dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="1"
+                                        android:fontFamily="@font/poppinsregular"
+                                        android:text="@string/size_string"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="2"
+                                        android:layout_marginStart="80dp"
+                                        android:fontFamily="@font/poppinsregular"
+                                        android:text="@string/double_dot"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:id="@+id/tv_product_size"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_column="3"
+                                        android:layout_marginStart="10dp"
+                                        android:fontFamily="@font/poppinsregular"
+                                        android:textSize="12sp"
+                                        tools:text="-" />
+
+                                </TableRow>
+
+                            </TableLayout>
+
+                        </GridLayout>
+
+                        <TableLayout
+                            android:id="@+id/tableLayout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            app:layout_constraintEnd_toEndOf="@+id/btn_toggle_favorite"
+                            app:layout_constraintStart_toStartOf="@+id/textView2"
+                            app:layout_constraintTop_toBottomOf="@+id/gridLayout">
+
 
                             <TableRow
                                 android:layout_width="fill_parent"
@@ -237,175 +343,157 @@
                                     android:layout_height="wrap_content"
                                     android:layout_column="1"
                                     android:fontFamily="@font/poppinsregular"
-                                    android:text="@string/type_string"
+                                    android:text="@string/description_string"
                                     android:textSize="12sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_column="2"
-                                    android:layout_marginStart="80dp"
+                                    android:layout_marginStart="20dp"
                                     android:fontFamily="@font/poppinsregular"
                                     android:text="@string/double_dot"
                                     android:textSize="12sp" />
-
-                                <TextView
-                                    android:id="@+id/tv_product_type"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_column="3"
-                                    android:layout_marginStart="10dp"
-                                    android:fontFamily="@font/poppinsregular"
-                                    android:textSize="12sp"
-                                    tools:text="Accessoris" />
 
                             </TableRow>
 
                         </TableLayout>
 
-                        <TableLayout
+                        <TextView
+                            android:id="@+id/tv_product_description"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:fontFamily="@font/poppinsregular"
+                            android:lineHeight="18sp"
+                            android:text="@string/lorem_string"
+                            android:textSize="12sp"
+                            app:layout_constraintEnd_toEndOf="@+id/tableLayout"
+                            app:layout_constraintStart_toStartOf="@+id/tableLayout"
+                            app:layout_constraintTop_toBottomOf="@+id/tableLayout"
+                            tools:targetApi="p" />
+
+                        <ImageView
+                            android:id="@+id/temp_image"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="200dp"
-                            android:weightSum="1">
+                            android:layout_marginEnd="353dp"
+                            android:layout_marginBottom="373dp"
+                            android:visibility="invisible"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
 
-                            <TableRow
-                                android:layout_width="fill_parent"
-                                android:layout_height="fill_parent">
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_column="1"
-                                    android:fontFamily="@font/poppinsregular"
-                                    android:text="@string/stock_string"
-                                    android:textSize="12sp" />
+                    <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/divider_other_product"
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:layout_marginTop="30dp"
+                        android:background="@color/lighter_grey" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_column="2"
-                                    android:layout_marginStart="80dp"
-                                    android:fontFamily="@font/poppinsregular"
-                                    android:text="@string/double_dot"
-                                    android:textSize="12sp" />
-
-                                <TextView
-                                    android:id="@+id/tv_product_stock"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_column="3"
-                                    android:layout_marginStart="10dp"
-                                    android:fontFamily="@font/poppinsregular"
-                                    android:textSize="12sp"
-                                    tools:text="20" />
-
-                            </TableRow>
-
-                            <TableRow
-                                android:layout_width="fill_parent"
-                                android:layout_height="fill_parent"
-                                android:layout_marginTop="23dp">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_column="1"
-                                    android:fontFamily="@font/poppinsregular"
-                                    android:text="@string/size_string"
-                                    android:textSize="12sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_column="2"
-                                    android:layout_marginStart="80dp"
-                                    android:fontFamily="@font/poppinsregular"
-                                    android:text="@string/double_dot"
-                                    android:textSize="12sp" />
-
-                                <TextView
-                                    android:id="@+id/tv_product_size"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_column="3"
-                                    android:layout_marginStart="10dp"
-                                    android:fontFamily="@font/poppinsregular"
-                                    android:textSize="12sp"
-                                    tools:text="-" />
-
-                            </TableRow>
-
-                        </TableLayout>
-
-                    </GridLayout>
-
-                    <TableLayout
-                        android:id="@+id/tableLayout"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:id="@+id/layout_rv_other_pruduct"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"
-                        app:layout_constraintEnd_toEndOf="@+id/btn_toggle_favorite"
-                        app:layout_constraintStart_toStartOf="@+id/textView2"
-                        app:layout_constraintTop_toBottomOf="@+id/gridLayout">
+                        android:orientation="vertical"
+                        android:paddingBottom="18dp">
 
+                        <TextView
+                            android:id="@+id/textView6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:padding="14dp"
+                            android:elevation="1dp"
+                            android:fontFamily="@font/poppinsregular"
+                            android:tag="sticky"
+                            android:text="@string/other_products"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                        <TableRow
-                            android:layout_width="fill_parent"
-                            android:layout_height="fill_parent"
-                            android:layout_marginTop="23dp">
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_other_product"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="50dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView6"
+                            tools:itemCount="3"
+                            tools:listitem="@layout/item_row_product" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_column="1"
-                                android:fontFamily="@font/poppinsregular"
-                                android:text="@string/description_string"
-                                android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/tv_other_product_empty"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/other_product_is_empty"
+                            android:fontFamily="@font/poppinsregular"
+                            android:textSize="14sp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:visibility="gone"/>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_column="2"
-                                android:layout_marginStart="20dp"
-                                android:fontFamily="@font/poppinsregular"
-                                android:text="@string/double_dot"
-                                android:textSize="12sp" />
+                    </LinearLayout>
 
-                        </TableRow>
+                    <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/divider_search_history"
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:background="@color/lighter_grey" />
 
-                    </TableLayout>
-
-                    <TextView
-                        android:id="@+id/tv_product_description"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:id="@+id/layout_rv_search_history"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:fontFamily="@font/poppinsregular"
-                        android:lineHeight="18sp"
-                        android:text="@string/lorem_string"
-                        android:textSize="12sp"
-                        app:layout_constraintEnd_toEndOf="@+id/tableLayout"
-                        app:layout_constraintStart_toStartOf="@+id/tableLayout"
-                        app:layout_constraintTop_toBottomOf="@+id/tableLayout"
-                        tools:targetApi="p" />
+                        android:orientation="vertical"
+                        android:paddingBottom="18dp">
 
-                    <ImageView
-                        android:id="@+id/temp_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="353dp"
-                        android:layout_marginBottom="373dp"
-                        android:visibility="invisible"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        <TextView
+                            android:id="@+id/title_search_history"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:padding="14dp"
+                            android:elevation="1dp"
+                            android:fontFamily="@font/poppinsregular"
+                            android:tag="sticky"
+                            android:text="@string/search_history"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_product_search_history"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="50dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/title_search_history"
+                            tools:itemCount="3"
+                            tools:listitem="@layout/item_row_product" />
 
-            </ScrollView>
+                        <TextView
+                            android:id="@+id/tv_search_history_product_empty"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/other_product_is_empty"
+                            android:fontFamily="@font/poppinsregular"
+                            android:textSize="14sp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:visibility="gone"/>
 
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </me.didik.component.StickyNestedScrollView>
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/shimmer_product_detail"
                 android:layout_width="0dp"
@@ -477,5 +565,32 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout2"
+        android:layout_width="0dp"
+        android:layout_height="?actionBarSize"
+        android:background="@color/background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/custom_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppinsbold"
+                tools:text="Product Name"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

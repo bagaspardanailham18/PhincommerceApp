@@ -11,7 +11,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bagaspardanailham.core.data.repository.FirebaseAnalyticsRepository
 import com.bagaspardanailham.myecommerceapp.databinding.ActivitySplashScreenBinding
-import com.bagaspardanailham.myecommerceapp.ui.MainActivity
+import com.bagaspardanailham.myecommerceapp.ui.main.MainActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthActivity
 import com.bagaspardanailham.myecommerceapp.ui.auth.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint

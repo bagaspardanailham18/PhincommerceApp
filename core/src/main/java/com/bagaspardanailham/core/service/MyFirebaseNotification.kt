@@ -36,8 +36,6 @@ class MyFirebaseNotification: FirebaseMessagingService() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-        Log.d("title", message.notification?.title.toString())
-        Log.d("text", message.notification?.body.toString())
 
         sendNotification(message.notification?.title, message.notification?.body)
         saveNotification(message.notification?.title, message.notification?.body)
@@ -53,7 +51,7 @@ class MyFirebaseNotification: FirebaseMessagingService() {
     }
 
     private fun sendNotification(title: String?, messageBody: String?) {
-        val contentIntent = Intent(applicationContext, Class.forName("com.bagaspardanailham.myecommerceapp.ui.MainActivity"))
+        val contentIntent = Intent(applicationContext, Class.forName("com.bagaspardanailham.myecommerceapp.ui.notification.NotificationActivity"))
 
         val contentPendingIntent = PendingIntent.getActivity(
             applicationContext,
