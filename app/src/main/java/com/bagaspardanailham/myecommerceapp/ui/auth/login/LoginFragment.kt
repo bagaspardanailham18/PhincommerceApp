@@ -2,6 +2,8 @@ package com.bagaspardanailham.myecommerceapp.ui.auth.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.util.Patterns
 import androidx.fragment.app.Fragment
@@ -9,6 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -69,10 +73,36 @@ class LoginFragment : Fragment() {
             firebaseAnalyticsRepository.onClickButtonRegister()
         }
 
+        formValidation()
+
         binding?.btnLogin?.setOnClickListener {
             handleLogin()
         }
 
+    }
+
+    private fun formValidation() {
+        binding?.apply {
+            edtEmail.doOnTextChanged { text, start, before, count ->
+                if (!Patterns.EMAIL_ADDRESS.matcher(text.toString()).matches()) {
+                    layoutEdtEmail.error = "Wrong email format"
+                }
+                else {
+                    layoutEdtEmail.error = null
+                    layoutEdtEmail.isErrorEnabled = false
+                }
+            }
+
+            edtPassword.doOnTextChanged { text, start, before, count ->
+                if (text.toString().isEmpty()) {
+                    layoutEdtPassword.error = "Password is required"
+                }
+                else {
+                    layoutEdtPassword.error = null
+                    layoutEdtPassword.isErrorEnabled = false
+                }
+            }
+        }
     }
 
     private fun handleLogin() {

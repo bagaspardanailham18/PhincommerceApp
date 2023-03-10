@@ -13,6 +13,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.system.Os.accept
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.util.Patterns
 import androidx.fragment.app.Fragment
@@ -23,6 +25,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -41,6 +44,7 @@ import com.bagaspardanailham.core.utils.createCustomTempFile
 import com.bagaspardanailham.core.utils.reduceFileImage
 import com.bagaspardanailham.core.utils.reduceGalleryFileImage
 import com.bagaspardanailham.core.utils.rotateBitmap
+import com.bagaspardanailham.myecommerceapp.ui.main.profile.ProfileFragment.Companion.CAMERA_X_RESULT
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
@@ -140,6 +144,7 @@ class RegisterFragment : Fragment() {
             firebaseAnalyticsRepository.onClickButtonLogin()
         }
 
+        formvalidation()
         binding?.btnSignup?.setOnClickListener {
             handleRegister()
         }
@@ -234,6 +239,54 @@ class RegisterFragment : Fragment() {
 
     }
 
+    private fun formvalidation() {
+        binding?.apply {
+            edtEmail.doOnTextChanged { text, start, before, count ->
+                if (text.toString().isEmpty()) {
+                    layoutEdtEmail.error = "Email is required"
+                } else if (!Patterns.EMAIL_ADDRESS.matcher(text.toString()).matches()) {
+                    layoutEdtEmail.error = "Wrong email format"
+                } else {
+                    layoutEdtEmail.error = null
+                    layoutEdtEmail.isErrorEnabled = false
+                }
+            }
+
+            edtPassword.doOnTextChanged { text, start, before, count ->
+                if (text.toString().isEmpty()) {
+                    layoutEdtPassword.error = "Password is required"
+                } else {
+                    layoutEdtPassword.error = null
+                    layoutEdtPassword.isErrorEnabled = false
+                }
+            }
+
+            edtConfirmPassword.doOnTextChanged { text, start, before, count ->
+                if (text.toString().isEmpty()) {
+                    layoutEdtConfirmPassword.error = "Confirm password is required"
+                } else {
+                    layoutEdtConfirmPassword.error = null
+                    layoutEdtConfirmPassword.isErrorEnabled = false
+                }
+            }
+            edtName.doOnTextChanged { text, start, before, count ->
+                if (text.toString().isEmpty()) {
+                    layoutEdtName.error = "Name is required"
+                } else {
+                    layoutEdtName.error = null
+                    layoutEdtName.isErrorEnabled = false
+                }
+            }
+            edtPhone.doOnTextChanged { text, start, before, count ->
+                if (text.toString().isEmpty()) {
+                    layoutEdtPhone.error = "Phone is required"
+                } else {
+                    layoutEdtPhone.error = null
+                    layoutEdtPhone.isErrorEnabled = false
+                }
+            }
+        }
+    }
     private fun handleRegister() {
         val email = binding?.edtEmail?.text.toString().trim()
         val password = binding?.edtPassword?.text.toString().trim()
