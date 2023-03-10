@@ -65,4 +65,19 @@
     <string name="menu_check_string">Menu Check</string>
     <string name="multiple_select_title">Multiple Select</string>
     <string name="choose_payment_method">Pilih Metode Pembayaran</string>
+    <string name="wrong_email_format">Format email salah</string>
+    <string name="password_is_required">Password harus diisi</string>
+    <string name="email_is_required">Email harus diisi</string>
+    <string name="confirm_password_is_required">Konfirmasi password harus diisi</string>
+    <string name="name_is_required">Nama harus diisi</string>
+    <string name="phone_is_required">No.Telp harus diisi</string>
+    <string name="password_must_be_same">Password harus sama</string>
+    <string name="gender_is_required">Gender harus diisi!</string>
+    <string name="choose_profile_picture">pilih Gambar</string>
+    <string name="no_permission">Tidak mendapatkan permission.</string>
+    <string name="old_password_is_required">Password lama harus diisi</string>
+    <string name="new_password_is_required">Password baru harus diisi</string>
+    <string name="password_must_be_minimum_6_char">Password minimal harus 6 karakter</string>
+    <string name="confirm_new_password_is_required">Konfirmasi password baru harus diisi</string>
+    <string name="token_is_expired">Token kadaluarsa</string>
 </resources>

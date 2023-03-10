@@ -64,4 +64,19 @@
     <string name="menu_check_string">Menu Check</string>
     <string name="multiple_select_title">Multiple Select</string>
     <string name="choose_payment_method">Choose Payment Method</string>
+    <string name="wrong_email_format">Wrong email format</string>
+    <string name="password_is_required">Password is required</string>
+    <string name="email_is_required">Email is required</string>
+    <string name="confirm_password_is_required">Confirm password is required</string>
+    <string name="name_is_required">Name is required</string>
+    <string name="phone_is_required">Phone is required</string>
+    <string name="password_must_be_same">Password must be same</string>
+    <string name="gender_is_required">Gender is required!</string>
+    <string name="choose_profile_picture">Choose a Picture</string>
+    <string name="no_permission">Tidak mendapatkan permission.</string>
+    <string name="old_password_is_required">Old password is required</string>
+    <string name="new_password_is_required">New password is required</string>
+    <string name="password_must_be_minimum_6_char">Password must be minimum 6 characters</string>
+    <string name="confirm_new_password_is_required">Confirm New password is required</string>
+    <string name="token_is_expired">Token is expired</string>
 </resources>

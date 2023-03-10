@@ -91,7 +91,7 @@ class RegisterFragment : Fragment() {
             if (!allPermissionGranted()) {
                 Toast.makeText(
                     requireActivity(),
-                    "Tidak mendapatkan permission.",
+                    getString(R.string.no_permission),
                     Toast.LENGTH_SHORT
                 ).show()
                 requireActivity().finish()
@@ -199,7 +199,7 @@ class RegisterFragment : Fragment() {
         val intent = Intent()
         intent.action = ACTION_GET_CONTENT
         intent.type = "image/*"
-        val chooser = Intent.createChooser(intent, "Choose a Picture")
+        val chooser = Intent.createChooser(intent, getString(R.string.choose_profile_picture))
         launcherIntentGallery.launch(chooser)
 
         // Analytics
@@ -243,9 +243,9 @@ class RegisterFragment : Fragment() {
         binding?.apply {
             edtEmail.doOnTextChanged { text, start, before, count ->
                 if (text.toString().isEmpty()) {
-                    layoutEdtEmail.error = "Email is required"
+                    layoutEdtEmail.error = getString(R.string.email_is_required)
                 } else if (!Patterns.EMAIL_ADDRESS.matcher(text.toString()).matches()) {
-                    layoutEdtEmail.error = "Wrong email format"
+                    layoutEdtEmail.error = getString(R.string.wrong_email_format)
                 } else {
                     layoutEdtEmail.error = null
                     layoutEdtEmail.isErrorEnabled = false
@@ -254,7 +254,7 @@ class RegisterFragment : Fragment() {
 
             edtPassword.doOnTextChanged { text, start, before, count ->
                 if (text.toString().isEmpty()) {
-                    layoutEdtPassword.error = "Password is required"
+                    layoutEdtPassword.error = getString(R.string.password_is_required)
                 } else {
                     layoutEdtPassword.error = null
                     layoutEdtPassword.isErrorEnabled = false
@@ -263,7 +263,7 @@ class RegisterFragment : Fragment() {
 
             edtConfirmPassword.doOnTextChanged { text, start, before, count ->
                 if (text.toString().isEmpty()) {
-                    layoutEdtConfirmPassword.error = "Confirm password is required"
+                    layoutEdtConfirmPassword.error = getString(R.string.confirm_password_is_required)
                 } else {
                     layoutEdtConfirmPassword.error = null
                     layoutEdtConfirmPassword.isErrorEnabled = false
@@ -271,7 +271,7 @@ class RegisterFragment : Fragment() {
             }
             edtName.doOnTextChanged { text, start, before, count ->
                 if (text.toString().isEmpty()) {
-                    layoutEdtName.error = "Name is required"
+                    layoutEdtName.error = getString(R.string.name_is_required)
                 } else {
                     layoutEdtName.error = null
                     layoutEdtName.isErrorEnabled = false
@@ -279,7 +279,7 @@ class RegisterFragment : Fragment() {
             }
             edtPhone.doOnTextChanged { text, start, before, count ->
                 if (text.toString().isEmpty()) {
-                    layoutEdtPhone.error = "Phone is required"
+                    layoutEdtPhone.error = getString(R.string.phone_is_required)
                 } else {
                     layoutEdtPhone.error = null
                     layoutEdtPhone.isErrorEnabled = false
@@ -296,41 +296,41 @@ class RegisterFragment : Fragment() {
 
         when {
             email.isEmpty() -> {
-                binding?.layoutEdtEmail?.error = "Email is required!"
+                binding?.layoutEdtEmail?.error = getString(R.string.email_is_required)
                 return
             }
             password.isEmpty() -> {
-                binding?.layoutEdtPassword?.error = "Password is required!"
+                binding?.layoutEdtPassword?.error = getString(R.string.password_is_required)
                 return
             }
             password.isEmpty() -> {
-                binding?.layoutEdtConfirmPassword?.error = "Confirm password is required!"
+                binding?.layoutEdtConfirmPassword?.error = getString(R.string.confirm_password_is_required)
                 return
             }
             name.isEmpty() -> {
-                binding?.layoutEdtName?.error = "Name is required!"
+                binding?.layoutEdtName?.error = getString(R.string.name_is_required)
                 return
             }
             phone.isEmpty() -> {
-                binding?.layoutEdtPhone?.error = "Phone is required!"
+                binding?.layoutEdtPhone?.error = getString(R.string.phone_is_required)
                 return
             }
             else -> {
                 if (password != confirmPassword) {
-                    binding?.layoutEdtPassword?.error = "Password must be same"
-                    binding?.layoutEdtConfirmPassword?.error = "Password must be same"
+                    binding?.layoutEdtPassword?.error = getString(R.string.password_must_be_same)
+                    binding?.layoutEdtConfirmPassword?.error = getString(R.string.password_must_be_same)
                     return
                 } else if (!Patterns.EMAIL_ADDRESS.matcher(email.toString()).matches()) {
-                    binding?.layoutEdtEmail?.error = "Wrong email format"
+                    binding?.layoutEdtEmail?.error = getString(R.string.wrong_email_format)
                     return
                 }
                 else if (!binding?.rgMale!!.isChecked && !binding?.rgFemale!!.isChecked) {
-                    Toast.makeText(requireActivity(), "Gender is required!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireActivity(), getString(R.string.gender_is_required), Toast.LENGTH_SHORT).show()
                     return
                 }
                 else {
                     val genderId = if (binding?.rgMale!!.isChecked) 0 else 1
-                    val gender = if (genderId == 0) "male" else "female"
+                    val gender = if (genderId == 0) getString(R.string.male_string) else getString(R.string.female_string)
 
                     //analytics
                     firebaseAnalyticsRepository.onSignupButtonClicked(imageSource, email, name, phone, gender)

@@ -84,8 +84,11 @@ class LoginFragment : Fragment() {
     private fun formValidation() {
         binding?.apply {
             edtEmail.doOnTextChanged { text, start, before, count ->
-                if (!Patterns.EMAIL_ADDRESS.matcher(text.toString()).matches()) {
-                    layoutEdtEmail.error = "Wrong email format"
+                if (text.toString().isEmpty()) {
+                    layoutEdtEmail.error = getString(R.string.email_is_required)
+                }
+                else if (!Patterns.EMAIL_ADDRESS.matcher(text.toString()).matches()) {
+                    layoutEdtEmail.error = getString(R.string.wrong_email_format)
                 }
                 else {
                     layoutEdtEmail.error = null
@@ -95,7 +98,7 @@ class LoginFragment : Fragment() {
 
             edtPassword.doOnTextChanged { text, start, before, count ->
                 if (text.toString().isEmpty()) {
-                    layoutEdtPassword.error = "Password is required"
+                    layoutEdtPassword.error = getString(R.string.password_is_required)
                 }
                 else {
                     layoutEdtPassword.error = null
@@ -111,16 +114,16 @@ class LoginFragment : Fragment() {
 
         when {
             email.isEmpty() -> {
-                binding?.layoutEdtEmail?.error = "Email is required"
+                binding?.layoutEdtEmail?.error = getString(R.string.email_is_required)
                 return
             }
             password.isEmpty() -> {
-                binding?.layoutEdtPassword?.error = "Password is required"
+                binding?.layoutEdtPassword?.error = getString(R.string.password_is_required)
                 return
             }
             else -> {
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    binding?.layoutEdtEmail?.error = "Wrong email format"
+                    binding?.layoutEdtEmail?.error = getString(R.string.wrong_email_format)
                     return
                 } else {
                     // Btn Login Analytics

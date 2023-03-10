@@ -68,15 +68,15 @@ class ChangePasswordActivity : AppCompatActivity() {
             val newPassConfirm = binding.edtConfirmNewPassword.text.toString().trim()
 
             if (oldPass.isEmpty()) {
-                layoutEdtOldPassword.error = "Old password is required"
+                layoutEdtOldPassword.error = getString(R.string.old_password_is_required)
             } else if (newPass.isEmpty()) {
-                layoutEdtNewPassword.error = "New password is required"
+                layoutEdtNewPassword.error = getString(R.string.new_password_is_required)
             } else if (newPass.length < 6) {
-                layoutEdtNewPassword.error = "Password must be minimum 6 characters"
+                layoutEdtNewPassword.error = getString(R.string.password_must_be_minimum_6_char)
             } else if (newPassConfirm.isEmpty()) {
-                layoutEdtConfirmNewPassword.error = "Confirm New password is required"
+                layoutEdtConfirmNewPassword.error = getString(R.string.confirm_new_password_is_required)
             } else if (newPassConfirm != newPass) {
-                layoutEdtConfirmNewPassword.error = "Password must be same"
+                layoutEdtConfirmNewPassword.error = getString(R.string.password_must_be_same)
             } else {
                 lifecycleScope.launch {
                     viewModel.getUserPref().collect { data ->
@@ -103,7 +103,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                                         val jsonObject = gson.fromJson(errorres, JsonObject::class.java)
                                         val errorResponse = gson.fromJson(jsonObject, ErrorResponse::class.java)
                                         if (response.errorCode == 401) {
-                                            Toast.makeText(this@ChangePasswordActivity, "Token is expired", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(this@ChangePasswordActivity, getString(R.string.token_is_expired), Toast.LENGTH_SHORT).show()
                                         } else {
                                             Toast.makeText(this@ChangePasswordActivity, errorResponse.error?.message, Toast.LENGTH_SHORT).show()
                                         }
@@ -124,7 +124,7 @@ class ChangePasswordActivity : AppCompatActivity() {
         binding.apply {
             edtOldPassword.doOnTextChanged { text, start, before, count ->
                 if (text.toString().isEmpty()) {
-                    layoutEdtOldPassword.error = "Old password is required"
+                    layoutEdtOldPassword.error = getString(R.string.old_password_is_required)
                 } else {
                     layoutEdtOldPassword.error = null
                     layoutEdtOldPassword.isErrorEnabled = false
@@ -132,9 +132,9 @@ class ChangePasswordActivity : AppCompatActivity() {
             }
             edtNewPassword.doOnTextChanged { text, start, before, count ->
                 if (text.toString().isEmpty()) {
-                    layoutEdtNewPassword.error = "New password is required"
+                    layoutEdtNewPassword.error = getString(R.string.new_password_is_required)
                 } else if (text.toString().length < 6) {
-                    layoutEdtNewPassword.error = "Password must be minimum 6 characters"
+                    layoutEdtNewPassword.error = getString(R.string.password_must_be_minimum_6_char)
                 } else {
                     layoutEdtNewPassword.error = null
                     layoutEdtNewPassword.isErrorEnabled = false
@@ -142,9 +142,9 @@ class ChangePasswordActivity : AppCompatActivity() {
             }
             edtConfirmNewPassword.doOnTextChanged { text, start, before, count ->
                 if (text.toString().isEmpty()) {
-                    layoutEdtConfirmNewPassword.error = "Confirm New password is required"
+                    layoutEdtConfirmNewPassword.error = getString(R.string.confirm_new_password_is_required)
                 } else if (text.toString() != edtNewPassword.text.toString()) {
-                    layoutEdtConfirmNewPassword.error = "Password must be same"
+                    layoutEdtConfirmNewPassword.error = getString(R.string.password_must_be_same)
                 } else {
                     layoutEdtConfirmNewPassword.error = null
                     layoutEdtConfirmNewPassword.isErrorEnabled = false
@@ -187,10 +187,6 @@ class ChangePasswordActivity : AppCompatActivity() {
         firebaseAnalyticsRepository.onLoadScreen(
             Constant.CHANGE_PASSWORD, this.javaClass.simpleName
         )
-    }
-
-    companion object {
-        private val USER_ID = "user_id"
     }
 }
 
