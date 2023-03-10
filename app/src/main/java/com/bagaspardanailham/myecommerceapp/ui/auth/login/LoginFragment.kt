@@ -121,16 +121,6 @@ class LoginFragment : Fragment() {
                                             }
 
                                             Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show()
-//                                            Log.d("pref", """
-//                                            authToken : $authToken,
-//                                            refreshToken : $refreshToken,
-//                                            id : $id,
-//                                            name : $name,
-//                                            email : $email,
-//                                            phone : $phone,
-//                                            gender : $gender,
-//                                            imgPath : $imgPath
-//                                        """.trimIndent())
                                         }
 
                                         val intent = Intent(requireActivity(), MainActivity::class.java)
