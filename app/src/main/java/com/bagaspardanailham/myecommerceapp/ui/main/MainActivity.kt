@@ -3,6 +3,7 @@ package com.bagaspardanailham.myecommerceapp.ui.main
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -47,6 +48,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var firebaseAnalytics: FirebaseAnalytics
     private lateinit var idLocale: String
 
+    private var backPressedTime = 0L
+
     override fun onStart() {
         super.onStart()
         setLocale()
@@ -62,6 +65,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupWindow()
+
+        backPressedTime = 0L
 
         firebaseAnalytics = Firebase.analytics
 
@@ -145,5 +150,18 @@ class MainActivity : AppCompatActivity() {
     private fun setupWindow() {
         setSupportActionBar(binding.customToolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
+
+    override fun onBackPressed() {
+        val currentTime = System.currentTimeMillis()
+
+        // If the difference between the current time and the last time the back button was pressed is less than 2 seconds, exit the app.
+        if (backPressedTime + 2000 > currentTime) {
+            super.onBackPressed()
+        } else {
+            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show()
+        }
+
+        backPressedTime = currentTime
     }
 }
