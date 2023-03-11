@@ -80,4 +80,7 @@
     <string name="password_must_be_minimum_6_char">Password minimal harus 6 karakter</string>
     <string name="confirm_new_password_is_required">Konfirmasi password baru harus diisi</string>
     <string name="token_is_expired">Token kadaluarsa</string>
+    <string name="camera">Kamera</string>
+    <string name="gallery">Galeri</string>
+    <string name="search">Cari Product…</string>
 </resources>

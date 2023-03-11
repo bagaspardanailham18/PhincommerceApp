@@ -17,7 +17,7 @@
         android:layout_marginHorizontal="30dp"
         android:background="@drawable/bg_searchbar"
         app:iconifiedByDefault="false"
-        app:queryHint="Search..."
+        app:queryHint="@string/search"
         android:fontFamily="@font/poppinsregular"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

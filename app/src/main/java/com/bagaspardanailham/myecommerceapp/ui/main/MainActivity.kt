@@ -7,6 +7,8 @@ import androidx.activity.viewModels
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bagaspardanailham.core.data.repository.FirebaseAnalyticsRepository
@@ -18,10 +20,13 @@ import com.bagaspardanailham.myecommerceapp.ui.notification.NotificationViewMode
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyActivity
 import com.bagaspardanailham.myecommerceapp.ui.trolly.TrollyViewModel
 import com.bagaspardanailham.core.utils.setVisibility
+import com.bagaspardanailham.myecommerceapp.ui.main.profile.ProfileFragment
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -40,6 +45,17 @@ class MainActivity : AppCompatActivity() {
     private val notificationViewModel by viewModels<NotificationViewModel>()
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private lateinit var idLocale: String
+
+    override fun onStart() {
+        super.onStart()
+        setLocale()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setLocale()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +69,15 @@ class MainActivity : AppCompatActivity() {
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         navView.setupWithNavController(navController)
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            if (destination.id == R.id.navigation_profile) {
+                binding.menuNotification.setVisibility(false)
+                binding.menuCart.setVisibility(false)
+            } else {
+                binding.menuNotification.setVisibility(true)
+                binding.menuCart.setVisibility(true)
+            }
+        }
 
         setLocale()
         setAction()
@@ -98,30 +123,23 @@ class MainActivity : AppCompatActivity() {
 
     private fun setLocale() {
         lifecycleScope.launch {
-            viewModel.getSettingPref().collect { data ->
-                if (data?.langName != null) {
-                    if (data.langName == "en") {
-                        val locale = Locale("en")
-                        Locale.setDefault(locale)
-                        val config = Configuration()
-                        config.locale = locale
-                        this@MainActivity.resources.updateConfiguration(config, this@MainActivity.resources.displayMetrics)
+            viewModel.getSettingPref().collectLatest { data ->
+                if (data?.localeId != null) {
+                    if (data.localeId == "0") {
+                        idLocale = "en"
                     } else {
-                        val locale = Locale("in")
-                        Locale.setDefault(locale)
-                        val config = Configuration()
-                        config.locale = locale
-                        this@MainActivity.resources.updateConfiguration(config, this@MainActivity.resources.displayMetrics)
+                        idLocale = "in"
                     }
                 } else {
-                    val locale = Locale("en")
-                    Locale.setDefault(locale)
-                    val config = Configuration()
-                    config.locale = locale
-                    this@MainActivity.resources.updateConfiguration(config, this@MainActivity.resources.displayMetrics)
+                    idLocale = "en"
                 }
             }
         }
+        val locale = Locale(idLocale)
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.locale = locale
+        resources.updateConfiguration(config, this@MainActivity.resources.displayMetrics)
     }
 
     private fun setupWindow() {

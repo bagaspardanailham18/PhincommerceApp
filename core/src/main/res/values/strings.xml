@@ -79,4 +79,7 @@
     <string name="password_must_be_minimum_6_char">Password must be minimum 6 characters</string>
     <string name="confirm_new_password_is_required">Confirm New password is required</string>
     <string name="token_is_expired">Token is expired</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="search">Search…</string>
 </resources>

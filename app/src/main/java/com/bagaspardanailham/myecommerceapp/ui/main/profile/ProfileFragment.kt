@@ -44,6 +44,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
@@ -90,7 +92,7 @@ class ProfileFragment : Fragment() {
             if (!allPermissionGranted()) {
                 Toast.makeText(
                     requireActivity(),
-                    "Tidak mendapatkan permission.",
+                    resources.getString(R.string.no_permission),
                     Toast.LENGTH_SHORT
                 ).show()
                 requireActivity().finish()
@@ -110,17 +112,24 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        setLocale()
+
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.langSpinner.setSelection(1)
 
         loading = LoadingDialog(requireActivity())
 
-        langNames = listOf("Default", "EN", "IDN")
-        langImgs = listOf(0, R.drawable.us_flag, R.drawable.idn_flag)
+        langNames = listOf("EN", "IDN")
+        langImgs = listOf(R.drawable.us_flag, R.drawable.idn_flag)
 
+        val adapter = ChangeLangAdapter(requireContext(), langNames, langImgs)
+        binding.langSpinner.adapter = adapter
+
+        setLocale()
         setProfile()
         setAction()
     }
@@ -147,26 +156,18 @@ class ProfileFragment : Fragment() {
 
     private fun setLocale() {
         lifecycleScope.launch {
-            profileViewModel.getSettingPref().collect { data ->
-                Toast.makeText(requireActivity(), data?.langName.toString(), Toast.LENGTH_SHORT).show()
-                if (data?.langName != null) {
-                    if (data.langName == "en") {
-                        binding.langSpinner.setSelection(langNames.indexOf("en"))
-                        val locale = Locale("en")
-                        Locale.setDefault(locale)
-                        val config = Configuration()
-                        config.locale = locale
-                        requireActivity().resources.updateConfiguration(config, requireActivity().resources.displayMetrics)
+            profileViewModel.getSettingPref().collectLatest { data ->
+                if (data?.localeId != "null") {
+                    if (data?.localeId == "0") {
+                        binding.langSpinner.setSelection(0)
+                        setLanguage("en")
                     } else {
-                        binding.langSpinner.setSelection(langNames.indexOf("in"))
-                        val locale = Locale("in")
-                        Locale.setDefault(locale)
-                        val config = Configuration()
-                        config.locale = locale
-                        requireActivity().resources.updateConfiguration(config, requireActivity().resources.displayMetrics)
+                        binding.langSpinner.setSelection(1)
+                        setLanguage("in")
                     }
                 } else {
                     binding.langSpinner.setSelection(0)
+                    setLanguage("en")
                 }
             }
         }
@@ -175,9 +176,9 @@ class ProfileFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     private fun setAction() {
         binding.imgPickerBtn.setOnClickListener {
-            val items = arrayOf("Camera", "Gallery")
+            val items = arrayOf(getString(R.string.camera), getString(R.string.gallery))
             MaterialAlertDialogBuilder(requireActivity())
-                .setTitle("Select Image")
+                .setTitle(getString(R.string.choose_profile_picture))
                 .setItems(items) { dialog, which ->
                     when {
                         items[which] == "Camera" -> {
@@ -203,23 +204,6 @@ class ProfileFragment : Fragment() {
         }
 
         binding.apply {
-            val adapter = ChangeLangAdapter(requireContext(), langNames, langImgs)
-            langSpinner.adapter = adapter
-
-            lifecycleScope.launch {
-                profileViewModel.getSettingPref().collect { pref ->
-                    if (pref?.langName != null) {
-                        if (pref.langName == "en") {
-                            langSpinner.setSelection(1)
-                        } else if (pref.langName == "in") {
-                            langSpinner.setSelection(2)
-                        } else {
-                            langSpinner.setSelection(0)
-                        }
-                    }
-                }
-            }
-
             langSpinner.setOnTouchListener { view, motionEvent ->
                 isUserAction = true
                 false
@@ -227,25 +211,20 @@ class ProfileFragment : Fragment() {
             langSpinner.onItemSelectedListener = object : OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     if (isUserAction) {
-                        when (position) {
-                            1 -> {
-                                setLanguage("en")
-                                startActivity(Intent(requireActivity(), SplashScreenActivity::class.java))
-                                // Analytics
-                                firebaseAnalyticsRepository.onChangeLanguage("EN")
+                        if (position == 1) {
+                            setLanguage("in")
+                            Log.d("position", position.toString())
+                            lifecycleScope.launch {
+                                profileViewModel.saveSettingPref(position.toString())
                             }
-                            2 -> {
-                                setLanguage("in")
-                                startActivity(Intent(requireActivity(), SplashScreenActivity::class.java))
-                                // Analytics
-                                firebaseAnalyticsRepository.onChangeLanguage("ID")
+                            activity!!.recreate()
+                        } else if (position == 0) {
+                            setLanguage("en")
+                            Log.d("position", position.toString())
+                            lifecycleScope.launch {
+                                profileViewModel.saveSettingPref(position.toString())
                             }
-                            else -> {
-                                setLanguage("en")
-                                startActivity(Intent(requireActivity(), SplashScreenActivity::class.java))
-                                // Analytics
-                                firebaseAnalyticsRepository.onChangeLanguage("EN")
-                            }
+                            activity!!.recreate()
                         }
                     } else {
                         isUserAction = false
@@ -285,11 +264,6 @@ class ProfileFragment : Fragment() {
 
             val myFile = reduceFileImage(it.data?.getSerializableExtra("picture") as File, isBackCamera)
 
-//            val result = rotateBitmap(
-//                BitmapFactory.decodeFile(myFile.path),
-//                isBackCamera
-//            )
-
             getFile = myFile
             Glide.with(requireActivity())
                 .load(myFile)
@@ -314,7 +288,6 @@ class ProfileFragment : Fragment() {
             )
             lifecycleScope.launch {
                 val id = viewModel.getUserPref().first()?.id
-                val authToken = viewModel.getUserPref().first()?.authTokenKey.toString()
                 profileViewModel.changeImage(
                     id!!.toInt(),
                     imageMultipart
@@ -408,15 +381,9 @@ class ProfileFragment : Fragment() {
     private fun setLanguage(localeName: String) {
         val locale = Locale(localeName)
         Locale.setDefault(locale)
-        val res = resources
-        val dm = res.displayMetrics
-        val conf = res.configuration
-        conf.locale = locale
-        res.updateConfiguration(conf, dm)
-
-        lifecycleScope.launch {
-            profileViewModel.saveSettingPref(localeName)
-        }
+        val config = Configuration()
+        config.locale = locale
+        requireActivity().resources.updateConfiguration(config, requireActivity().resources.displayMetrics)
     }
 
     private fun showLogoutValidationDialog() {

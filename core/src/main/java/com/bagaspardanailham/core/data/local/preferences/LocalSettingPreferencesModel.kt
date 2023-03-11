@@ -1,5 +1,5 @@
-package com.bagaspardanailham.myecommerceapp.data.local.preferences
+package com.bagaspardanailham.core.data.local.preferences
 
 data class LocalSettingPreferencesModel(
-    val langName: String
+    val localeId: String
 )
